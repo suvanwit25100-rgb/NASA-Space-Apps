@@ -58,6 +58,49 @@ export default function App() {
   const route = useRoute();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+
+  // scroll animation: progress bar, background parallax, and sections that glide in as you reach them
+  useEffect(() => {
+    const root = document.documentElement;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    let raf = 0;
+    const on = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const max = Math.max(1, root.scrollHeight - window.innerHeight);
+        root.style.setProperty("--progress", String(Math.min(1, window.scrollY / max)));
+        root.style.setProperty("--bgshift", `${reduce ? 0 : window.scrollY * -0.08}px`);
+      });
+    };
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    window.addEventListener("resize", on);
+    return () => {
+      window.removeEventListener("scroll", on);
+      window.removeEventListener("resize", on);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (route === "/" || !data) return undefined;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !("IntersectionObserver" in window)) return undefined;
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }),
+      { threshold: 0.08, rootMargin: "0px 0px -6% 0px" },
+    );
+    const t = setTimeout(() => {
+      document.querySelectorAll(".page > *").forEach((el, i) => {
+        if (el.classList.contains("in")) return;
+        el.classList.add("scroll-in");
+        el.style.setProperty("--d", `${Math.min(i, 4) * 60}ms`);
+        io.observe(el);
+      });
+    }, 60);
+    return () => { clearTimeout(t); io.disconnect(); };
+  }, [route, data]);
+
   useEffect(() => {
     Promise.all([loadRegions(), loadCells4(), loadSky()])
       .then(([r, cells4, sky]) => setData({ ...r, cells4, sky }))
@@ -92,6 +135,7 @@ export default function App() {
   return (
     <ExplorerProvider data={data}>
       <Nav route={route} />
+      <div className="progress" aria-hidden="true" />
       {route !== "/" && <div className="page-bg" aria-hidden="true" />}
       {route === "/" ? <Home nCountries={nCountries} /> : <RoutedPage route={route} />}
       <SiteFooter />

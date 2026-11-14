@@ -110,7 +110,7 @@ export default function Home({ nCountries = 209 }) {
       </section>
 
       <div className="front-scroll">
-        <section id="about-front" className="front-section" aria-label="About">
+        <section id="about-front" className="front-section about-bg" aria-label="About">
           <Reveal as="p" className="eyebrow caps">About the project</Reveal>
           <Reveal as="h2" className="front-h" delay={80}>Twenty-five years of fire,<br /><em>one consistent record.</em></Reveal>
           <Reveal as="p" className="front-lead" delay={160}>
