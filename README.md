@@ -1,5 +1,7 @@
 # Burning Activity Calendar
 
+**Live:** https://global-burn-log.web.app (custom domain: globalburnlog.earth, once DNS is set)
+
 A global burning-activity calendar built from 20+ years of satellite active-fire hotspot data (MODIS + VIIRS via NASA FIRMS), harmonised across sensors into comparable "burning cell-days" on an H3 grid, so responders, scientists and land managers can see historical fire patterns, anomalies and critical periods for any area of interest.
 
 Built for NASA Space Apps Challenge 2026.
