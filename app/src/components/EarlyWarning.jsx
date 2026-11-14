@@ -39,7 +39,7 @@ export default function EarlyWarning() {
       <p>
         In <em>{aoi?.name || "this area"}</em> there were <em>{a.n.toLocaleString()}</em> burning cell-days in the newest seven days of near-real-time data, against about {Math.round(a.typical).toLocaleString()} in the same week of
         2013 to 2025 ({pct >= 0 ? "+" : "−"}{Math.abs(pct)}%, {a.z >= 0 ? "+" : "−"}{Math.abs(a.z).toFixed(1)} standard deviations, higher than {Math.round(a.pct)}% of those years).
-        <span className="hint"> {nrt.bias ? `Across the world this feed currently reads about ${Math.round((nrt.bias - 1) * 100)}% above earlier years for the same week (it cannot drop gas flares the way the reprocessed archive does), so small excesses are not reliable. ` : ""}{nrt.live ? "Refreshed daily from the repository." : "Bundled copy; the daily refresh was not reachable."} Near-real-time data arrives about 12 days behind and is later replaced by reprocessed data, so treat this as an early signal, not a final count.</span>
+        <span className="hint"> {nrt.bias ? `This feed reads about ${Math.round((nrt.bias - 1) * 100)}% above earlier years worldwide (it cannot drop gas flares like the archive), so small excesses are unreliable. ` : ""}Data runs about 12 days behind and is later replaced, so this is an early signal, not a final count.{nrt.live ? "" : " Showing the copy bundled with the site."}</span>
       </p>
       <div className="watch-controls">
         <label className="hint">

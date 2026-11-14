@@ -12,7 +12,7 @@ const get = (url, ms) =>
 
 export const loadNrt = () =>
   (cache ||= Promise.all([get(`${base}data/nrt.json`, 8000), get(LIVE, 4000)]).then(([bundled, live]) => {
-    if (live?.end && (!bundled || live.end > bundled.end)) return { ...live, live: true };
+    if (live?.end && (!bundled || live.end >= bundled.end)) return { ...live, live: true };
     return bundled;
   }));
 
