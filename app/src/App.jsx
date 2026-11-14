@@ -134,6 +134,7 @@ export default function App() {
 
   return (
     <ExplorerProvider data={data}>
+      <a className="skip-link" href="#main" onClick={(e) => { e.preventDefault(); const m = document.querySelector("main"); m?.setAttribute("tabindex", "-1"); m?.focus(); }}>Skip to content</a>
       <Nav route={route} />
       <div className="progress" aria-hidden="true" />
       {route !== "/" && <div className="page-bg" aria-hidden="true" />}

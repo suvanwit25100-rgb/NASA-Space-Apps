@@ -2,6 +2,7 @@ import AreaBar from "../components/AreaBar";
 import BurnedOverlay from "../components/BurnedOverlay";
 import Climatology from "../components/Climatology";
 import CriticalPeriods from "../components/CriticalPeriods";
+import EarlyWarning from "../components/EarlyWarning";
 import Loading from "../components/Loading";
 import { ChapterNav, PageHead } from "../components/PageHead";
 import Replays from "../components/Replays";
@@ -9,6 +10,7 @@ import { KpiRow, StoryLead } from "../components/Story";
 import TimeOfDay from "../components/TimeOfDay";
 import Trend from "../components/Trend";
 import Verdict from "../components/Verdict";
+import WeatherContext from "../components/WeatherContext";
 import { useExplorer } from "../state/Explorer";
 
 export default function SeasonsPage() {
@@ -21,6 +23,7 @@ export default function SeasonsPage() {
         <StoryLead />
         <KpiRow />
         <Verdict />
+        <EarlyWarning />
         <div className="grid-2">
           <section className="panel" data-tour="climatology">
             <h2>Climatology and {e.year}</h2>
@@ -47,6 +50,11 @@ export default function SeasonsPage() {
           <h2>Morning or afternoon?</h2>
           <p className="hint">When in the day fires are caught: a time-of-day signal from the two MODIS satellites' different overpass times.</p>
           <TimeOfDay />
+        </section>
+        <section className="panel" data-tour="weather">
+          <h2>Weather context</h2>
+          <p className="hint">Was the weather unusual in the same months? Temperature and rainfall beside the fire anomaly.</p>
+          <WeatherContext />
         </section>
       </Loading>
       <Replays />

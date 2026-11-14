@@ -123,6 +123,14 @@ The site is a short story told over six chapters. Open any of them from the fron
 - ⚖️ **Compare** two areas or periods.
 - 📤 **Export** the daily series as CSV (with a provenance header) or the calendar as PNG.
 - 🔗 **Shareable links** that carry the area, year, mode and view.
+- 🧮 **"Is this year unusual?" verdict** with the year's rank, its size in standard deviations, its most unusual week and the calibration range, plus a **one-page picture report** you can download.
+- 🚨 **Latest-week early signal**: the newest seven days of near-real-time VIIRS against the same week in 2013–2025 (refreshed by `pipeline/nrt_update.py`; NRT data runs about 12 days behind).
+- 🎞️ **Event replays**: one click to Australia 2019–20, Canada 2023, the Amazon 2019, Indonesia 2015, California 2020 and Punjab stubble burning.
+- 📉 **Has the season moved?** Season start and end across 25 years with a trend line, marked "no clear shift" when it is within noise.
+- ✅ **Checked against burned area, in the app**: the harmonised seasonal shape drawn over GFED4.1s (and NASA MCD64A1 for India), with r.
+- 🌓 **Morning or afternoon?** A time-of-day signal from Terra's 10:30 and Aqua's 13:30 overpasses.
+- 🌦️ **Weather context** (on request): temperature and rainfall anomalies beside the fire anomaly, from Open-Meteo (ERA5).
+- 🔍 **Thin-evidence cells** can be outlined on the map, so weak spots are visible rather than hidden.
 - 🧭 **Guided tour** of the Punjab and Haryana crop-residue story, written from the data itself.
 - 📱 **Phone friendly**: touch drawing, large tap targets, stacked layouts.
 - ♿ **Reduced-motion aware**: every animation switches off when the visitor asks for it.
@@ -299,6 +307,7 @@ We would rather you trust a smaller claim.
 - **Cell-days are not area burned.** They show *where and when* fire was detected, not *how much land* burned. Where a few very large fires dominate burned area (California, Boreal Canada, Southeast Australia), cell-days count presence, not size, and the seasonal match is weaker.
 - **2000–2011 are calibrated estimates** from MODIS. They are always drawn with an uncertainty band and never presented as measurements.
 - **One calibration ratio per area and calendar month.** Biome-specific calibration is future work.
+- The **latest-week signal** uses near-real-time data, which lags about 12 days and is later replaced by reprocessed data.
 - **NOAA-20 and NOAA-21 are not included**, and **2026 is excluded** until FIRMS publishes reprocessed data.
 - Detections outlast burn scars, so the harmonised series runs a little high in winter and low at peaks against burned area.
 - **A hackathon project.** Do not use it for operational emergency decisions.
@@ -412,11 +421,9 @@ npx firebase-tools deploy --only hosting
 
 ## 🧭 &nbsp;What could come next
 
-- NOAA-20 and NOAA-21 detections (the country-archive file naming still needs to be found).
-- Uncertainty bands and weak-cell flagging for individual cells.
-- A near-real-time early-warning banner for the last seven days (needs NRT data).
-- A diurnal view of when in the day fires are detected.
-- A weather-context layer.
+- NOAA-20 and NOAA-21 detections. Probed the public country archive under ten plausible folder names and all returned 404, so there is no public per-country file to use; the FIRMS area API could supply them but only within its rate limits.
+- Scheduling `nrt_update.py` so the latest-week signal refreshes itself (today it is a manual run).
+- A finer diurnal view. Today's signal compares two overpass times; true hour-of-day needs the raw acquisition times, which the pipeline discards.
 - Biome-specific calibration (quantile mapping per biome and season).
 
 <br/>

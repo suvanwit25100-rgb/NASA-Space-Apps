@@ -16,6 +16,20 @@ export default function AboutPage() {
         </p>
       </section>
       <DataAndAI />
+      <section className="panel">
+        <h2>Try these views</h2>
+        <p className="hint">Direct links to views worth a look. Each one opens with the area and year already chosen.</p>
+        <div className="pill-row">
+          {[
+            ["Punjab stubble burning, 2025", "/seasons?aoi=punjab-haryana&y=2025"],
+            ["Australia Black Summer", "/calendar?aoi=southeast-australia&y=2019"],
+            ["Canada 2023", "/seasons?aoi=boreal-canada&y=2023"],
+            ["Amazon 2019", "/calendar?aoi=amazon-arc&y=2019&mode=anomaly"],
+            ["Indonesia 2015", "/seasons?aoi=maritime-sea&y=2015"],
+            ["World map, 2020", "/map?aoi=world&y=2020"],
+          ].map(([t, h]) => <a key={h} className="chip" href={h}>{t}</a>)}
+        </div>
+      </section>
       <section className="panel link-row">
         <a className="btn" href={REPO} target="_blank" rel="noreferrer"><GithubIcon width="18" height="18" /> Source on GitHub</a>
         <a className="btn" href="/calendar?tour=1">Take the guided tour</a>

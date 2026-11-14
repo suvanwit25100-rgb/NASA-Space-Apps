@@ -430,3 +430,17 @@ table.prov td { padding: 12px; border-bottom: 1px solid rgba(230, 200, 170, 0.08
 
 .verdict { grid-template-columns: auto 1fr auto; }
 @media (max-width: 700px) { .verdict { grid-template-columns: 1fr; } .verdict-report { justify-self: start; } }
+
+.early { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; border-color: rgba(111,179,255,.3); }
+.early.high { border-color: var(--ember); }
+.early .verdict-badge { background: rgba(111,179,255,.1); border-color: rgba(111,179,255,.35); }
+.early.high .verdict-badge { background: rgba(255,122,47,.25); border-color: var(--ember); }
+.early p { margin: 0; line-height: 1.65; color: #e9e2d7; }
+.early em { color: var(--ember-hot); font-style: normal; font-weight: 700; }
+@media (max-width: 700px) { .early { grid-template-columns: 1fr; gap: 14px; } }
+
+.mini-row { display: grid; gap: 4px; margin: 10px 0; }
+
+.skip-link { position: fixed; left: 12px; top: -60px; z-index: 100; background: var(--ember); color: #1a0a00; padding: 10px 16px; border-radius: 999px; font-weight: 800; text-decoration: none; transition: top .2s; }
+.skip-link:focus { top: 12px; }
+main:focus { outline: none; }

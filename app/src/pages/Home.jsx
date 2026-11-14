@@ -56,7 +56,7 @@ export default function Home({ nCountries = 209 }) {
     <main className="home">
       <section className="hero" ref={heroRef} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} aria-label="Introduction">
         <div className="hero-media">
-          <img className="hero-img" src="/img/hero.webp" alt="A volcanic crater glowing with molten lava under a dusk sky" fetchpriority="high" />
+          <img className="hero-img" src="/img/hero.webp" alt="A volcanic crater glowing with molten lava under a dusk sky" fetchPriority="high" />
         </div>
         <div className="hero-shade" aria-hidden="true" />
         <div className="hero-glow" aria-hidden="true" />
