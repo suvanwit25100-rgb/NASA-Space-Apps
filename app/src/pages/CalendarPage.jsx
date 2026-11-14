@@ -1,6 +1,7 @@
 import AreaBar from "../components/AreaBar";
 import CalendarHeatmap from "../components/CalendarHeatmap";
 import EarlyWarning from "../components/EarlyWarning";
+import Watchlist from "../components/Watchlist";
 import Loading from "../components/Loading";
 import { ChapterNav, PageHead } from "../components/PageHead";
 import Replays from "../components/Replays";
@@ -15,6 +16,7 @@ export default function CalendarPage() {
     <main className="page">
       <PageHead path="/calendar" />
       <AreaBar />
+      <Watchlist />
       <Loading>
         <StoryLead />
         <Verdict />

@@ -3,6 +3,7 @@ import BurnedOverlay from "../components/BurnedOverlay";
 import Climatology from "../components/Climatology";
 import CriticalPeriods from "../components/CriticalPeriods";
 import EarlyWarning from "../components/EarlyWarning";
+import Watchlist from "../components/Watchlist";
 import Loading from "../components/Loading";
 import { ChapterNav, PageHead } from "../components/PageHead";
 import Replays from "../components/Replays";
@@ -19,6 +20,7 @@ export default function SeasonsPage() {
     <main className="page">
       <PageHead path="/seasons" />
       <AreaBar />
+      <Watchlist />
       <Loading>
         <StoryLead />
         <KpiRow />

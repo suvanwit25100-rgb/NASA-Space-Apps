@@ -1,0 +1,31 @@
+name: Refresh latest-week signal
+
+# Runs the near-real-time update every day and commits app/public/data/nrt.json.
+# The site reads that file straight from the repository, so no redeploy is needed.
+# Needs a repository secret named FIRMS_MAP_KEY (a free key from https://firms.modaps.eosdis.nasa.gov/api/map_key/).
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy pandas pyarrow requests h3
+      - run: python3 pipeline/nrt_update.py
+        env:
+          FIRMS_MAP_KEY: ${{ secrets.FIRMS_MAP_KEY }}
+      - name: Commit if changed
+        run: |
+          git config user.name "burn-log-bot"
+          git config user.email "burn-log-bot@users.noreply.github.com"
+          git add app/public/data/nrt.json
+          git diff --cached --quiet || (git commit -m "Refresh latest-week signal" && git push)

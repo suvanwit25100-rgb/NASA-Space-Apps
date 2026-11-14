@@ -124,7 +124,7 @@ The site is a short story told over six chapters. Open any of them from the fron
 - 📤 **Export** the daily series as CSV (with a provenance header) or the calendar as PNG.
 - 🔗 **Shareable links** that carry the area, year, mode and view.
 - 🧮 **"Is this year unusual?" verdict** with the year's rank, its size in standard deviations, its most unusual week and the calibration range, plus a **one-page picture report** you can download.
-- 🚨 **Latest-week early signal**: the newest seven days of near-real-time VIIRS against the same week in 2013–2025 (refreshed by `pipeline/nrt_update.py`; NRT data runs about 12 days behind).
+- 🚨 **Latest-week early signal**: the newest seven days of near-real-time VIIRS against the same week in 2013–2025 (a daily GitHub Action runs `pipeline/nrt_update.py` and the site reads the result straight from this repository; NRT data runs about 12 days behind), with a **watchlist** that flags areas above a threshold you choose (kept in your browser, shown when you open the site).
 - 🎞️ **Event replays**: one click to Australia 2019–20, Canada 2023, the Amazon 2019, Indonesia 2015, California 2020 and Punjab stubble burning.
 - 📉 **Has the season moved?** Season start and end across 25 years with a trend line, marked "no clear shift" when it is within noise.
 - ✅ **Checked against burned area, in the app**: the harmonised seasonal shape drawn over GFED4.1s (and NASA MCD64A1 for India), with r.
@@ -422,7 +422,7 @@ npx firebase-tools deploy --only hosting
 ## 🧭 &nbsp;What could come next
 
 - NOAA-20 and NOAA-21 detections. Probed the public country archive under ten plausible folder names and all returned 404, so there is no public per-country file to use; the FIRMS area API could supply them but only within its rate limits.
-- Scheduling `nrt_update.py` so the latest-week signal refreshes itself (today it is a manual run).
+- Push alerts (email or phone). The watchlist is browser-only because there is no server.
 - A finer diurnal view. Today's signal compares two overpass times; true hour-of-day needs the raw acquisition times, which the pipeline discards.
 - Biome-specific calibration (quantile mapping per biome and season).
 

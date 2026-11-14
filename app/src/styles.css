@@ -444,3 +444,12 @@ table.prov td { padding: 12px; border-bottom: 1px solid rgba(230, 200, 170, 0.08
 .skip-link { position: fixed; left: 12px; top: -60px; z-index: 100; background: var(--ember); color: #1a0a00; padding: 10px 16px; border-radius: 999px; font-weight: 800; text-decoration: none; transition: top .2s; }
 .skip-link:focus { top: 12px; }
 main:focus { outline: none; }
+
+.watch-controls { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.early { grid-template-columns: auto 1fr; }
+.watchlist ul { list-style: none; margin: 10px 0; padding: 0; display: grid; gap: 8px; }
+.watchlist li { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--line); }
+.watchlist li.hot { border-color: var(--ember); background: rgba(255,122,47,.14); }
+.watchlist li span { color: var(--muted); font-size: 13.5px; }
+.watchlist.alert { border-color: var(--ember); }
+.link-btn { background: none; border: 0; color: var(--ember-hot); font: 800 14px var(--sans); cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; }

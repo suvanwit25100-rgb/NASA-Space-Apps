@@ -26,6 +26,8 @@ from h3.api import numpy_int as h3i
 sys.path.insert(0, str(Path(__file__).parent))
 from build_global_products import FEATURED, SHARDS  # noqa: E402
 
+LOOKUP = Path(__file__).parent / "cell_country.npz"  # committed: lets CI run without the 30 GB of shards
+
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "app" / "public" / "data"
 KEY = os.environ.get("FIRMS_MAP_KEY")
@@ -64,10 +66,16 @@ def main():
 
     names = json.loads((Path(__file__).parent / "countries.json").read_text())
     alpha3 = list(names)
-    cc = pd.concat([pd.read_parquet(p) for p in SHARDS.glob("*_cc.parquet")], ignore_index=True)
-    dom = cc.groupby(["h3", "cidx"], sort=False)["cd"].sum().reset_index().sort_values("cd").drop_duplicates("h3", keep="last").sort_values("h3").reset_index(drop=True)
-    uniq = dom["h3"].to_numpy(np.uint64)
-    cell_country = dom["cidx"].to_numpy(np.int64)
+    if LOOKUP.exists():
+        z = np.load(LOOKUP)
+        uniq, cell_country = z["h3"], z["cidx"].astype(np.int64)
+    else:
+        cc = pd.concat([pd.read_parquet(p) for p in SHARDS.glob("*_cc.parquet")], ignore_index=True)
+        dom = cc.groupby(["h3", "cidx"], sort=False)["cd"].sum().reset_index().sort_values("cd").drop_duplicates("h3", keep="last").sort_values("h3").reset_index(drop=True)
+        uniq = dom["h3"].to_numpy(np.uint64)
+        cell_country = dom["cidx"].to_numpy(np.int64)
+        np.savez_compressed(LOOKUP, h3=uniq, cidx=cell_country.astype(np.uint8))
+        print(f"wrote {LOOKUP.name} ({LOOKUP.stat().st_size / 1e6:.1f} MB)")
     ll = np.array([h3i.cell_to_latlng(int(x)) for x in uniq])
 
     h = cd["h3"].to_numpy(np.uint64)
