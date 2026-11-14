@@ -8,6 +8,8 @@ import { fireColor } from "../lib/colors";
 import { FIRE_CSS } from "../lib/colors";
 import { MONTHS } from "../lib/analytics";
 import { useCoarse } from "../lib/hooks";
+import { cellToLatLng } from "h3-js";
+import { coverageFactor } from "../lib/overpass";
 
 maplibregl.setWorkerUrl(workerUrl);
 
@@ -17,6 +19,7 @@ const THIN = 3; // fewer burning days than this in a cell is one or two detectio
 
 export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, onDrawn }) {
   const [flagThin, setFlagThin] = useState(false);
+  const [adjust, setAdjust] = useState(false);
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const overlayRef = useRef(null);
@@ -32,11 +35,20 @@ export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, on
     const acc = new Uint16Array(cells4.length);
     for (let i = 0; i < mapYear.n; i++) if (month == null || mapYear.month[i] === month) acc[mapYear.cell[i]] += mapYear.days[i];
     const out = [];
-    for (let i = 0; i < acc.length; i++) if (acc[i] > 0) out.push({ hex: cells4[i], v: acc[i] });
+    for (let i = 0; i < acc.length; i++) {
+      if (acc[i] <= 0) continue;
+      const raw = acc[i];
+      let v = raw;
+      if (adjust) {
+        const [lat] = cellToLatLng(cells4[i]);
+        v = raw / coverageFactor(lat, year >= 2012 ? "viirs" : "modis");
+      }
+      out.push({ hex: cells4[i], v, raw });
+    }
     const sorted = out.map((d) => d.v).sort((a, b) => a - b);
     const ref = sorted.length ? Math.max(sorted[Math.floor(sorted.length * 0.97)], 2) : 1;
     return { rows: out, ref };
-  }, [cells4, mapYear, month]);
+  }, [cells4, mapYear, month, adjust, year]);
 
   useEffect(() => {
     const map = new maplibregl.Map({
@@ -139,7 +151,7 @@ export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, on
         }),
         new H3HexagonLayer({
           id: "thin",
-          data: flagThin ? data.rows.filter((d) => d.v < THIN) : [],
+          data: flagThin ? data.rows.filter((d) => d.raw < THIN) : [],
           getHexagon: (d) => d.hex,
           filled: false,
           stroked: true,
@@ -160,14 +172,14 @@ export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, on
           extruded: false,
           pickable: true,
           coverage: 0.92,
-          onHover: (info) => setHover(info.object ? { x: info.x, y: info.y, v: info.object.v } : null),
+          onHover: (info) => setHover(info.object ? { x: info.x, y: info.y, v: info.object.v, raw: info.object.raw } : null),
           updateTriggers: { getFillColor: [data.ref] },
         }),
       ],
     });
   }, [data, aoi, ready, draft, flagThin]);
 
-  const thinCount = useMemo(() => data.rows.filter((d) => d.v < THIN).length, [data]);
+  const thinCount = useMemo(() => data.rows.filter((d) => d.raw < THIN).length, [data]);
 
   const era = year >= 2012 ? "VIIRS 375 m" : year >= 2003 ? "MODIS Aqua 1 km" : "MODIS Terra 1 km";
   const label = month == null ? `${year}, full year` : `${MONTHS[month]} ${year}`;
@@ -183,7 +195,7 @@ export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, on
         {drawing && <div className="map-badge" style={{ top: "auto", bottom: 34, borderColor: "#ff8a1f" }}>{coarse ? "Press and drag with one finger to draw your area" : "Click and drag on the map to draw your area"}</div>}
         {hover && (
           <div className="map-tip" style={{ left: hover.x, top: hover.y }}>
-            <b>{hover.v}</b> burning day{hover.v === 1 ? "" : "s"} in this ~1,770 km² cell
+            <b>{hover.raw}</b> burning day{hover.raw === 1 ? "" : "s"}{adjust ? ` (${hover.v.toFixed(1)} adjusted for coverage)` : ""} in this ~1,770 km² cell
           </div>
         )}
       </div>
@@ -192,6 +204,11 @@ export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, on
         <span>
           <label className="thin-toggle">
             <input type="checkbox" checked={flagThin} onChange={(e) => setFlagThin(e.target.checked)} /> Outline thin-evidence cells ({thinCount.toLocaleString()} of {data.rows.length.toLocaleString()} have under {THIN} burning days)
+          </label>
+        </span>
+        <span>
+          <label className="thin-toggle">
+            <input type="checkbox" checked={adjust} onChange={(e) => setAdjust(e.target.checked)} /> Adjust for satellite coverage (orbits converge toward the poles, so high-latitude cells are seen more often)
           </label>
         </span>
         <span>Colour is scaled within the selected period, so compare patterns, not absolute levels, across years.</span>

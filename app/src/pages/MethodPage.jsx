@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChapterNav, PageHead } from "../components/PageHead";
+import { looksPerDay } from "../lib/overpass";
 
 const base = import.meta.env.BASE_URL;
 const STEPS = [
@@ -80,6 +81,26 @@ export default function MethodPage() {
       )}
 
       <div className="grid-2">
+        <section className="panel">
+          <h2>How often the satellites look</h2>
+          <p className="lead-text">
+            A cell counts as burning if any pass sees fire in it that day, so a cell that is looked at more often has more chances to be counted. The orbits of all
+            three satellites converge toward the poles, so the number of looks per day rises with latitude. Within one area this cancels out of the calendar,
+            because the seasonal ratios are learned inside that area. It matters when you compare areas at different latitudes, so the Compare page and the map
+            offer an adjustment.
+          </p>
+          <div className="scroll-x">
+            <table className="prov">
+              <thead><tr><th>Latitude</th><th>VIIRS looks per day</th><th>MODIS looks per day (one satellite)</th></tr></thead>
+              <tbody>
+                {[0, 20, 40, 60, 70].map((lat) => (
+                  <tr key={lat}><td>{lat}°</td><td className="num">{looksPerDay(lat, "viirs").toFixed(1)}</td><td className="num">{looksPerDay(lat, "modis").toFixed(1)}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="hint">An analytic orbit model (swath width against orbit spacing), not a measured count. It assumes detections scale with the number of looks, which overcorrects where nearly every look finds fire. It does not model orbit drift: Terra and Aqua have both drifted from their original overpass times in recent years.</p>
+        </section>
         <section className="panel">
           <h2>Data provenance</h2>
           <p className="hint">Everything in the calendar comes from NASA satellites via NASA FIRMS.</p>

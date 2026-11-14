@@ -130,6 +130,7 @@ The site is a short story told over six chapters. Open any of them from the fron
 - ✅ **Checked against burned area, in the app**: the harmonised seasonal shape drawn over GFED4.1s (and NASA MCD64A1 for India), with r.
 - 🌓 **Morning or afternoon?** A time-of-day signal from Terra's 10:30 and Aqua's 13:30 overpasses.
 - 🌦️ **Weather context** (on request): temperature and rainfall anomalies beside the fire anomaly, from Open-Meteo (ERA5).
+- 🛰️ **Coverage adjustment**: satellites look at high latitudes more often (orbits converge toward the poles), so the map and the Compare table can adjust cell-days for that, using a simple orbit model.
 - 🔍 **Thin-evidence cells** can be outlined on the map, so weak spots are visible rather than hidden.
 - 🧭 **Guided tour** of the Punjab and Haryana crop-residue story, written from the data itself.
 - 📱 **Phone friendly**: touch drawing, large tap targets, stacked layouts.
@@ -306,6 +307,7 @@ We would rather you trust a smaller claim.
 
 - **Cell-days are not area burned.** They show *where and when* fire was detected, not *how much land* burned. Where a few very large fires dominate burned area (California, Boreal Canada, Southeast Australia), cell-days count presence, not size, and the seasonal match is weaker.
 - **2000–2011 are calibrated estimates** from MODIS. They are always drawn with an uncertainty band and never presented as measurements.
+- **Overpass normalisation is an approximation.** It is an analytic orbit model (swath against orbit spacing) that assumes detections scale with the number of looks and ignores orbit drift. It is off by default on the map and shown as a separate row in Compare.
 - **One calibration ratio per area and calendar month.** Biome-specific calibration is future work.
 - The **latest-week signal** uses near-real-time data, which lags about 12 days and is later replaced by reprocessed data. It runs roughly 10% above earlier years across the world because it cannot drop static sources like gas flares; a persistent-spot filter removes most of them, and the site shows the measured offset.
 - **NOAA-20 and NOAA-21 are not included**, and **2026 is excluded** until FIRMS publishes reprocessed data.
@@ -423,6 +425,7 @@ npx firebase-tools deploy --only hosting
 
 - NOAA-20 and NOAA-21 detections. Probed the public country archive under ten plausible folder names and all returned 404, so there is no public per-country file to use; the FIRMS area API could supply them but only within its rate limits.
 - Push alerts for all 209 countries. They are limited to the world and the featured regions because the near-real-time feed cannot drop gas flares the way the archive does and still over-reads some small countries.
+- Orbit drift in the coverage model (Terra and Aqua have drifted from their original overpass times).
 - A finer diurnal view. Today's signal compares two overpass times; true hour-of-day needs the raw acquisition times, which the pipeline discards.
 - Biome-specific calibration (quantile mapping per biome and season).
 

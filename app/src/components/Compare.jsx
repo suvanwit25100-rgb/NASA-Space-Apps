@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { area, line, scaleLinear } from "d3";
 import { fmtDate, monthLabels, monthStartDoy, yearSummary } from "../lib/analytics";
 import { useSize } from "../lib/hooks";
+import { coverageFactor, looksPerDay } from "../lib/overpass";
 
 const M = { l: 44, r: 14, t: 12, b: 26 };
 const COLORS = { a: "#ff7a2f", b: "#6fb3ff" };
@@ -12,6 +13,8 @@ function curves(model, year) {
   const norm = (arr) => Array.from(arr, (v) => v / peak);
   return { median: norm(model.clim.median), cur: norm(model.byYear[year].sm), p10: norm(model.clim.p10), p90: norm(model.clim.p90), n: model.byYear[year].n };
 }
+
+const centreLat = (model) => (model.aoi.bbox[1] + model.aoi.bbox[3]) / 2;
 
 export default function Compare({ a, b, year }) {
   const [ref, { w }] = useSize();
@@ -38,6 +41,8 @@ export default function Compare({ a, b, year }) {
     ["Peak week begins", (s, y) => fmtDate(y, s.main.peakWeek)],
     ["Share of year in main season", (s) => `${Math.round(s.main.share * 100)}%`],
     ["Total cell-days", (s) => Math.round(s.total).toLocaleString()],
+    ["Satellite looks per day (VIIRS)", (s, y, m) => looksPerDay(centreLat(m), "viirs").toFixed(1)],
+    ["Cell-days adjusted for coverage", (s, y, m) => Math.round(s.total / coverageFactor(centreLat(m), "viirs")).toLocaleString()],
     ["Versus median year", (s) => `${s.vsMedian >= 0 ? "+" : "−"}${Math.abs(s.vsMedian * 100).toFixed(0)}%`],
   ];
 
@@ -85,12 +90,15 @@ export default function Compare({ a, b, year }) {
               {rows.map(([label, f]) => (
                 <tr key={label}>
                   <td>{label}</td>
-                  <td className="num">{f(sa, year)}</td>
-                  <td className="num">{f(sb, year)}</td>
+                  <td className="num">{f(sa, year, a)}</td>
+                  <td className="num">{f(sb, year, b)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+          <p className="hint">
+            Satellites look at high latitudes more often because their orbits converge toward the poles, so a boreal area has more chances to be caught burning than a tropical one. "Adjusted" divides by that extra coverage using a simple orbit model (about 1.0 at the equator, 2.0 at 60°), which assumes detections scale with looks; treat it as a rough fairness correction, not a measurement.
+          </p>
         </div>
       )}
     </div>
