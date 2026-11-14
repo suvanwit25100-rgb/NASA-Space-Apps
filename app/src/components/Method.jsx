@@ -42,7 +42,7 @@ export default function Method() {
         <div className="figs">
           <figure className="panel fig" style={{ margin: 0 }}>
             <img src={`${base}img/before_after_India.png`} alt="Two stacked time-series charts for India, 2000 to 2025. Top: raw detections per sensor, with a large jump when VIIRS begins in 2012. Bottom: burning cell-days on the grid, with the jump damped." loading="lazy" />
-            <figcaption><b>Before (India, as a worked example).</b> Raw detections jump roughly tenfold when VIIRS starts in January 2012. Gridding alone damps it but doesn't remove it.</figcaption>
+            <figcaption><b>Before (India, as a worked example).</b> Raw detections jump about sixfold when VIIRS starts in January 2012 (India: roughly 76,000 MODIS detections in 2020 against 490,000 from VIIRS). Gridding alone damps it but doesn't remove it.</figcaption>
           </figure>
           <figure className="panel fig" style={{ margin: 0 }}>
             <img src={`${base}img/calibration_India.png`} alt="Three stacked charts: raw per-sensor burning cell-days, the uncalibrated sum with a visible jump in 2012, and the calibrated series with no jump." loading="lazy" />

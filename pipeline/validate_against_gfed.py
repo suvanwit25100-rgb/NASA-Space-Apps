@@ -7,16 +7,14 @@ seasonal shape is a genuine external check, not a tautology.
 
 Source: GFED4.1s per-year HDF5 files (0.25 deg global grid, burned_fraction
 per month + grid_cell_area), fetched over SFTP from the GFED team's own
-public distribution server (credentials are published openly on
-https://www.globalfiredata.org/data.html for exactly this purpose — this is
-the project's standard anonymous bulk-download mechanism, not a personal
-account). Each year file (~70-100MB) is downloaded, summed over the India
+public distribution server (the login is published openly by the GFED team for exactly this purpose, not a personal account). Each year file (~70-100MB) is downloaded, summed over the India
 bbox, and deleted immediately — nothing raw is kept on disk.
 
 Usage:
     python3 pipeline/validate_against_gfed.py --start-year 2000 --end-year 2025
 """
 import argparse
+import os
 from pathlib import Path
 
 import h5py
@@ -27,10 +25,13 @@ import paramiko
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
-SFTP_HOST = "ftp.prd.dip.wur.nl"
-SFTP_PORT = 1022
-SFTP_USER = "sftp0041-1-r"
-SFTP_PASS = "akU8%S2Fewr!PspDVBqd&s4Y9L&@C9wCd*B"
+# GFED publishes this read-only bulk-download login on https://www.globalfiredata.org/ancill/GFED5_SFTP_info.txt;
+# export it as GFED_SFTP_USER / GFED_SFTP_PASS (host and port default to the published values).
+SFTP_HOST = os.environ.get("GFED_SFTP_HOST", "ftp.prd.dip.wur.nl")
+SFTP_PORT = int(os.environ.get("GFED_SFTP_PORT", "1022"))
+SFTP_USER = os.environ.get("GFED_SFTP_USER", "")
+SFTP_PASS = os.environ.get("GFED_SFTP_PASS", "")
+
 
 # Approximate India bounding box (lon_min, lat_min, lon_max, lat_max) —
 # matches the "India" country scope used by the FIRMS country archives.
@@ -77,6 +78,8 @@ def run(start_year: int, end_year: int, out_dir: Path) -> pd.Series:
     cache_dir = out_dir / "gfed_cache"
     cache_dir.mkdir(exist_ok=True)
 
+    if not (SFTP_USER and SFTP_PASS):
+        raise SystemExit("Set GFED_SFTP_USER and GFED_SFTP_PASS (published at https://www.globalfiredata.org/ancill/GFED5_SFTP_info.txt), or use --reuse")
     transport = paramiko.Transport((SFTP_HOST, SFTP_PORT))
     transport.connect(username=SFTP_USER, password=SFTP_PASS)
     sftp = paramiko.SFTPClient.from_transport(transport)

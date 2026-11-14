@@ -17,6 +17,13 @@ export default function App() {
       .catch((e) => setError(e.message));
   }, []);
 
+  // section links like /#method point at content that renders after the data loads, so scroll once it exists
+  useEffect(() => {
+    if (!data || !window.location.hash) return;
+    const el = document.querySelector(window.location.hash);
+    if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: "instant", block: "start" }));
+  }, [data]);
+
   const nCountries = data ? data.regions.filter((r) => r.kind === "country").length : 0;
   const stats = data && [
     { value: "25", label: "Years of record" },

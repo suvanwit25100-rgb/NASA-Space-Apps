@@ -21,7 +21,7 @@ export default function About() {
         <div className="panel">
           <h3>AI disclosure</h3>
           <ul className="caveats">
-            <li>The idea, the approach and the scientific method were set by the team. <b>Claude Code</b> (Anthropic) was used as a tool to help write the data pipeline, this web app and the documentation.</li>
+            <li>The team set the goal and made the design decisions. Claude (Anthropic) was used as a tool to help plan, and <b>Claude Code</b> (Anthropic) to write the data pipeline, the web app and the documentation.</li>
             <li>No generative AI was used to create imagery. The hero sky is drawn in code from the real fire detections.</li>
             <li>This site uses no NASA logos or mission identifiers.</li>
           </ul>

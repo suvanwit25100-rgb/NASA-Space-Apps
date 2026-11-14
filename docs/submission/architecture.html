@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Global Burn Log architecture</title>
+<style>
+  :root { --bg:#03070f; --panel:#0a1730; --line:#4a7aa8; --ember:#ff8a1f; --hot:#ffc760; --text:#f4f8ff; --muted:#8fa8c4; }
+  * { box-sizing: border-box; }
+  body { margin:0; width:1600px; height:900px; background: radial-gradient(900px 500px at 85% 0%, rgba(63,140,220,.18), transparent 70%), radial-gradient(700px 400px at 5% 90%, rgba(255,138,31,.10), transparent 70%), var(--bg);
+    color:var(--text); font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif; padding:44px 56px; }
+  h1 { margin:0; font-size:34px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+  h1 span { color:var(--ember); }
+  .sub { margin:6px 0 26px; color:var(--muted); font-size:15px; letter-spacing:.04em; }
+  .row { display:grid; grid-template-columns: 1fr 70px 1.15fr 70px 1fr 70px 1fr; align-items:stretch; }
+  .col { display:flex; flex-direction:column; gap:12px; }
+  .col > h2 { margin:0 0 4px; font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--ember); font-weight:700; }
+  .box { background:var(--panel); border:1px solid var(--line); padding:13px 15px; font-size:13.5px; line-height:1.4;
+    clip-path: polygon(0 12px,12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%); }
+  .box b { display:block; font-size:14px; margin-bottom:3px; }
+  .box small { color:var(--muted); display:block; margin-top:3px; font-size:12px; }
+  .nasa { border-color:var(--ember); box-shadow: inset 3px 0 0 var(--ember); }
+  .arrow { display:flex; align-items:center; justify-content:center; color:var(--ember); font-size:36px; font-weight:300; }
+  .band { margin-top:26px; display:grid; grid-template-columns: 1.2fr 1fr; gap:18px; }
+  .band .box { font-size:13px; }
+  .tag { display:inline-block; padding:1px 7px; margin-right:6px; border:1px solid var(--ember); color:var(--hot); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; }
+  .foot { position:absolute; left:56px; right:56px; bottom:26px; display:flex; justify-content:space-between; color:var(--muted); font-size:12px; letter-spacing:.08em; }
+</style>
+</head>
+<body>
+  <h1>Global Burn Log<span>.</span> How it works</h1>
+  <p class="sub">From NASA satellite detections to a calendar in your browser, with no server to keep alive.</p>
+
+  <div class="row">
+    <div class="col">
+      <h2>1 · NASA data</h2>
+      <div class="box nasa"><b><span class="tag">NASA</span>FIRMS archive</b>Public per-country annual files, 209 countries, 2000 to 2025<small>MODIS Terra and Aqua (1 km), VIIRS Suomi NPP (375 m)</small></div>
+      <div class="box nasa"><b><span class="tag">NASA</span>MCD64A1 burned area</b>MODIS burned-area product via Microsoft Planetary Computer<small>Used only to validate</small></div>
+      <div class="box"><b>GFED4.1s</b>Burned area and emissions<small>Second validation, 12 regions</small></div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <h2>2 · Python pipeline</h2>
+      <div class="box"><b>Filter</b>Vegetation fire only (drops volcanoes, flares, offshore); drops low-confidence detections</div>
+      <div class="box"><b>Grid</b>Raw points become H3 burning cell-days; raw points are discarded (100 M cell-days kept)</div>
+      <div class="box"><b>Calibrate</b>Seasonal Aqua↔VIIRS and Terra↔Aqua ratios per area put 2000 to 2011 on the VIIRS scale, with an uncertainty band</div>
+      <div class="box"><b>Detect seasons</b>Fire seasons, peaks and anomalies computed per area and year</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <h2>3 · Static files</h2>
+      <div class="box"><b>series/*.json.gz</b>Calibrated daily series for 209 countries, the world and 16 regions (5 MB total)</div>
+      <div class="box"><b>map/*.bin.gz</b>Yearly global hexagon layers (7 MB for 26 years)</div>
+      <div class="box"><b>tiles/*.bin.gz</b>5° cell-day tiles so any drawn area can be calibrated in the browser</div>
+      <div class="box"><b>Firebase Hosting (CDN)</b>globalburnlog.earth, HTTPS, always on, no login</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="col">
+      <h2>4 · In the browser</h2>
+      <div class="box"><b>Calendar heatmap</b>Year × day, hover for value, anomaly and confidence</div>
+      <div class="box"><b>Climatology and seasons</b>Median year, typical range, fire seasons per year</div>
+      <div class="box"><b>MapLibre + deck.gl map</b>H3 hexagons linked to the calendar</div>
+      <div class="box"><b>Custom areas</b>Draw, upload GeoJSON, compare, export CSV or PNG, share a link</div>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="box"><b>Validation (independent of the pipeline)</b>Seasonal cycle vs NASA MCD64A1: r = 0.89 (India, 2000 to 2025). Vs GFED burned area in 12 regions worldwide: 9 of 12 at r ≥ 0.90 (southern Africa 0.99, Siberia 0.96, Mediterranean 0.95). Weakest where a few huge fires dominate burned area (California, Boreal Canada, Southeast Australia), which is stated on the site.</div>
+    <div class="box"><b>Reproducible</b>Every step is a script in the repository. The historical archive needs no API key; the in-browser calibration is a line-for-line port of the Python and was checked to give identical results.</div>
+  </div>
+  <div class="foot"><span>Built for the NASA Space Apps Challenge 2026 · built with AI assistance (Claude); goals and design decisions by the team</span><span>globalburnlog.earth</span></div>
+</body>
+</html>

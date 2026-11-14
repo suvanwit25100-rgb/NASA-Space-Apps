@@ -5,7 +5,7 @@ Mediterranean, agricultural). GFED has a burned-area product for 2000-2016, so t
 
 Step 1 (--fetch-only, no dependency on our data) extracts GFED regional monthly burned area over SFTP into
 data/gfed_regions_monthly.csv; each year file is deleted after summarising. The SFTP credentials are the ones
-GFED publishes openly on globalburnlog's source page for exactly this bulk download.
+GFED publishes openly for exactly this bulk download (see the constants below).
 Step 2 compares with app/public/data/series/<id>.json.gz and writes docs/validation_regions_gfed.png and
 app/public/data/validation.json.
 
@@ -16,6 +16,7 @@ Usage:
 import argparse
 import gzip
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -31,7 +32,12 @@ from build_global_products import FEATURED  # noqa: E402
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CACHE = REPO_ROOT / "data" / "gfed_regions_monthly.csv"
 SERIES = REPO_ROOT / "app" / "public" / "data" / "series"
-HOST, PORT, USER, PASS = "ftp.prd.dip.wur.nl", 1022, "sftp0041-1-r", "akU8%S2Fewr!PspDVBqd&s4Y9L&@C9wCd*B"
+# GFED publishes this read-only bulk-download login at https://www.globalfiredata.org/ancill/GFED5_SFTP_info.txt;
+# export it as GFED_SFTP_USER / GFED_SFTP_PASS.
+HOST = os.environ.get("GFED_SFTP_HOST", "ftp.prd.dip.wur.nl")
+PORT = int(os.environ.get("GFED_SFTP_PORT", "1022"))
+USER = os.environ.get("GFED_SFTP_USER", "")
+PASS = os.environ.get("GFED_SFTP_PASS", "")
 
 # India as a whole (bbox, compared with the IND country series) plus every global featured region
 REGIONS = [("ind", "India", [68.0, 6.0, 98.0, 36.0])] + [(fid, name, bbox) for fid, name, bbox, restrict in FEATURED if not restrict]
@@ -40,6 +46,10 @@ REGIONS = [("ind", "India", [68.0, 6.0, 98.0, 36.0])] + [(fid, name, bbox) for f
 def fetch() -> pd.DataFrame:
     done = pd.read_csv(CACHE, parse_dates=["date"]) if CACHE.exists() else pd.DataFrame(columns=["region", "date", "km2"])
     have_years = set(done["date"].dt.year) if len(done) else set()
+    if all(y in have_years for y in range(2000, 2017)):
+        return done
+    if not (USER and PASS):
+        sys.exit("Set GFED_SFTP_USER and GFED_SFTP_PASS (published at https://www.globalfiredata.org/ancill/GFED5_SFTP_info.txt)")
     t = paramiko.Transport((HOST, PORT))
     t.connect(username=USER, password=PASS)
     sftp = paramiko.SFTPClient.from_transport(t)
