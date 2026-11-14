@@ -11,7 +11,7 @@ const fmt = (iso) => {
 
 // The most recent seven days of near-real-time VIIRS against the same calendar week in 2013 to 2025.
 export default function EarlyWarning() {
-  const { aoiId, aoi } = useExplorer();
+  const { aoiId, aoi, byId } = useExplorer();
   const [nrt, setNrt] = useState(null);
   useEffect(() => {
     loadNrt().then(setNrt);
@@ -39,7 +39,7 @@ export default function EarlyWarning() {
       <p>
         In <em>{aoi?.name || "this area"}</em> there were <em>{a.n.toLocaleString()}</em> burning cell-days in the newest seven days of near-real-time data, against about {Math.round(a.typical).toLocaleString()} in the same week of
         2013 to 2025 ({pct >= 0 ? "+" : "−"}{Math.abs(pct)}%, {a.z >= 0 ? "+" : "−"}{Math.abs(a.z).toFixed(1)} standard deviations, higher than {Math.round(a.pct)}% of those years).
-        <span className="hint"> {nrt.live ? "Refreshed daily from the repository." : "Bundled copy; the daily refresh was not reachable."} Near-real-time data arrives about 12 days behind and is later replaced by reprocessed data, so treat this as an early signal, not a final count.</span>
+        <span className="hint"> {nrt.bias ? `Across the world this feed currently reads about ${Math.round((nrt.bias - 1) * 100)}% above earlier years for the same week (it cannot drop gas flares the way the reprocessed archive does), so small excesses are not reliable. ` : ""}{nrt.live ? "Refreshed daily from the repository." : "Bundled copy; the daily refresh was not reachable."} Near-real-time data arrives about 12 days behind and is later replaced by reprocessed data, so treat this as an early signal, not a final count.</span>
       </p>
       <div className="watch-controls">
         <label className="hint">
@@ -52,6 +52,18 @@ export default function EarlyWarning() {
         </label>
         <button className="btn-sm" onClick={toggle} aria-pressed={!!watched}>{watched ? "Stop watching" : "Watch this area"}</button>
       </div>
+      {["world", "featured"].includes(byId?.[aoiId]?.kind) ? (
+        <details className="push">
+          <summary>Get push alerts on your phone</summary>
+          <p className="hint">
+            Install the free <a href="https://ntfy.sh" target="_blank" rel="noreferrer">ntfy</a> app (or open it in a browser) and subscribe to the topic{" "}
+            <code>globalburnlog-{aoiId}</code>. You get one message when this area rises past +2σ or +3σ and at least +50% on the same week of earlier years, checked daily. No account, and we never see who subscribes.{" "}
+            <a href={`https://ntfy.sh/globalburnlog-${aoiId}`} target="_blank" rel="noreferrer">Open the topic</a>
+          </p>
+        </details>
+      ) : (
+        <p className="hint push">Push alerts are offered for the world and the featured regions. Use the watchlist above for this area.</p>
+      )}
     </section>
   );
 }

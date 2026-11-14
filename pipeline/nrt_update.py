@@ -37,6 +37,7 @@ if not KEY and (ROOT / ".env").exists():
             KEY = line.split("=", 1)[1].strip()
 BASE = "https://firms.modaps.eosdis.nasa.gov/api"
 AXIS0 = pd.Timestamp("2000-01-01")
+STATIC_DAYS = 5
 
 
 def api(path: str) -> str:
@@ -60,7 +61,15 @@ def main():
         d += timedelta(days=n)
     df = pd.concat(frames, ignore_index=True)
     df = df[df["confidence"] != "l"]
-    print(f"{len(df):,} detections {start} to {end}", flush=True)
+    # The historical archive drops static sources (gas flares, industrial heat, volcanoes) with its fire-type field, but the
+    # near-real-time feed has no such field. A flare shows up on the same ~1 km spot on most days, a vegetation fire does
+    # not, so drop any 0.01-degree spot detected on 5 or more of the 7 days. Without this, flaring countries read as extreme.
+    spot = (np.round(df["latitude"] / 0.01).astype(np.int64) * 100000 + np.round(df["longitude"] / 0.01).astype(np.int64))
+    days_seen = df.assign(spot=spot).groupby("spot")["acq_date"].nunique()
+    static = days_seen[days_seen >= STATIC_DAYS].index
+    is_static = pd.Series(spot).isin(static).to_numpy()
+    print(f"{len(df):,} detections {start} to {end}; dropping {int(is_static.sum()):,} from {len(static):,} persistent spots", flush=True)
+    df = df[~is_static]
     cell = np.fromiter((h3.str_to_int(h3.latlng_to_cell(a, b, 5)) for a, b in zip(df["latitude"], df["longitude"])), dtype=np.uint64, count=len(df))
     cd = pd.DataFrame({"h3": cell, "day": pd.to_datetime(df["acq_date"]).dt.strftime("%Y-%m-%d")}).drop_duplicates()
 
@@ -108,7 +117,11 @@ def main():
         mean, sd = float(np.mean(tot)), float(np.std(tot))
         areas[aid] = {"n": int(n), "typical": round(mean, 1), "z": round((n - mean) / sd, 2) if sd > 0 else 0.0,
                       "pct": round(100 * float(np.mean(np.array(tot) < n)), 0), "years": len(tot)}
-    (OUT / "nrt.json").write_text(json.dumps({"start": start.isoformat(), "end": end.isoformat(), "areas": areas}))
+    # Across areas with real activity, NRT should sit near 1.0 of the same week in earlier years. A persistent excess is a
+    # sign of NRT-versus-reprocessed differences (and leftover flares), so it is published and shown with the signal.
+    ratios = [a["n"] / a["typical"] for a in areas.values() if a["typical"] >= 100]
+    bias = round(float(np.median(ratios)), 2) if len(ratios) >= 20 else None
+    (OUT / "nrt.json").write_text(json.dumps({"start": start.isoformat(), "end": end.isoformat(), "bias": bias, "areas": areas}))
     print(f"wrote nrt.json: {len(areas)} areas; punjab {areas.get('punjab-haryana')}")
 
 

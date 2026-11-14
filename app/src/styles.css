@@ -453,3 +453,7 @@ main:focus { outline: none; }
 .watchlist li span { color: var(--muted); font-size: 13.5px; }
 .watchlist.alert { border-color: var(--ember); }
 .link-btn { background: none; border: 0; color: var(--ember-hot); font: 800 14px var(--sans); cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
+
+.push { grid-column: 1 / -1; }
+.push summary { cursor: pointer; font-weight: 800; color: var(--ember-hot); }
+.push code { background: rgba(255,255,255,.08); padding: 2px 8px; border-radius: 8px; }
