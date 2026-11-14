@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8" />
 <title>Global Burn Log architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Lato:wght@400;700;900&display=swap" rel="stylesheet" />
 <style>
-  :root { --bg:#03070f; --panel:#0a1730; --line:#4a7aa8; --ember:#ff8a1f; --hot:#ffc760; --text:#f4f8ff; --muted:#8fa8c4; }
+  :root { --bg:#0b0c10; --panel:rgba(32,26,31,.85); --line:rgba(230,200,170,.22); --ember:#ff7a2f; --hot:#ffb869; --text:#f5efe6; --muted:#bdb1a6; }
   * { box-sizing: border-box; }
-  body { margin:0; width:1600px; height:900px; background: radial-gradient(900px 500px at 85% 0%, rgba(63,140,220,.18), transparent 70%), radial-gradient(700px 400px at 5% 90%, rgba(255,138,31,.10), transparent 70%), var(--bg);
-    color:var(--text); font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif; padding:44px 56px; }
-  h1 { margin:0; font-size:34px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+  body { margin:0; width:1600px; height:900px; background: radial-gradient(900px 500px at 85% 0%, rgba(255,122,47,.20), transparent 70%), radial-gradient(700px 400px at 5% 90%, rgba(255,122,47,.10), transparent 70%), var(--bg);
+    color:var(--text); font-family: "Lato", "Helvetica Neue", Arial, sans-serif; padding:44px 56px; }
+  h1 { margin:0; font-family:"Cormorant Garamond", Georgia, serif; font-size:48px; font-weight:400; letter-spacing:.05em; }
   h1 span { color:var(--ember); }
   .sub { margin:6px 0 26px; color:var(--muted); font-size:15px; letter-spacing:.04em; }
   .row { display:grid; grid-template-columns: 1fr 70px 1.15fr 70px 1fr 70px 1fr; align-items:stretch; }
   .col { display:flex; flex-direction:column; gap:12px; }
   .col > h2 { margin:0 0 4px; font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--ember); font-weight:700; }
-  .box { background:var(--panel); border:1px solid var(--line); padding:13px 15px; font-size:13.5px; line-height:1.4;
-    clip-path: polygon(0 12px,12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%); }
+  .box { background:var(--panel); border:1px solid var(--line); padding:14px 16px; font-size:13.5px; line-height:1.4; border-radius:18px; }
   .box b { display:block; font-size:14px; margin-bottom:3px; }
   .box small { color:var(--muted); display:block; margin-top:3px; font-size:12px; }
-  .nasa { border-color:var(--ember); box-shadow: inset 3px 0 0 var(--ember); }
+  .nasa { border-color:var(--ember); box-shadow: 0 0 0 1px rgba(255,122,47,.35) inset; }
   .arrow { display:flex; align-items:center; justify-content:center; color:var(--ember); font-size:36px; font-weight:300; }
   .band { margin-top:26px; display:grid; grid-template-columns: 1.2fr 1fr; gap:18px; }
   .band .box { font-size:13px; }
-  .tag { display:inline-block; padding:1px 7px; margin-right:6px; border:1px solid var(--ember); color:var(--hot); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; }
+  .tag { display:inline-block; padding:1px 8px; margin-right:6px; border-radius:999px; border:1px solid var(--ember); color:var(--hot); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:700; }
   .foot { position:absolute; left:56px; right:56px; bottom:26px; display:flex; justify-content:space-between; color:var(--muted); font-size:12px; letter-spacing:.08em; }
 </style>
 </head>
