@@ -245,7 +245,8 @@ export function computeAoiSeries(parts, meta) {
     hi[d] = Math.round(val * (1 + rel) * 10) / 10;
   }
   const viirsTotal = daily.VIIRS_SNPP.reduce((x, y) => x + y, 0);
-  return { values, lo, hi, cells, lowData: viirsTotal < LOW_DATA_CELLDAYS };
+  const ratios = { aqua_over_terra: Array.from(a.ratio, (x) => Math.round(x * 100) / 100) };
+  return { values, lo, hi, cells, ratios, lowData: viirsTotal < LOW_DATA_CELLDAYS };
 }
 
 export async function calibrateArea({ bbox, polygons }, meta) {
