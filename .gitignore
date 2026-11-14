@@ -5,6 +5,7 @@
 
 # data
 data/
+!app/public/data/
 *.parquet
 *.nc
 *.hdf

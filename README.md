@@ -11,12 +11,14 @@ Built for NASA Space Apps Challenge 2026.
   - **VIIRS** 375m active-fire product from **Suomi NPP** (joint NASA/NOAA mission) and **NOAA-20**
   - Accessed via FIRMS's live area API and per-country annual archive distribution; see [CLAUDE.md](CLAUDE.md) §3 and [pipeline/fetch_and_aggregate.py](pipeline/fetch_and_aggregate.py)/[pipeline/firms_test.py](pipeline/firms_test.py)
 
-(Validation against GFED4.1s, which draws on NASA's MCD64A1 MODIS Burned Area product as an input, is a supplementary cross-check — see `docs/validation_vs_gfed_India.png` — not itself a NASA-operated resource.)
+- **NASA MCD64A1** (MODIS Burned Area, Collection 6.1, 500 m) via the Microsoft Planetary Computer STAC, used as an independent validation of the harmonised series: seasonal climatology r = 0.888, monthly series r = 0.824 over 2000-2025. See [pipeline/validate_against_mcd64a1.py](pipeline/validate_against_mcd64a1.py) and `docs/validation_vs_mcd64a1_India.png`.
+
+(A second cross-check against GFED4.1s, a third-party dataset built on MCD64A1, gives r = 0.931 for the seasonal cycle over 2000-2016; see `docs/validation_vs_gfed_India.png`. GFED is not itself a NASA-operated resource.)
 
 ## Repo layout
 
 - `pipeline/` — Python pipeline: fetch FIRMS data, filter, aggregate to H3 cell-day, cross-sensor calibration, export partitioned Parquet.
-- `app/` — React + Vite frontend: MapLibre GL + deck.gl map, D3/Observable Plot calendar heatmap, DuckDB-WASM for in-browser queries.
+- `app/` — React + Vite frontend: MapLibre GL + deck.gl H3 map, D3 and canvas calendar heatmap, climatology, anomaly and fire-season charts. Run it with `npm --prefix app install && npm --prefix app run dev` (data is pre-exported into `app/public/data/` by `pipeline/export_frontend_data.py`).
 - `docs/` — architecture notes, validation figures, submission assets.
 
 ## Setup

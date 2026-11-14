@@ -18,6 +18,7 @@ Usage:
     python3 pipeline/validate_against_mcd64a1.py --start-year 2000 --end-year 2025
 """
 import argparse
+import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -49,7 +50,17 @@ def tile_bbox_mask(src: rasterio.DatasetReader, key: str) -> np.ndarray:
     return _mask_cache[key]
 
 
-def burned_pixels(item) -> tuple[int, float]:
+def burned_pixels(item, attempts: int = 5) -> tuple[int, float]:
+    for attempt in range(attempts):
+        try:
+            return _burned_pixels_once(item)
+        except rasterio.errors.RasterioIOError:
+            if attempt == attempts - 1:
+                raise
+            time.sleep(2 ** attempt)
+
+
+def _burned_pixels_once(item) -> tuple[int, float]:
     href = item.assets["Burn_Date"].href
     tile_key = item.id.split(".")[2]
     with rasterio.open(href) as src:
