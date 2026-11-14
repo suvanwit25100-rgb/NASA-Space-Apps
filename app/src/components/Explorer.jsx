@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { buildModel, fmtDate, MONTHS, yearSummary } from "../lib/analytics";
 import { calibrateArea, parseGeoJSON } from "../lib/aoi";
 import { loadMapYear, loadSeries } from "../lib/data";
@@ -7,9 +7,9 @@ import CalendarHeatmap from "./CalendarHeatmap";
 import Climatology from "./Climatology";
 import Compare from "./Compare";
 import CriticalPeriods from "./CriticalPeriods";
-import FireMap from "./FireMap";
 import { ArrowDown } from "./Icons";
 
+const FireMap = lazy(() => import("./FireMap"));
 const MAX_VERTICES = 50000;
 const MIN_YEAR = 2001;
 
@@ -384,6 +384,7 @@ export default function Explorer({ regions, meta, cells4 }) {
               <button key={m} className="chip" aria-pressed={mapMonth === i} onClick={() => setMapMonth(i)}>{m}</button>
             ))}
           </div>
+          <Suspense fallback={<div className="map-wrap"><div className="map-badge">Loading map…</div></div>}>
           <FireMap
             cells4={cells4}
             mapYear={mapYear}
@@ -393,6 +394,7 @@ export default function Explorer({ regions, meta, cells4 }) {
             drawing={drawing}
             onDrawn={(bbox) => startCustom({ bbox, source: "rect", name: rectName(bbox) })}
           />
+          </Suspense>
           <p className="map-note">
             Map cells come from whichever sensor was flying that month, so MODIS-era maps are sparser than VIIRS-era ones by design. The
             calendar and charts above are the harmonised, comparable view.
