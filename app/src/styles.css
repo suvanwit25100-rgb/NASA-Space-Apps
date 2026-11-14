@@ -240,3 +240,25 @@ table.prov td { padding: 10px; border-bottom: 1px solid rgba(120,165,210,.08); v
   .section h2 { letter-spacing: 0.02em; }
   .map-wrap { height: 440px; }
 }
+
+/* ---------- custom areas, compare, export ---------- */
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center; }
+.btn-sm {
+  padding: 8px 14px; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+  background: transparent; border: 1px solid var(--steel); transition: all .18s;
+}
+.btn-sm:hover { border-color: var(--ember); background: rgba(255, 138, 31, 0.12); }
+.btn-sm[aria-pressed="true"] { background: rgba(255, 138, 31, 0.25); border-color: var(--ember); }
+.select-wrap select {
+  padding: 8px 12px; font: inherit; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  background: rgba(8, 18, 36, 0.9); color: var(--text); border: 1px solid var(--steel); cursor: pointer;
+}
+.chip-group { display: inline-flex; align-items: stretch; }
+.chip-x { width: 28px; background: rgba(20, 40, 72, 0.5); border: 1px solid var(--line); border-left: 0; cursor: pointer; font-size: 16px; }
+.chip-x:hover { border-color: var(--ember); }
+.warn { margin: 10px 0 0; padding: 8px 12px; font-size: 12.5px; color: var(--ember-hot); border: 1px solid rgba(255, 199, 96, 0.35); background: rgba(255, 138, 31, 0.07); }
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; }
+.toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 80; max-width: calc(100vw - 32px);
+  padding: 12px 20px; background: rgba(4, 10, 22, 0.97); border: 1px solid var(--ember); font-size: 13px; font-weight: 600;
+}

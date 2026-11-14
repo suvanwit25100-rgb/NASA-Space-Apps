@@ -120,10 +120,15 @@ def main() -> None:
     parser.add_argument("--start-year", type=int, default=2000)
     parser.add_argument("--end-year", type=int, default=2025)
     parser.add_argument("--data-dir", default=str(REPO_ROOT / "data"))
+    parser.add_argument("--reuse", action="store_true", help="reuse the saved GFED monthly CSV instead of re-downloading")
     args = parser.parse_args()
 
     data_dir = Path(args.data_dir)
-    gfed_monthly = run(args.start_year, args.end_year, data_dir)
+    saved = data_dir / f"gfed_monthly_India_{args.start_year}_{args.end_year}.csv"
+    if args.reuse and saved.exists():
+        gfed_monthly = pd.read_csv(saved, index_col=0, parse_dates=True)["burned_area_km2"]
+    else:
+        gfed_monthly = run(args.start_year, args.end_year, data_dir)
 
     harmonised_path = data_dir / f"harmonised_monthly_India_{args.start_year}_{args.end_year}.csv"
     harmonised = pd.read_csv(harmonised_path, index_col=0, parse_dates=True)["harmonised_burning_cell_days"]

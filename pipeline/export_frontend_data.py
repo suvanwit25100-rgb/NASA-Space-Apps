@@ -54,9 +54,10 @@ def monthly_ratio(num: pd.Series, den: pd.Series):
 def aoi_series(daily: pd.DataFrame) -> dict:
     """daily: index=date, columns MODIS_TERRA/MODIS_AQUA/VIIRS_SNPP (cell-days/day)."""
     monthly = daily.resample("MS").sum()
-    v_over_a, v_over_a_rel = monthly_ratio(monthly["VIIRS_SNPP"][monthly.index >= "2012-01-01"],
+    # full months only: VIIRS starts 20 Jan 2012 and Aqua 4 Jul 2002, so their first months are partial
+    v_over_a, v_over_a_rel = monthly_ratio(monthly["VIIRS_SNPP"][monthly.index >= "2012-02-01"],
                                            monthly["MODIS_AQUA"])
-    pre = monthly.index < "2012-01-01"
+    pre = (monthly.index >= "2002-08-01") & (monthly.index < "2012-01-01")
     a_over_t, a_over_t_rel = monthly_ratio(monthly["MODIS_AQUA"][pre], monthly["MODIS_TERRA"][pre])
 
     days = pd.date_range(AXIS_START, daily.index.max(), freq="D")
@@ -144,6 +145,21 @@ def main() -> None:
     arr["d"] = agg["days"].clip(upper=31).to_numpy()
     (out / "cell_months.bin").write_bytes(arr.tobytes())
     print(f"cells={len(cells)} cell-month rows={len(arr)} bin={arr.nbytes/1e6:.1f}MB")
+
+    # cell-days per sensor for in-browser calibration of custom areas: for each sensor,
+    # uint16 cell indices then uint16 day indices (days since 2000-01-01), sorted by day
+    parts, counts = [], {}
+    for sensor in ["MODIS_TERRA", "MODIS_AQUA", "VIIRS_SNPP"]:
+        sub = df[df["sensor"] == sensor].copy()
+        sub["day"] = (sub["date"] - AXIS_START).dt.days
+        sub = sub.sort_values(["day", "h3_cell"])
+        parts.append(sub["h3_cell"].map(cell_idx).to_numpy().astype("<u2").tobytes())
+        parts.append(sub["day"].to_numpy().astype("<u2").tobytes())
+        counts[sensor] = len(sub)
+    (out / "cell_days.bin").write_bytes(b"".join(parts))
+    meta["cellDays"] = counts
+    (out / "aois.json").write_text(json.dumps({"meta": meta, "aois": aois_out}, separators=(",", ":")))
+    print("cell_days.bin", counts)
 
 
 if __name__ == "__main__":

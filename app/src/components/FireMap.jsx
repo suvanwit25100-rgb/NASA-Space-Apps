@@ -12,12 +12,15 @@ maplibregl.setWorkerUrl(workerUrl);
 
 const STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
-export default function FireMap({ cells, cm, aoi, year, month }) {
+export default function FireMap({ cells, cm, aoi, year, month, drawing, onDrawn }) {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const overlayRef = useRef(null);
   const [hover, setHover] = useState(null);
   const [ready, setReady] = useState(false);
+  const [draft, setDraft] = useState(null);
+  const onDrawnRef = useRef(onDrawn);
+  onDrawnRef.current = onDrawn;
 
   const byMonth = useMemo(() => {
     const arr = Array.from({ length: 12 * 27 }, () => []);
@@ -60,10 +63,44 @@ export default function FireMap({ cells, cm, aoi, year, month }) {
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !ready) return;
+    if (!map || !ready || aoi.noFit) return;
     const [w, s, e, n] = aoi.bbox;
     map.fitBounds([[w, s], [e, n]], { padding: 40, duration: 900, maxZoom: 7 });
   }, [aoi, ready]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready || !drawing) return undefined;
+    let start = null;
+    const canvas = map.getCanvas();
+    canvas.style.cursor = "crosshair";
+    map.dragPan.disable();
+    const box = (a, b) => [Math.min(a.lng, b.lng), Math.min(a.lat, b.lat), Math.max(a.lng, b.lng), Math.max(a.lat, b.lat)];
+    const down = (e) => {
+      start = e.lngLat;
+    };
+    const move = (e) => {
+      if (start) setDraft(box(start, e.lngLat));
+    };
+    const up = (e) => {
+      if (!start) return;
+      const b = box(start, e.lngLat);
+      start = null;
+      setDraft(null);
+      if (b[2] - b[0] > 0.15 && b[3] - b[1] > 0.15) onDrawnRef.current?.(b);
+    };
+    map.on("mousedown", down);
+    map.on("mousemove", move);
+    map.on("mouseup", up);
+    return () => {
+      map.off("mousedown", down);
+      map.off("mousemove", move);
+      map.off("mouseup", up);
+      map.dragPan.enable();
+      canvas.style.cursor = "";
+      setDraft(null);
+    };
+  }, [drawing, ready]);
 
   useEffect(() => {
     const overlay = overlayRef.current;
@@ -73,11 +110,22 @@ export default function FireMap({ cells, cm, aoi, year, month }) {
       layers: [
         new PolygonLayer({
           id: "aoi",
-          data: [{ p: [[w, s], [e, s], [e, n], [w, n]] }],
+          data: aoi.polygons ? aoi.polygons.map((p) => ({ p })) : [{ p: [[[w, s], [e, s], [e, n], [w, n]]] }],
           getPolygon: (d) => d.p,
           filled: false,
           stroked: true,
           getLineColor: [159, 208, 255, 200],
+          getLineWidth: 2,
+          lineWidthUnits: "pixels",
+        }),
+        new PolygonLayer({
+          id: "draft",
+          data: draft ? [{ p: [[[draft[0], draft[1]], [draft[2], draft[1]], [draft[2], draft[3]], [draft[0], draft[3]]]] }] : [],
+          getPolygon: (d) => d.p,
+          filled: true,
+          getFillColor: [255, 138, 31, 40],
+          stroked: true,
+          getLineColor: [255, 138, 31, 255],
           getLineWidth: 2,
           lineWidthUnits: "pixels",
         }),
@@ -97,7 +145,7 @@ export default function FireMap({ cells, cm, aoi, year, month }) {
         }),
       ],
     });
-  }, [data, aoi, ready]);
+  }, [data, aoi, ready, draft]);
 
   const era = year >= 2012 ? "VIIRS 375 m" : year >= 2003 ? "MODIS Aqua 1 km" : "MODIS Terra 1 km";
   const label = month == null ? `${year}, full year` : `${MONTHS[month]} ${year}`;
@@ -109,6 +157,7 @@ export default function FireMap({ cells, cm, aoi, year, month }) {
         <div className="map-badge">
           Showing <b>{label}</b> · {data.rows.length.toLocaleString()} burning cells · <span style={{ color: "#8fa8c4" }}>{era}</span>
         </div>
+        {drawing && <div className="map-badge" style={{ top: 52, borderColor: "#ff8a1f" }}>Click and drag on the map to draw your area</div>}
         {hover && (
           <div className="map-tip" style={{ left: hover.x, top: hover.y }}>
             <b>{hover.v}</b> burning day{hover.v === 1 ? "" : "s"} in this ~250 km² cell

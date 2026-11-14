@@ -134,6 +134,7 @@ export default function CalendarHeatmap({ model, year, mode, onSelect }) {
     <div className="chart" ref={wrapRef}>
       <canvas
         ref={canvasRef}
+        className="cal-canvas"
         role="img"
         aria-label={`Calendar heatmap of burning activity, one row per year from ${years[0]} to ${years[years.length - 1]}, one column per day of year. Hover or click a day for details.`}
         style={{ cursor: "crosshair" }}

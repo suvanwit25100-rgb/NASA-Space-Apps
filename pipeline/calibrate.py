@@ -70,15 +70,16 @@ def main() -> None:
     viirs = monthly_cell_days(cell_days, "VIIRS_SNPP")
 
     # Step A: Aqua -> VIIRS ratio, learned on their overlap (2012+)
-    viirs_over_aqua = seasonal_ratio(viirs, aqua)
+    # full months only: VIIRS starts 20 Jan 2012 and Aqua 4 Jul 2002, so their first months are partial
+    viirs_over_aqua = seasonal_ratio(viirs[viirs.index >= pd.Timestamp("2012-02-01")], aqua)
     print("VIIRS/Aqua seasonal ratio by month:")
     print(viirs_over_aqua)
 
     # Step B: Terra -> Aqua ratio, learned on their overlap (2002-2011, pre-VIIRS)
     pre_viirs_cutoff = pd.Timestamp("2012-01-01")
-    aqua_over_terra = seasonal_ratio(
-        aqua[aqua.index < pre_viirs_cutoff], terra[terra.index < pre_viirs_cutoff]
-    )
+    overlap_start = pd.Timestamp("2002-08-01")
+    in_overlap = lambda s: s[(s.index >= overlap_start) & (s.index < pre_viirs_cutoff)]
+    aqua_over_terra = seasonal_ratio(in_overlap(aqua), in_overlap(terra))
     print("\nAqua/Terra seasonal ratio by month (pre-2012 overlap):")
     print(aqua_over_terra)
 
