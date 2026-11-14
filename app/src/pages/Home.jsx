@@ -143,6 +143,15 @@ export default function Home({ nCountries = 209 }) {
           </div>
         </section>
 
+        <Reveal className="smoke-band">
+          <div className="smoke-copy">
+            <p className="eyebrow caps">The demo question</p>
+            <h2 className="front-h">When does <em>your</em> region burn?</h2>
+            <p className="front-lead">Pick Punjab and Haryana to see two separate fire seasons, spring wheat residue and autumn paddy stubble, and how this year compares with the last twenty-five.</p>
+            <Link to="/seasons" className="btn primary">See fire seasons <ArrowRight width="16" height="16" /></Link>
+          </div>
+        </Reveal>
+
         <section className="front-section" aria-label="Data and honesty">
           <Reveal as="p" className="eyebrow caps">Where it comes from</Reveal>
           <Reveal as="h2" className="front-h" delay={80}>Built on NASA data, <em>openly.</em></Reveal>

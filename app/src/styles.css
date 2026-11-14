@@ -398,3 +398,9 @@ table.prov td { padding: 12px; border-bottom: 1px solid rgba(230, 200, 170, 0.08
 .page-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,16,.55), rgba(11,12,16,.72) 45%, rgba(11,12,16,.9)); }
 @keyframes bgIn { from { opacity: 0; } to { opacity: 1; } }
 @media (max-width: 700px) { .page-bg { background-position: 50% 20%; } }
+
+.smoke-band { max-width: 1120px; margin: 56px auto 0; border-radius: 28px; overflow: hidden; min-height: 420px; display: flex; align-items: flex-end; position: relative; background: #0b0c10 url(/img/smoke.webp) center 35% / cover no-repeat; border: 1px solid var(--line); }
+.smoke-band::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,12,16,.88), rgba(11,12,16,.35) 70%, rgba(11,12,16,.1)); }
+.smoke-copy { position: relative; padding: 48px clamp(24px, 5vw, 56px); max-width: 640px; }
+.smoke-copy .front-lead { margin-bottom: 24px; }
+@media (max-width: 700px) { .smoke-band { min-height: 480px; border-radius: 22px; } }
