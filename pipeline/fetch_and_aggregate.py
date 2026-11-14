@@ -36,23 +36,28 @@ import requests
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ARCHIVE_URL = "https://firms.modaps.eosdis.nasa.gov/data/country/{sensor}/{year}/{sensor}_{year}_{country}.csv"
 
-# sensor key -> (archive slug, first year available, confidence filter)
-SENSORS = {
-    "MODIS": {
-        "slug": "modis",
+# archive slug -> (first year available, confidence filter, satellite->sensor-label split)
+# MODIS is split into MODIS_TERRA / MODIS_AQUA because calibration (CLAUDE.md §4 step 4)
+# pairs Aqua (~1:30pm/am overpass) against VIIRS S-NPP (~1:30pm/am overpass) specifically —
+# Terra (~10:30am/pm) is a different orbit and would bias the ratio. Aqua launched May 2002,
+# so 2000-2001 is Terra-only.
+ARCHIVES = {
+    "modis": {
         "first_year": 2000,
         "drop_low_confidence": lambda df: df["confidence"].astype(int) >= 30,
+        "satellite_to_sensor": {"Terra": "MODIS_TERRA", "Aqua": "MODIS_AQUA"},
     },
-    "VIIRS_SNPP": {
-        "slug": "viirs-snpp",
+    "viirs-snpp": {
         "first_year": 2012,
         "drop_low_confidence": lambda df: df["confidence"] != "l",
+        "satellite_to_sensor": None,  # single sensor, no split needed
+        "sensor_name": "VIIRS_SNPP",
     },
 }
 
 
-def fetch_year(sensor_slug: str, year: int, country: str) -> pd.DataFrame:
-    url = ARCHIVE_URL.format(sensor=sensor_slug, year=year, country=country)
+def fetch_year(archive_slug: str, year: int, country: str) -> pd.DataFrame:
+    url = ARCHIVE_URL.format(sensor=archive_slug, year=year, country=country)
     resp = requests.get(url, timeout=120)
     if resp.status_code == 404:
         return pd.DataFrame()
@@ -63,12 +68,24 @@ def fetch_year(sensor_slug: str, year: int, country: str) -> pd.DataFrame:
     return pd.read_csv(StringIO(text))
 
 
-def filter_vegetation_fire(df: pd.DataFrame, sensor: str) -> pd.DataFrame:
+def filter_vegetation_fire(df: pd.DataFrame, archive_slug: str) -> pd.DataFrame:
     if df.empty:
         return df
     df = df[df["type"] == 0]  # vegetation fire only; drop volcano/static/offshore
-    df = df[SENSORS[sensor]["drop_low_confidence"](df)]
+    df = df[ARCHIVES[archive_slug]["drop_low_confidence"](df)]
     return df
+
+
+def split_by_sensor(df: pd.DataFrame, archive_slug: str) -> dict:
+    """Return {sensor_label: sub-dataframe}, splitting MODIS by satellite."""
+    cfg = ARCHIVES[archive_slug]
+    if cfg["satellite_to_sensor"] is None:
+        return {cfg["sensor_name"]: df}
+    return {
+        label: df[df["satellite"] == sat]
+        for sat, label in cfg["satellite_to_sensor"].items()
+        if (df["satellite"] == sat).any()
+    }
 
 
 def aggregate_to_cell_days(df: pd.DataFrame, sensor: str, res: int) -> pd.DataFrame:
@@ -96,27 +113,30 @@ def daily_raw_counts(df: pd.DataFrame, sensor: str) -> pd.Series:
 def run(country: str, start_year: int, end_year: int, res: int, out_dir: Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     cell_day_chunks = []
-    raw_daily_series = {}
+    raw_daily_by_sensor = {}
 
-    for sensor, cfg in SENSORS.items():
-        sensor_raw_daily = []
+    for archive_slug, cfg in ARCHIVES.items():
         for year in range(max(start_year, cfg["first_year"]), end_year + 1):
-            print(f"[{sensor}] fetching {country} {year} ...")
-            raw = fetch_year(cfg["slug"], year, country)
+            print(f"[{archive_slug}] fetching {country} {year} ...")
+            raw = fetch_year(archive_slug, year, country)
             if raw.empty:
                 print(f"  (no data / archive not yet published for {year})")
                 continue
-            filtered = filter_vegetation_fire(raw, sensor)
+            filtered = filter_vegetation_fire(raw, archive_slug)
             print(f"  {len(raw)} raw -> {len(filtered)} after type+confidence filter")
 
-            sensor_raw_daily.append(daily_raw_counts(filtered, sensor))
-            cell_day_chunks.append(aggregate_to_cell_days(filtered, sensor, res))
+            for sensor, sensor_df in split_by_sensor(filtered, archive_slug).items():
+                if sensor_df.empty:
+                    continue
+                raw_daily_by_sensor.setdefault(sensor, []).append(daily_raw_counts(sensor_df, sensor))
+                cell_day_chunks.append(aggregate_to_cell_days(sensor_df, sensor, res))
 
             # discard raw/filtered frames for this year now that they're summarised
             del raw, filtered
 
-        if sensor_raw_daily:
-            raw_daily_series[sensor] = pd.concat(sensor_raw_daily).sort_index()
+    raw_daily_series = {
+        sensor: pd.concat(parts).sort_index() for sensor, parts in raw_daily_by_sensor.items()
+    }
 
     cell_days = pd.concat(cell_day_chunks, ignore_index=True) if cell_day_chunks else pd.DataFrame()
     cell_days_path = out_dir / f"cell_days_{country}_{start_year}_{end_year}_res{res}.parquet"

@@ -17,4 +17,4 @@ cp .env.example .env
 # then fill in FIRMS_MAP_KEY in .env (get a free key at https://firms.modaps.eosdis.nasa.gov/api/map_key/)
 ```
 
-See [CLAUDE.md](CLAUDE.md) for the full plan, data caveats and method.
+See [CLAUDE.md](CLAUDE.md) for the full plan, data caveats and method, and [AI_USAGE.md](AI_USAGE.md) for the SI (AI) tool usage disclosure required by the NASA Space Apps Challenge rules.
