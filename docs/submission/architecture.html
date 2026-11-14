@@ -13,9 +13,9 @@
   h1 span { color:var(--ember); }
   .sub { margin:6px 0 26px; color:var(--muted); font-size:15px; letter-spacing:.04em; }
   .row { display:grid; grid-template-columns: 1fr 70px 1.15fr 70px 1fr 70px 1fr; align-items:stretch; }
-  .col { display:flex; flex-direction:column; gap:12px; }
+  .col { display:flex; flex-direction:column; gap:9px; }
   .col > h2 { margin:0 0 4px; font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--ember); font-weight:700; }
-  .box { background:var(--panel); border:1px solid var(--line); padding:14px 16px; font-size:13.5px; line-height:1.4; border-radius:18px; }
+  .box { background:var(--panel); border:1px solid var(--line); padding:11px 14px; font-size:12.8px; line-height:1.4; border-radius:18px; }
   .box b { display:block; font-size:14px; margin-bottom:3px; }
   .box small { color:var(--muted); display:block; margin-top:3px; font-size:12px; }
   .nasa { border-color:var(--ember); box-shadow: 0 0 0 1px rgba(255,122,47,.35) inset; }
@@ -51,6 +51,7 @@
       <div class="box"><b>series/*.json.gz</b>Calibrated daily series for 209 countries, the world and 16 regions (5 MB total)</div>
       <div class="box"><b>map/*.bin.gz</b>Yearly global hexagon layers (7 MB for 26 years)</div>
       <div class="box"><b>tiles/*.bin.gz</b>5° cell-day tiles so any drawn area can be calibrated in the browser</div>
+      <div class="box nasa"><b><span class="tag">Daily</span>nrt.json + alerts</b>A GitHub Action reads the newest NASA near-real-time week, writes nrt.json and pushes alerts through ntfy.sh</div>
       <div class="box"><b>Firebase Hosting (CDN)</b>globalburnlog.earth, HTTPS, always on, no login</div>
     </div>
     <div class="arrow">→</div>
@@ -59,12 +60,13 @@
       <div class="box"><b>Calendar heatmap</b>Year × day, hover for value, anomaly and confidence</div>
       <div class="box"><b>Climatology and seasons</b>Median year, typical range, fire seasons per year</div>
       <div class="box"><b>MapLibre + deck.gl map</b>H3 hexagons linked to the calendar</div>
-      <div class="box"><b>Custom areas</b>Draw, upload GeoJSON, compare, export CSV or PNG, share a link</div>
+      <div class="box"><b>Verdict and latest week</b>Is this year unusual, is this week unusual, watchlist and phone alerts</div>
+      <div class="box"><b>Custom areas</b>Draw, upload GeoJSON, compare, export CSV, PNG or a one-page report</div>
     </div>
   </div>
 
   <div class="band">
-    <div class="box"><b>Validation (independent of the pipeline)</b>Seasonal cycle vs NASA MCD64A1: r = 0.89 (India, 2000 to 2025). Vs GFED burned area in 12 regions worldwide: 9 of 12 at r ≥ 0.90 (southern Africa 0.99, Siberia 0.96, Mediterranean 0.95). Weakest where a few huge fires dominate burned area (California, Boreal Canada, Southeast Australia), which is stated on the site.</div>
+    <div class="box"><b>Validation (independent of the pipeline)</b>Seasonal cycle vs NASA MCD64A1: r = 0.89 (India). Vs GFED burned area in 12 regions: 9 of 12 at r ≥ 0.90. Hold-out test, one year left out at a time: the world's annual total is predicted within a median 2%. Weakest where a few huge fires dominate (California, Boreal Canada, Southeast Australia); stated on the site.</div>
     <div class="box"><b>Reproducible</b>Every step is a script in the repository. The historical archive needs no API key; the in-browser calibration is a line-for-line port of the Python and was checked to give identical results.</div>
   </div>
   <div class="foot"><span>Built for the NASA Space Apps Challenge 2026 · built with AI assistance (Claude); goals and design decisions by the team</span><span>globalburnlog.earth</span></div>
