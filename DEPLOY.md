@@ -19,7 +19,7 @@ The custom-area tiles (`app/public/data/tiles/`, ~110 MB) are gitignored, so dep
 
 ## Custom domain
 Firebase console > Hosting > Add custom domain. It shows a TXT record (ownership) and two A records for the apex; add them
-at the DNS provider (GoDaddy: My Products > DNS). Add the same for `www` if wanted. HTTPS is provisioned automatically
+at the DNS provider (Porkbun: Domain Management > Details > DNS Records). Add the same for `www` if wanted. HTTPS is provisioned automatically
 once DNS resolves (minutes to a few hours).
 
 ## Free-tier note
