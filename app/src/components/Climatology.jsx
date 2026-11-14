@@ -13,8 +13,8 @@ function MonthAxis({ x, h }) {
         const px = x(monthStartDoy(2001, i));
         return (
           <g key={i}>
-            <line x1={px} x2={px} y1={0} y2={h} stroke="rgba(120,165,210,0.12)" />
-            <text x={px + 4} y={h + 16} fill="#8fa8c4" fontSize="10" fontWeight="600">{m.toUpperCase()}</text>
+            <line x1={px} x2={px} y1={0} y2={h} stroke="rgba(230,200,170,0.1)" />
+            <text x={px + 4} y={h + 16} fill="#9d8f82" fontSize="10" fontWeight="600">{m.toUpperCase()}</text>
           </g>
         );
       })}
@@ -77,24 +77,24 @@ export default function Climatology({ model, year }) {
             <g transform={`translate(${M.l},${M.t})`}>
               {y.ticks(4).map((t) => (
                 <g key={t}>
-                  <line x1={0} x2={iw} y1={y(t)} y2={y(t)} stroke="rgba(120,165,210,0.12)" />
-                  <text x={-8} y={y(t) + 3} textAnchor="end" fill="#8fa8c4" fontSize="10">{t}</text>
+                  <line x1={0} x2={iw} y1={y(t)} y2={y(t)} stroke="rgba(230,200,170,0.1)" />
+                  <text x={-8} y={y(t) + 3} textAnchor="end" fill="#9d8f82" fontSize="10">{t}</text>
                 </g>
               ))}
               <MonthAxis x={x} h={ih} />
-              {seasons.map((se, i) => <rect key={`b${i}`} x={x(se.start)} y={0} width={Math.max(x(se.end) - x(se.start), 1)} height={ih} fill={i === 0 ? "rgba(255,199,96,0.1)" : "rgba(255,199,96,0.05)"} />)}
-              <path d={paths.band} fill="rgba(95,176,255,0.2)" />
-              <path d={paths.median} fill="none" stroke="#9fd0ff" strokeWidth="1.6" />
-              {year < 2012 && <path d={paths.unc} fill="rgba(255,138,31,0.22)" />}
-              <path d={paths.cur} fill="none" stroke="#ff8a1f" strokeWidth="2.2" />
+              {seasons.map((se, i) => <rect key={`b${i}`} x={x(se.start)} y={0} width={Math.max(x(se.end) - x(se.start), 1)} height={ih} fill={i === 0 ? "rgba(255,184,110,0.1)" : "rgba(255,184,110,0.05)"} />)}
+              <path d={paths.band} fill="rgba(255,184,110,0.18)" />
+              <path d={paths.median} fill="none" stroke="#ffb869" strokeWidth="1.6" />
+              {year < 2012 && <path d={paths.unc} fill="rgba(255,122,47,0.22)" />}
+              <path d={paths.cur} fill="none" stroke="#ff7a2f" strokeWidth="2.2" />
               {seasons.map((se, i) => (
                 <g key={`m${i}`}>
-                  <line x1={x(se.start)} x2={x(se.start)} y1={0} y2={ih} stroke="#ffc760" strokeDasharray="3 3" opacity={i === 0 ? 1 : 0.5} />
-                  <line x1={x(se.end)} x2={x(se.end)} y1={0} y2={ih} stroke="#ffc760" strokeDasharray="3 3" opacity={i === 0 ? 1 : 0.5} />
-                  <circle cx={x(se.peak)} cy={y(model.byYear[year].sm[se.peak])} r={i === 0 ? 4.5 : 3.5} fill="#fff" stroke="#ff8a1f" strokeWidth="2" />
+                  <line x1={x(se.start)} x2={x(se.start)} y1={0} y2={ih} stroke="#ffb869" strokeDasharray="3 3" opacity={i === 0 ? 1 : 0.5} />
+                  <line x1={x(se.end)} x2={x(se.end)} y1={0} y2={ih} stroke="#ffb869" strokeDasharray="3 3" opacity={i === 0 ? 1 : 0.5} />
+                  <circle cx={x(se.peak)} cy={y(model.byYear[year].sm[se.peak])} r={i === 0 ? 4.5 : 3.5} fill="#f5efe6" stroke="#ff7a2f" strokeWidth="2" />
                 </g>
               ))}
-              {hoverD != null && <line x1={x(hoverD)} x2={x(hoverD)} y1={0} y2={ih} stroke="#fff" opacity="0.7" />}
+              {hoverD != null && <line x1={x(hoverD)} x2={x(hoverD)} y1={0} y2={ih} stroke="#f5efe6" opacity="0.7" />}
             </g>
           </svg>
           {hoverD != null && (
@@ -106,27 +106,27 @@ export default function Climatology({ model, year }) {
             </div>
           )}
           <div className="legend" style={{ marginTop: 4 }}>
-            <span><i style={{ background: "#ff8a1f", height: 3 }} />{year} (7-day mean)</span>
-            <span><i style={{ background: "#9fd0ff", height: 3 }} />Median year</span>
-            <span><i style={{ background: "rgba(95,176,255,0.4)" }} />Typical range (10th to 90th percentile)</span>
-            {year < 2012 && <span><i style={{ background: "rgba(255,138,31,0.4)" }} />Calibration uncertainty</span>}
+            <span><i style={{ background: "#ff7a2f", height: 3 }} />{year} (7-day mean)</span>
+            <span><i style={{ background: "#ffb869", height: 3 }} />Median year</span>
+            <span><i style={{ background: "rgba(255,184,110,0.35)" }} />Typical range (10th to 90th percentile)</span>
+            {year < 2012 && <span><i style={{ background: "rgba(255,122,47,0.4)" }} />Calibration uncertainty</span>}
           </div>
-          <p className="caps" style={{ margin: "18px 0 4px", color: "#8fa8c4" }}>Weekly anomaly in {year}: how unusual each week was</p>
+          <p className="caps" style={{ margin: "18px 0 4px", color: "#9d8f82" }}>Weekly anomaly in {year}: how unusual each week was</p>
           <svg height={WH} role="img" aria-label={`Weekly anomaly bars for ${year}, in standard deviations from other years.`}>
             <g transform={`translate(${M.l},8)`}>
-              <line x1={0} x2={iw} y1={wih / 2} y2={wih / 2} stroke="rgba(120,165,210,0.4)" />
+              <line x1={0} x2={iw} y1={wih / 2} y2={wih / 2} stroke="rgba(230,200,170,0.3)" />
               {wk.map((d) => {
                 if (d.z == null) return null;
                 const z = Math.max(-3, Math.min(3, d.z));
                 const hh = (Math.abs(z) / 3) * (wih / 2);
                 return (
-                  <rect key={d.week} x={zx(d.week * 7)} y={z >= 0 ? wih / 2 - hh : wih / 2} width={bw} height={Math.max(hh, 0.5)} fill={z >= 0 ? "#ff8a1f" : "#4b9bff"} opacity={0.4 + Math.abs(z) / 5}>
+                  <rect key={d.week} x={zx(d.week * 7)} y={z >= 0 ? wih / 2 - hh : wih / 2} width={bw} height={Math.max(hh, 0.5)} fill={z >= 0 ? "#ff7a2f" : "#6fb3ff"} opacity={0.4 + Math.abs(z) / 5}>
                     <title>{`Week of ${fmtDate(year, d.week * 7)}: ${d.z >= 0 ? "+" : ""}${d.z.toFixed(1)}σ`}</title>
                   </rect>
                 );
               })}
-              <text x={-8} y={10} textAnchor="end" fill="#8fa8c4" fontSize="10">+3σ</text>
-              <text x={-8} y={wih} textAnchor="end" fill="#8fa8c4" fontSize="10">−3σ</text>
+              <text x={-8} y={10} textAnchor="end" fill="#9d8f82" fontSize="10">+3σ</text>
+              <text x={-8} y={wih} textAnchor="end" fill="#9d8f82" fontSize="10">−3σ</text>
               <MonthAxis x={zx} h={wih} />
             </g>
           </svg>

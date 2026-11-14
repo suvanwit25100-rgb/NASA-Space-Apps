@@ -1,51 +1,101 @@
 import { useEffect, useState } from "react";
-import { loadCells4, loadRegions, loadSky } from "./lib/data";
 import Nav from "./components/Nav";
-import Hero from "./components/Hero";
-import Explorer from "./components/Explorer";
-import Method from "./components/Method";
-import About from "./components/About";
+import Tour from "./components/Tour";
+import { loadCells4, loadRegions, loadSky } from "./lib/data";
+import { navigate, useRoute } from "./lib/router";
+import { TOUR } from "./lib/tour";
+import AboutPage from "./pages/AboutPage";
+import CalendarPage from "./pages/CalendarPage";
+import ComparePage from "./pages/ComparePage";
+import Home from "./pages/Home";
+import MapPage from "./pages/MapPage";
+import MethodPage from "./pages/MethodPage";
+import SeasonsPage from "./pages/SeasonsPage";
+import { ExplorerProvider, useExplorer } from "./state/Explorer";
+
+function SiteFooter() {
+  return (
+    <footer className="footer">
+      <p>Fire detections: NASA FIRMS (MODIS, VIIRS). Validation: NASA MCD64A1 and GFED4.1s. Basemap: © OpenStreetMap contributors © CARTO.</p>
+      <p>Global Burn Log is a hackathon project; do not use it for operational emergency decisions.</p>
+    </footer>
+  );
+}
+
+function RoutedPage({ route }) {
+  switch (route) {
+    case "/calendar": return <CalendarPage />;
+    case "/seasons": return <SeasonsPage />;
+    case "/map": return <MapPage />;
+    case "/compare": return <ComparePage />;
+    case "/method": return <MethodPage />;
+    case "/about": return <AboutPage />;
+    default: return null;
+  }
+}
+
+function TourMount() {
+  const e = useExplorer();
+  if (e.tourStep == null) return null;
+  const steps = TOUR.map((t) => ({ id: t.id, title: t.title, body: t.body(e.tourCtx) }));
+  return (
+    <Tour
+      index={e.tourStep}
+      steps={steps}
+      onBack={() => e.setTourStep((i) => Math.max(i - 1, 0))}
+      onNext={() => e.setTourStep((i) => Math.min(i + 1, TOUR.length - 1))}
+      onClose={() => e.setTourStep(null)}
+    />
+  );
+}
+
+function Toast() {
+  const e = useExplorer();
+  return e.toast ? <div className="toast" role="status">{e.toast}</div> : null;
+}
 
 export default function App() {
+  const route = useRoute();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [tourKey, setTourKey] = useState(0);
-
   useEffect(() => {
     Promise.all([loadRegions(), loadCells4(), loadSky()])
       .then(([r, cells4, sky]) => setData({ ...r, cells4, sky }))
       .catch((e) => setError(e.message));
   }, []);
 
-  // section links like /#method point at content that renders after the data loads, so scroll once it exists
+  // first visit lands on the home page; a tour link opens its page directly
   useEffect(() => {
-    if (!data || !window.location.hash) return;
-    const el = document.querySelector(window.location.hash);
-    if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: "instant", block: "start" }));
-  }, [data]);
+    if (window.location.pathname === "/" && new URLSearchParams(window.location.search).get("tour") === "1") {
+      navigate(TOUR[0].route + "?tour=1", { query: false, replace: true });
+    }
+  }, []);
 
-  const nCountries = data ? data.regions.filter((r) => r.kind === "country").length : 0;
-  const stats = data && [
-    { value: "25", label: "Years of record" },
-    { value: "3", label: "Satellite sensors" },
-    { value: String(nCountries), label: "Countries" },
-  ];
+  if (!data && !error) {
+    return (
+      <>
+        <Nav route={route} />
+        <main className="page"><div className="skeleton">Loading the fire record…</div></main>
+      </>
+    );
+  }
+  if (error) {
+    return (
+      <>
+        <Nav route={route} />
+        <main className="page"><div className="error">Could not load the data: {error}</div></main>
+      </>
+    );
+  }
+  const nCountries = data.regions.filter((r) => r.kind === "country").length;
 
   return (
-    <>
-      <Nav />
-      <main>
-        <Hero cells4={data?.cells4} sky={data?.sky} stats={stats} onTour={() => setTourKey((k) => k + 1)} />
-        {error && <div className="section"><div className="error">Could not load the data: {error}</div></div>}
-        {!data && !error && <div className="section"><div className="skeleton">Loading fire record…</div></div>}
-        {data && <Explorer regions={data.regions} meta={data.meta} cells4={data.cells4} tourKey={tourKey} />}
-        <Method />
-        <About />
-      </main>
-      <footer className="footer">
-        <p>Fire detections: NASA FIRMS (MODIS, VIIRS). Validation: NASA MCD64A1 and GFED4.1s. Basemap: © OpenStreetMap contributors © CARTO.</p>
-        <p>Global Burn Log is a hackathon project; do not use it for operational emergency decisions.</p>
-      </footer>
-    </>
+    <ExplorerProvider data={data}>
+      <Nav route={route} />
+      {route === "/" ? <Home nCountries={nCountries} /> : <RoutedPage route={route} />}
+      {route !== "/" && <SiteFooter />}
+      <TourMount />
+      <Toast />
+    </ExplorerProvider>
   );
 }

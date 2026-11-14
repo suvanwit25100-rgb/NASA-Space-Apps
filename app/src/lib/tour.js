@@ -39,6 +39,7 @@ export const TOUR = [
   {
     id: "calendar",
     title: "A 25-year fire calendar",
+    route: "/calendar",
     target: "calendar",
     apply: ({ maxYear }) => ({ aoi: HOME, year: maxYear, mode: "activity", month: null, cmp: "" }),
     body: () =>
@@ -47,6 +48,7 @@ export const TOUR = [
   {
     id: "autumn",
     title: "When does the autumn burn start?",
+    route: "/seasons",
     target: "climatology",
     apply: ({ maxYear }) => ({ aoi: HOME, year: maxYear, mode: "activity", month: null, cmp: "" }),
     body: ({ models, year }) => {
@@ -59,6 +61,7 @@ export const TOUR = [
   {
     id: "anomaly",
     title: "Was this year unusual?",
+    route: "/calendar",
     target: "calendar",
     apply: ({ maxYear }) => ({ aoi: HOME, year: maxYear, mode: "anomaly", month: null, cmp: "" }),
     body: ({ models, year }) => {
@@ -72,6 +75,7 @@ export const TOUR = [
   {
     id: "map",
     title: "Where did it burn?",
+    route: "/map",
     target: "map",
     apply: ({ models, year, maxYear }) => {
       const m = models[HOME];
@@ -88,6 +92,7 @@ export const TOUR = [
   {
     id: "compare",
     title: "Compare with another part of the world",
+    route: "/compare",
     target: "compare",
     apply: ({ maxYear }) => ({ aoi: HOME, year: maxYear, mode: "activity", month: null, cmp: COMPARE }),
     body: ({ models, year }) => {
@@ -100,9 +105,10 @@ export const TOUR = [
   {
     id: "yours",
     title: "Now make it yours",
-    target: "controls",
+    route: "/map",
+    target: "area",
     apply: ({ maxYear }) => ({ aoi: HOME, year: maxYear, mode: "activity", month: null, cmp: "" }),
     body: () =>
-      "Search any of 209 countries, draw an area on the map, or upload a GeoJSON outline. Copy the link to share this exact view, or download the data as a CSV and the calendar as an image.",
+      "Search any of 209 countries, draw an area on the map, or upload a GeoJSON outline. On the calendar page you can copy a link to this exact view, or download the data as a CSV and the calendar as an image.",
   },
 ];

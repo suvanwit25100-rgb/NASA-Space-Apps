@@ -4,7 +4,7 @@ import { fmtDate, monthLabels, monthStartDoy, yearSummary } from "../lib/analyti
 import { useSize } from "../lib/hooks";
 
 const M = { l: 44, r: 14, t: 12, b: 26 };
-const COLORS = { a: "#ff8a1f", b: "#5fb0ff" };
+const COLORS = { a: "#ff7a2f", b: "#6fb3ff" };
 
 function curves(model, year) {
   let peak = 1;
@@ -49,15 +49,15 @@ export default function Compare({ a, b, year }) {
             <g transform={`translate(${M.l},${M.t})`}>
               {paths.y.ticks(4).map((t) => (
                 <g key={t}>
-                  <line x1={0} x2={iw} y1={paths.y(t)} y2={paths.y(t)} stroke="rgba(120,165,210,0.12)" />
-                  <text x={-8} y={paths.y(t) + 3} textAnchor="end" fill="#8fa8c4" fontSize="10">{t}</text>
+                  <line x1={0} x2={iw} y1={paths.y(t)} y2={paths.y(t)} stroke="rgba(230,200,170,0.1)" />
+                  <text x={-8} y={paths.y(t) + 3} textAnchor="end" fill="#9d8f82" fontSize="10">{t}</text>
                 </g>
               ))}
               {monthLabels(iw).map((m, i) => (
-                <text key={i} x={paths.x(monthStartDoy(2001, i)) + 3} y={ih + 16} fill="#8fa8c4" fontSize="10" fontWeight="600">{m.toUpperCase()}</text>
+                <text key={i} x={paths.x(monthStartDoy(2001, i)) + 3} y={ih + 16} fill="#9d8f82" fontSize="10" fontWeight="600">{m.toUpperCase()}</text>
               ))}
-              <path d={paths.a.band} fill="rgba(255,138,31,0.1)" />
-              <path d={paths.b.band} fill="rgba(95,176,255,0.1)" />
+              <path d={paths.a.band} fill="rgba(255,122,47,0.12)" />
+              <path d={paths.b.band} fill="rgba(111,179,255,0.12)" />
               <path d={paths.a.med} fill="none" stroke={COLORS.a} strokeWidth="1.2" strokeDasharray="4 3" opacity="0.8" />
               <path d={paths.b.med} fill="none" stroke={COLORS.b} strokeWidth="1.2" strokeDasharray="4 3" opacity="0.8" />
               <path d={paths.a.cur} fill="none" stroke={COLORS.a} strokeWidth="2.2" />

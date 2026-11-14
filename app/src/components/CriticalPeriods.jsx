@@ -21,8 +21,8 @@ export default function CriticalPeriods({ model, year, onSelect }) {
               const px = x(monthStartDoy(2001, i));
               return (
                 <g key={i}>
-                  <line x1={px} x2={px} y1={0} y2={ys.length * ROW} stroke="rgba(120,165,210,0.12)" />
-                  <text x={px + 3} y={ys.length * ROW + 15} fill="#8fa8c4" fontSize="10" fontWeight="600">{m.toUpperCase()}</text>
+                  <line x1={px} x2={px} y1={0} y2={ys.length * ROW} stroke="rgba(230,200,170,0.1)" />
+                  <text x={px + 3} y={ys.length * ROW + 15} fill="#9d8f82" fontSize="10" fontWeight="600">{m.toUpperCase()}</text>
                 </g>
               );
             })}
@@ -31,18 +31,18 @@ export default function CriticalPeriods({ model, year, onSelect }) {
               const calibrated = y < 2012;
               return (
                 <g key={y} transform={`translate(0,${i * ROW})`} style={{ cursor: "pointer" }} onClick={() => onSelect(y)}>
-                  <rect x={-M.l} y={0} width={w} height={ROW} fill={sel ? "rgba(255,138,31,0.1)" : "transparent"} />
-                  <text x={-8} y={ROW / 2 + 3.5} textAnchor="end" fill={sel ? "#fff" : "#8fa8c4"} fontSize="10" fontWeight={sel ? 800 : 600}>{y}</text>
+                  <rect x={-M.l} y={0} width={w} height={ROW} fill={sel ? "rgba(255,122,47,0.12)" : "transparent"} />
+                  <text x={-8} y={ROW / 2 + 3.5} textAnchor="end" fill={sel ? "#f5efe6" : "#9d8f82"} fontSize="10" fontWeight={sel ? 800 : 600}>{y}</text>
                   {(model.seasons[y] || []).map((se, k) => (
                     <g key={k} opacity={(calibrated ? 0.55 : 1) * (k === 0 ? 1 : 0.6)}>
                       <rect
                         x={x(se.start)} y={3} width={Math.max(x(se.end) - x(se.start), 2)} height={ROW - 6} rx="1"
-                        fill={sel ? "#ffc760" : "#ff8a1f"}
-                        stroke={calibrated ? "#ff8a1f" : "none"} strokeDasharray={calibrated ? "3 2" : "0"}
+                        fill={sel ? "#ffb869" : "#ff7a2f"}
+                        stroke={calibrated ? "#ff7a2f" : "none"} strokeDasharray={calibrated ? "3 2" : "0"}
                       >
                         <title>{`${y}: ${fmtDate(y, se.start)} to ${fmtDate(y, se.end)}, peak week of ${fmtDate(y, se.peakWeek)}, ${Math.round(se.share * 100)}% of the year`}</title>
                       </rect>
-                      <rect x={x(se.peakWeek)} y={1} width={Math.max(x(7), 2)} height={ROW - 2} fill="#fff" />
+                      <rect x={x(se.peakWeek)} y={1} width={Math.max(x(7), 2)} height={ROW - 2} fill="#f5efe6" />
                     </g>
                   ))}
                 </g>
@@ -52,8 +52,8 @@ export default function CriticalPeriods({ model, year, onSelect }) {
         </svg>
       )}
       <div className="legend">
-        <span><i style={{ background: "#ff8a1f" }} />Fire season (fainter bar: smaller second season)</span>
-        <span><i style={{ background: "#fff" }} />Peak week</span>
+        <span><i style={{ background: "#ff7a2f" }} />Fire season (fainter bar: smaller second season)</span>
+        <span><i style={{ background: "#f5efe6" }} />Peak week</span>
         <span><i style={{ background: "transparent", border: "1px dashed #ff8a1f" }} />Calibrated years (pre-2012)</span>
       </div>
     </div>

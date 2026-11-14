@@ -51,48 +51,48 @@ export default function CalendarHeatmap({ model, year, mode, onSelect }) {
         let c = null;
         if (mode === "activity") c = fireColor(vals[d], model.vmax);
         else c = anomalyColor(anom[y][d]);
-        ctx.fillStyle = c ? rgb(c) : "rgba(120,165,210,0.06)";
+        ctx.fillStyle = c ? rgb(c) : "rgba(230,200,170,0.05)";
         ctx.fillRect(ML + d * cw, yy, Math.ceil(cw) + 0.4, ROW - 1.5);
       }
       const sel = y === year;
-      ctx.fillStyle = sel ? "#fff" : "#8fa8c4";
+      ctx.fillStyle = sel ? "#f5efe6" : "#9d8f82";
       ctx.textAlign = "right";
       ctx.fillText(String(y), ML - 18, yy + ROW / 2);
-      ctx.fillStyle = isMeasured(y, 180) ? "#5fb0ff" : y === model.firstYear ? "#3a4a60" : "#ff8a1f";
+      ctx.fillStyle = isMeasured(y, 180) ? "#ffb869" : y === model.firstYear ? "#5a4738" : "#ff7a2f";
       ctx.globalAlpha = isMeasured(y, 180) ? 0.9 : 0.55;
       ctx.fillRect(ML - 12, yy + 2, 3, ROW - 5);
       ctx.globalAlpha = 1;
     });
 
     ctx.textAlign = "left";
-    ctx.fillStyle = "#8fa8c4";
+    ctx.fillStyle = "#9d8f82";
     const labels = monthLabels(w - ML - MR);
     for (let m = 0; m < 12; m++) {
       const x = ML + monthStartDoy(2001, m) * cw;
       ctx.fillText(labels[m], x + 2, 10);
       ctx.fillStyle = "rgba(120,165,210,0.35)";
       ctx.fillRect(x, 17, 1, 6);
-      ctx.fillStyle = "#8fa8c4";
+      ctx.fillStyle = "#9d8f82";
     }
 
     const r = years.indexOf(year);
     if (r >= 0) {
       const yy = MT + r * ROW;
-      ctx.strokeStyle = "#fff";
+      ctx.strokeStyle = "#f5efe6";
       ctx.lineWidth = 1.2;
       ctx.strokeRect(ML - 0.5, yy - 0.5, w - ML - MR + 1, ROW);
       (model.seasons[year] || []).forEach((se, i) => {
-        ctx.fillStyle = i === 0 ? "#ffc760" : "rgba(255,199,96,0.55)";
+        ctx.fillStyle = i === 0 ? "#ffb869" : "rgba(255,199,96,0.55)";
         ctx.fillRect(ML + se.start * cw, yy + ROW - 1, (se.end - se.start + 1) * cw, 2.5);
         ctx.beginPath();
         ctx.arc(ML + (se.peak + 0.5) * cw, yy - 3, i === 0 ? 2.8 : 2.2, 0, Math.PI * 2);
-        ctx.fillStyle = i === 0 ? "#fff" : "rgba(255,255,255,0.65)";
+        ctx.fillStyle = i === 0 ? "#f5efe6" : "rgba(255,255,255,0.65)";
         ctx.fill();
       });
     }
     if (hover) {
       const yy = MT + years.indexOf(hover.y) * ROW;
-      ctx.strokeStyle = "rgba(255,255,255,0.9)";
+      ctx.strokeStyle = "rgba(245,239,230,0.9)";
       ctx.lineWidth = 1;
       ctx.strokeRect(ML + hover.d * cw - 0.5, yy - 0.5, cw + 1, ROW);
     }
@@ -160,9 +160,9 @@ export default function CalendarHeatmap({ model, year, mode, onSelect }) {
           <i className="ramp" style={{ background: mode === "activity" ? FIRE_CSS : ANOM_CSS }} />
           {mode === "activity" ? "High burning" : "Unusually high"}
         </span>
-        <span><i style={{ background: "#5fb0ff", width: 3, height: 10 }} />VIIRS-measured (2012 on)</span>
-        <span><i style={{ background: "#ff8a1f", width: 3, height: 10, opacity: 0.6 }} />Calibrated from MODIS</span>
-        <span><i style={{ background: "#ffc760", height: 3 }} />Fire seasons of the selected year, with the peak marked above</span>
+        <span><i style={{ background: "#ffb869", width: 3, height: 10 }} />VIIRS-measured (2012 on)</span>
+        <span><i style={{ background: "#ff7a2f", width: 3, height: 10, opacity: 0.6 }} />Calibrated from MODIS</span>
+        <span><i style={{ background: "#ffb869", height: 3 }} />Fire seasons of the selected year, with the peak marked above</span>
       </div>
     </div>
   );
