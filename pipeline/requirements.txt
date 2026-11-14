@@ -2,3 +2,10 @@ requests
 python-dotenv
 pandas
 matplotlib
+h3
+pyarrow
+h5py
+paramiko
+pystac-client
+planetary-computer
+rasterio
