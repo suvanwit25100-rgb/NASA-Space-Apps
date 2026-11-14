@@ -24,7 +24,7 @@ import requests
 from h3.api import numpy_int as h3i
 
 sys.path.insert(0, str(Path(__file__).parent))
-from build_global_products import FEATURED, SHARDS  # noqa: E402
+from build_global_products import FEATURED, SHARDS, VIIRS_MIN_DETECTIONS  # noqa: E402
 
 LOOKUP = Path(__file__).parent / "cell_country.npz"  # committed: lets CI run without the 30 GB of shards
 
@@ -71,7 +71,9 @@ def main():
     print(f"{len(df):,} detections {start} to {end}; dropping {int(is_static.sum()):,} from {len(static):,} persistent spots", flush=True)
     df = df[~is_static]
     cell = np.fromiter((h3.str_to_int(h3.latlng_to_cell(a, b, 5)) for a, b in zip(df["latitude"], df["longitude"])), dtype=np.uint64, count=len(df))
-    cd = pd.DataFrame({"h3": cell, "day": pd.to_datetime(df["acq_date"]).dt.strftime("%Y-%m-%d")}).drop_duplicates()
+    # MODIS-equivalent VIIRS, the same rule as the historical series: a cell-day needs at least VIIRS_MIN_DETECTIONS detections
+    per = pd.DataFrame({"h3": cell, "day": pd.to_datetime(df["acq_date"]).dt.strftime("%Y-%m-%d")}).groupby(["h3", "day"]).size().reset_index(name="n")
+    cd = per[per["n"] >= VIIRS_MIN_DETECTIONS][["h3", "day"]].reset_index(drop=True)
 
     names = json.loads((Path(__file__).parent / "countries.json").read_text())
     alpha3 = list(names)

@@ -30,6 +30,7 @@ from h3.api import numpy_int as h3i
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SHARDS = REPO_ROOT / "data" / "global" / "shards"
 OUT = Path(os.environ.get("BURNLOG_OUT", REPO_ROOT / "app" / "public" / "data"))
+VIIRS_MIN_DETECTIONS = int(os.environ.get("BURNLOG_VIIRS_MIN_DETECTIONS", "2"))  # keep in step with build_global_products.py
 AXIS0 = pd.Timestamp("2000-01-01")
 TILE_DEG = 5
 TILES_X = 360 // TILE_DEG
@@ -86,8 +87,9 @@ def main() -> None:
     map_bytes = 0
     sky_acc = np.zeros(len(cells4), dtype=np.float64)
     for year in sorted(by_year):
-        frames = [pd.read_parquet(p, columns=["h3", "day", "sensor"]).astype({"h3": np.uint64}) for p in by_year[year]]
+        frames = [pd.read_parquet(p, columns=["h3", "day", "sensor", "n"]).astype({"h3": np.uint64}) for p in by_year[year]]
         df = pd.concat(frames, ignore_index=True)
+        df = df[(df["sensor"] != 2) | (df["n"] >= VIIRS_MIN_DETECTIONS)]  # MODIS-equivalent VIIRS, see build_global_products.py
         idx = np.searchsorted(uniq, df["h3"].to_numpy(np.uint64))
         day = df["day"].to_numpy(np.int64)
         sensor = df["sensor"].to_numpy(np.int64)

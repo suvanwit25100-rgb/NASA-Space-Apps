@@ -26,7 +26,7 @@ export function exportCsv(model) {
   }
   const header = [
     `# Global Burn Log: ${model.aoi.name}`,
-    "# Daily burning cell-days on a VIIRS-equivalent scale (H3 res 5). Source: NASA FIRMS (MODIS, VIIRS).",
+    "# Daily burning cell-days on a MODIS-equivalent VIIRS scale (H3 res 5; a VIIRS cell-day needs at least two detections). Source: NASA FIRMS (MODIS, VIIRS).",
     "# low/high give the calibration range for MODIS-era days; they equal the value for VIIRS-measured days.",
   ];
   download(new Blob([`${header.join("\n")}\n${rows.join("\n")}\n`], { type: "text/csv" }), `burn-log-${slug(model.aoi.name)}.csv`);

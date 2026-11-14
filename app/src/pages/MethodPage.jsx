@@ -6,9 +6,9 @@ import { looksPerDay } from "../lib/overpass";
 const base = import.meta.env.BASE_URL;
 const STEPS = [
   ["Filter", "Keep vegetation fire only (dropping volcanoes, gas flares and offshore sources) and discard low-confidence pixels."],
-  ["Grid", "Collapse the raw points onto an H3 hexagon grid. The unit is a burning cell-day: a cell with at least one detection on a day."],
+  ["Grid", "Collapse the raw points onto an H3 hexagon grid. The unit is a burning cell-day: a cell with at least one MODIS detection on a day, or at least two VIIRS detections, because a lone 375 m pixel is a fire MODIS would usually miss."],
   ["Calibrate", "Learn seasonal ratios on the years two sensors overlap: Aqua against VIIRS from 2012, and Terra against Aqua before VIIRS existed."],
-  ["Extend", "Apply the ratios to the MODIS-only years so 2000 to 2011 reads on the VIIRS scale, with an uncertainty band that travels with every estimate."],
+  ["Extend", "Apply the ratios to the MODIS-only years so 2000 to 2011 reads on the same MODIS-equivalent VIIRS scale, with an uncertainty band that travels with every estimate."],
   ["Validate", "Compare the result's seasonality against two independent burned-area datasets, not against itself."],
 ];
 

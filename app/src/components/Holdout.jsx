@@ -80,7 +80,7 @@ export default function Holdout() {
         {lowCov > 0 && <> In {lowCov} area{lowCov > 1 ? "s" : ""} the bands were a little too narrow (under 60% of months inside), so treat the calibration range as a minimum, not a guarantee.</>}
       </p>
       <p className="hint">
-        We also tried a separate ratio for each biome inside an area (RESOLVE Ecoregions 2017, 8 groups). On the same held-out years it was worse than one ratio per area in 11 of 15 comparable areas for Aqua to VIIRS, because splitting the data makes each ratio noisier, so the app keeps one ratio per area.
+        We also tried a separate ratio for each biome inside an area (RESOLVE Ecoregions 2017, 8 groups). On the same held-out years (before the MODIS-equivalent rule) it was worse than one ratio per area in 11 of 15 comparable areas for Aqua to VIIRS, because splitting the data makes each ratio noisier, so the app keeps one ratio per area.
       </p>
       <p className="hint">
         Annual total error is the median absolute miss over the held-out years. "Inside the band" is how often a month's true value fell within the one-standard-deviation range the app draws around calibrated years; about 68% would mean the bands are honest. The 2000 to 2011 estimates rest on both links in this chain.

@@ -24,7 +24,7 @@ import pandas as pd
 from h3.api import numpy_int as h3i
 
 sys.path.insert(0, str(Path(__file__).parent))
-from build_global_products import AXIS_START, FEATURED, NDAYS, SHARDS  # noqa: E402
+from build_global_products import AXIS_START, FEATURED, NDAYS, SHARDS, VIIRS_MIN_DETECTIONS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "app" / "public" / "data" / "holdout.json"
@@ -107,7 +107,8 @@ def main():
     midx = month_index()
     monthly = {a: np.zeros((3, NM)) for a in masks}
     for p in shard_files:
-        df = pd.read_parquet(p, columns=["h3", "day", "sensor"])
+        df = pd.read_parquet(p, columns=["h3", "day", "sensor", "n"])
+        df = df[(df["sensor"] != 2) | (df["n"] >= VIIRS_MIN_DETECTIONS)]  # MODIS-equivalent VIIRS, as in the products
         pos = np.searchsorted(uniq, df["h3"].to_numpy(np.uint64))
         pos = np.clip(pos, 0, len(uniq) - 1)
         ok = uniq[pos] == df["h3"].to_numpy(np.uint64)

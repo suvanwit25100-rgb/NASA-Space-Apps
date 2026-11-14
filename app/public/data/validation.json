@@ -3,85 +3,85 @@
   {
    "id": "ind",
    "name": "India",
-   "monthlyR": 0.88,
-   "climatologyR": 0.932,
+   "monthlyR": 0.895,
+   "climatologyR": 0.95,
    "months": 194
   },
   {
    "id": "amazon-arc",
    "name": "Amazon arc of deforestation",
-   "monthlyR": 0.834,
-   "climatologyR": 0.907,
+   "monthlyR": 0.851,
+   "climatologyR": 0.925,
    "months": 194
   },
   {
    "id": "southern-africa-savanna",
    "name": "Southern African savanna",
-   "monthlyR": 0.979,
-   "climatologyR": 0.99,
+   "monthlyR": 0.986,
+   "climatologyR": 0.997,
    "months": 194
   },
   {
    "id": "sahel-savanna",
    "name": "West African savanna",
-   "monthlyR": 0.905,
-   "climatologyR": 0.92,
+   "monthlyR": 0.916,
+   "climatologyR": 0.932,
    "months": 194
   },
   {
    "id": "northern-australia",
    "name": "Northern Australia savanna",
-   "monthlyR": 0.845,
-   "climatologyR": 0.824,
+   "monthlyR": 0.857,
+   "climatologyR": 0.84,
    "months": 194
   },
   {
    "id": "southeast-australia",
    "name": "Southeast Australia",
-   "monthlyR": 0.508,
-   "climatologyR": -0.052,
+   "monthlyR": 0.556,
+   "climatologyR": 0.119,
    "months": 194
   },
   {
    "id": "california",
    "name": "California",
-   "monthlyR": 0.527,
-   "climatologyR": 0.552,
+   "monthlyR": 0.65,
+   "climatologyR": 0.799,
    "months": 194
   },
   {
    "id": "boreal-canada",
    "name": "Boreal Canada",
-   "monthlyR": 0.668,
-   "climatologyR": 0.667,
+   "monthlyR": 0.757,
+   "climatologyR": 0.763,
    "months": 194
   },
   {
    "id": "siberia",
    "name": "Siberian boreal forest",
-   "monthlyR": 0.882,
-   "climatologyR": 0.961,
+   "monthlyR": 0.899,
+   "climatologyR": 0.977,
    "months": 194
   },
   {
    "id": "maritime-sea",
    "name": "Sumatra & Kalimantan",
-   "monthlyR": 0.837,
-   "climatologyR": 0.901,
+   "monthlyR": 0.865,
+   "climatologyR": 0.923,
    "months": 194
   },
   {
    "id": "mainland-sea",
    "name": "Mainland Southeast Asia",
-   "monthlyR": 0.888,
-   "climatologyR": 0.909,
+   "monthlyR": 0.881,
+   "climatologyR": 0.899,
    "months": 194
   },
   {
    "id": "mediterranean",
    "name": "Mediterranean Europe",
-   "monthlyR": 0.886,
-   "climatologyR": 0.955,
+   "monthlyR": 0.931,
+   "climatologyR": 0.983,
    "months": 194
   }
  ]

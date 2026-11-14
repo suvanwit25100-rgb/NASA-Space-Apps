@@ -1,0 +1,648 @@
+{
+ "world": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.016397001719595128,
+   "medAbsNaiveTotalErr": 0.027962614961160925,
+   "meanMonthlyR": 0.8768323073632129,
+   "meanNaiveMonthlyR": 0.7565080846470351,
+   "bandCoverage": 0.75,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.01602232088766442,
+   "medAbsNaiveTotalErr": 0.017562122567131633,
+   "meanMonthlyR": 0.9215340370295705,
+   "meanNaiveMonthlyR": 0.8753674119145293,
+   "bandCoverage": 0.7756410256410257,
+   "viirsShare": 0.5880795756736278
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.014993904686870674,
+   "medAbsNaiveTotalErr": 0.014938822372302152,
+   "meanMonthlyR": 0.9401519379071737,
+   "meanNaiveMonthlyR": 0.9165760456628758,
+   "bandCoverage": 0.7115384615384616,
+   "viirsShare": 0.3920198515056598
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.015464721021945405,
+   "medAbsNaiveTotalErr": 0.018905794744793925,
+   "meanMonthlyR": 0.9512624062262766,
+   "meanNaiveMonthlyR": 0.9340617387662887,
+   "bandCoverage": 0.6730769230769231,
+   "viirsShare": 0.2223397774383783
+  }
+ },
+ "punjab-haryana": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.07888165490695154,
+   "medAbsNaiveTotalErr": 1.090273320001347,
+   "meanMonthlyR": 0.9727624592697697,
+   "meanNaiveMonthlyR": 0.9345191578796445,
+   "bandCoverage": 0.6730769230769231,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.038286021686548155,
+   "medAbsNaiveTotalErr": 0.23419316898570552,
+   "meanMonthlyR": 0.9890665851180793,
+   "meanNaiveMonthlyR": 0.9465961213370792,
+   "bandCoverage": 0.6666666666666666,
+   "viirsShare": 0.6007674955738692
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.059150006648383435,
+   "medAbsNaiveTotalErr": 0.21165880349962762,
+   "meanMonthlyR": 0.9824352223056927,
+   "meanNaiveMonthlyR": 0.9483392274186753,
+   "bandCoverage": 0.6666666666666666,
+   "viirsShare": 0.4243962937333178
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.10149580091622279,
+   "medAbsNaiveTotalErr": 0.4989986240637213,
+   "meanMonthlyR": 0.9647656693623817,
+   "meanNaiveMonthlyR": 0.9479580824484771,
+   "bandCoverage": 0.6794871794871794,
+   "viirsShare": 0.27664440869588663
+  }
+ },
+ "indo-gangetic": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.04855054497387479,
+   "medAbsNaiveTotalErr": 0.3937199142602048,
+   "meanMonthlyR": 0.9769981570291228,
+   "meanNaiveMonthlyR": 0.904662944583795,
+   "bandCoverage": 0.6217948717948718,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.01888266423079521,
+   "medAbsNaiveTotalErr": 0.05289587557989428,
+   "meanMonthlyR": 0.9924690981297739,
+   "meanNaiveMonthlyR": 0.9287346443473165,
+   "bandCoverage": 0.6282051282051283,
+   "viirsShare": 0.5014794314730885
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.04755848461530243,
+   "medAbsNaiveTotalErr": 0.14743454859817717,
+   "meanMonthlyR": 0.9892117277538424,
+   "meanNaiveMonthlyR": 0.9369339176995649,
+   "bandCoverage": 0.6346153846153846,
+   "viirsShare": 0.3142046682707129
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.0934081735171377,
+   "medAbsNaiveTotalErr": 0.34261708964044524,
+   "meanMonthlyR": 0.9749684361888401,
+   "meanNaiveMonthlyR": 0.9452572767043077,
+   "bandCoverage": 0.6794871794871795,
+   "viirsShare": 0.1798226808361357
+  }
+ },
+ "central-india": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.032011425160982654,
+   "medAbsNaiveTotalErr": 0.19613049952351602,
+   "meanMonthlyR": 0.9774889005664105,
+   "meanNaiveMonthlyR": 0.9717264136964429,
+   "bandCoverage": 0.6089743589743589,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.0635799269757209,
+   "medAbsNaiveTotalErr": 0.11559703095096152,
+   "meanMonthlyR": 0.9862132921540705,
+   "meanNaiveMonthlyR": 0.9680118527357303,
+   "bandCoverage": 0.6474358974358974,
+   "viirsShare": 0.48938569413233257
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.06028155959794135,
+   "medAbsNaiveTotalErr": 0.26506248707139923,
+   "meanMonthlyR": 0.9878891926023194,
+   "meanNaiveMonthlyR": 0.9578618445258458,
+   "bandCoverage": 0.6666666666666666,
+   "viirsShare": 0.2890530369445727
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.08098185224589038,
+   "medAbsNaiveTotalErr": 0.3780704878941199,
+   "meanMonthlyR": 0.9866176431844451,
+   "meanNaiveMonthlyR": 0.9408274770812173,
+   "bandCoverage": 0.6666666666666666,
+   "viirsShare": 0.1429766383929505
+  }
+ },
+ "northeast": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.025244631595709777,
+   "medAbsNaiveTotalErr": 0.6564068241231729,
+   "meanMonthlyR": 0.9926261277605891,
+   "meanNaiveMonthlyR": 0.9844844618463622,
+   "bandCoverage": 0.6346153846153846,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.03916021149078763,
+   "medAbsNaiveTotalErr": 0.047965645049827144,
+   "meanMonthlyR": 0.9966440152665813,
+   "meanNaiveMonthlyR": 0.9963929686212439,
+   "bandCoverage": 0.6153846153846154,
+   "viirsShare": 0.5705096969106325
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.03946157804181061,
+   "medAbsNaiveTotalErr": 0.3111798757445925,
+   "meanMonthlyR": 0.9976560266444535,
+   "meanNaiveMonthlyR": 0.9922777938848786,
+   "bandCoverage": 0.6153846153846154,
+   "viirsShare": 0.3792840204008706
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.04001042962604051,
+   "medAbsNaiveTotalErr": 0.5302255753583558,
+   "meanMonthlyR": 0.9963871846051806,
+   "meanNaiveMonthlyR": 0.9805577669517971,
+   "bandCoverage": 0.7115384615384615,
+   "viirsShare": 0.22409555057445127
+  }
+ },
+ "peninsular": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.07798992958601536,
+   "medAbsNaiveTotalErr": 0.6837626801077661,
+   "meanMonthlyR": 0.9705552052676591,
+   "meanNaiveMonthlyR": 0.9656929010880193,
+   "bandCoverage": 0.6602564102564101,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.05592303792570075,
+   "medAbsNaiveTotalErr": 0.21275619681652747,
+   "meanMonthlyR": 0.9862614697753075,
+   "meanNaiveMonthlyR": 0.9766295933218122,
+   "bandCoverage": 0.6987179487179488,
+   "viirsShare": 0.352884981630973
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.04698484633880906,
+   "medAbsNaiveTotalErr": 0.0842965983969769,
+   "meanMonthlyR": 0.9895749331544595,
+   "meanNaiveMonthlyR": 0.9735543214397976,
+   "bandCoverage": 0.6474358974358974,
+   "viirsShare": 0.15801663656357895
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.09216531046839416,
+   "medAbsNaiveTotalErr": 0.26897013687002247,
+   "meanMonthlyR": 0.9810743672579698,
+   "meanNaiveMonthlyR": 0.9520323669683075,
+   "bandCoverage": 0.6987179487179488,
+   "viirsShare": 0.05834469878481821
+  }
+ },
+ "amazon-arc": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.04808530760037766,
+   "medAbsNaiveTotalErr": 0.10600294822585166,
+   "meanMonthlyR": 0.9913242177878125,
+   "meanNaiveMonthlyR": 0.9789932632610419,
+   "bandCoverage": 0.6923076923076923,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.034774589330044736,
+   "medAbsNaiveTotalErr": 0.19158823177031636,
+   "meanMonthlyR": 0.9938783412007788,
+   "meanNaiveMonthlyR": 0.9873170484649112,
+   "bandCoverage": 0.6730769230769231,
+   "viirsShare": 0.6429688053073744
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.021737064345424884,
+   "medAbsNaiveTotalErr": 0.26959929708510444,
+   "meanMonthlyR": 0.9948916716690162,
+   "meanNaiveMonthlyR": 0.9911636867532929,
+   "bandCoverage": 0.6794871794871795,
+   "viirsShare": 0.44348356089060087
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.054518993715153896,
+   "medAbsNaiveTotalErr": 0.3421900486934897,
+   "meanMonthlyR": 0.9944326844227102,
+   "meanNaiveMonthlyR": 0.9893038656998532,
+   "bandCoverage": 0.6730769230769231,
+   "viirsShare": 0.2646763042721416
+  }
+ },
+ "southern-africa-savanna": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.02446262744172889,
+   "medAbsNaiveTotalErr": 0.6411874717820065,
+   "meanMonthlyR": 0.9882913638787205,
+   "meanNaiveMonthlyR": 0.9732668596794346,
+   "bandCoverage": 0.7435897435897437,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.024822191884412148,
+   "medAbsNaiveTotalErr": 0.23808300314555475,
+   "meanMonthlyR": 0.9894827136737946,
+   "meanNaiveMonthlyR": 0.9817326147926176,
+   "bandCoverage": 0.7435897435897434,
+   "viirsShare": 0.6921971443927947
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.025650375282092464,
+   "medAbsNaiveTotalErr": 0.038791324576097574,
+   "meanMonthlyR": 0.9895456116281889,
+   "meanNaiveMonthlyR": 0.9843113649258298,
+   "bandCoverage": 0.7051282051282051,
+   "viirsShare": 0.505212843503389
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.02132383104763136,
+   "medAbsNaiveTotalErr": 0.14560258634042178,
+   "meanMonthlyR": 0.9890343024253242,
+   "meanNaiveMonthlyR": 0.9841667519831616,
+   "bandCoverage": 0.7243589743589745,
+   "viirsShare": 0.30559269142344614
+  }
+ },
+ "sahel-savanna": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.02943157960292886,
+   "medAbsNaiveTotalErr": 0.6447684203199404,
+   "meanMonthlyR": 0.9968253805675639,
+   "meanNaiveMonthlyR": 0.9898694769309577,
+   "bandCoverage": 0.7243589743589743,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.0104786802587572,
+   "medAbsNaiveTotalErr": 0.12839568463742856,
+   "meanMonthlyR": 0.9982498200355887,
+   "meanNaiveMonthlyR": 0.9938474562412577,
+   "bandCoverage": 0.7179487179487178,
+   "viirsShare": 0.5936707796330937
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.013632922763047173,
+   "medAbsNaiveTotalErr": 0.08225624530934672,
+   "meanMonthlyR": 0.9985157504563701,
+   "meanNaiveMonthlyR": 0.9947582956086847,
+   "bandCoverage": 0.6794871794871794,
+   "viirsShare": 0.38551131780817216
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.014519463743099648,
+   "medAbsNaiveTotalErr": 0.16934520246714058,
+   "meanMonthlyR": 0.9974316661642102,
+   "meanNaiveMonthlyR": 0.9944954395507491,
+   "bandCoverage": 0.6602564102564104,
+   "viirsShare": 0.19929175747799077
+  }
+ },
+ "northern-australia": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.04470154269988935,
+   "medAbsNaiveTotalErr": 0.10771692211901929,
+   "meanMonthlyR": 0.9789932496773935,
+   "meanNaiveMonthlyR": 0.9824375383435566,
+   "bandCoverage": 0.7371794871794872,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.03171796053680742,
+   "medAbsNaiveTotalErr": 0.055941048948195515,
+   "meanMonthlyR": 0.9808433118693698,
+   "meanNaiveMonthlyR": 0.9815700581619763,
+   "bandCoverage": 0.7564102564102565,
+   "viirsShare": 0.8010072774591547
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.019600846450767317,
+   "medAbsNaiveTotalErr": 0.04662116057809507,
+   "meanMonthlyR": 0.981172981716434,
+   "meanNaiveMonthlyR": 0.9791204606472578,
+   "bandCoverage": 0.7115384615384616,
+   "viirsShare": 0.668859543431812
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.029265928490747162,
+   "medAbsNaiveTotalErr": 0.023574843686350655,
+   "meanMonthlyR": 0.9795716753358062,
+   "meanNaiveMonthlyR": 0.9726766469229889,
+   "bandCoverage": 0.7307692307692307,
+   "viirsShare": 0.5081369383263451
+  }
+ },
+ "southeast-australia": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.12486227996308386,
+   "medAbsNaiveTotalErr": 0.2513905772054954,
+   "meanMonthlyR": 0.9329396162539341,
+   "meanNaiveMonthlyR": 0.9340028112934622,
+   "bandCoverage": 0.6858974358974359,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.07053365190232364,
+   "medAbsNaiveTotalErr": 0.19831924928543065,
+   "meanMonthlyR": 0.9704898936530858,
+   "meanNaiveMonthlyR": 0.9719177845219004,
+   "bandCoverage": 0.6858974358974359,
+   "viirsShare": 0.5821924535891523
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.07748099756923232,
+   "medAbsNaiveTotalErr": 0.14306332681256362,
+   "meanMonthlyR": 0.9804567414920247,
+   "meanNaiveMonthlyR": 0.9702396678465919,
+   "bandCoverage": 0.6858974358974359,
+   "viirsShare": 0.38684359462480766
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.08474539753399368,
+   "medAbsNaiveTotalErr": 0.18981618530355238,
+   "meanMonthlyR": 0.9722072138522845,
+   "meanNaiveMonthlyR": 0.9347248950996716,
+   "bandCoverage": 0.6858974358974359,
+   "viirsShare": 0.2201106657249634
+  }
+ },
+ "california": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.09794544221075463,
+   "medAbsNaiveTotalErr": 0.18699280045866962,
+   "meanMonthlyR": 0.8424819101561355,
+   "meanNaiveMonthlyR": 0.8362049498509893,
+   "bandCoverage": 0.685897435897436,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.07335034891664471,
+   "medAbsNaiveTotalErr": 0.09057921568741589,
+   "meanMonthlyR": 0.9276067439597917,
+   "meanNaiveMonthlyR": 0.9281348405171607,
+   "bandCoverage": 0.7051282051282052,
+   "viirsShare": 0.5067617992265768
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.025464562962126847,
+   "medAbsNaiveTotalErr": 0.021843098836827335,
+   "meanMonthlyR": 0.9640358338428651,
+   "meanNaiveMonthlyR": 0.9263306187422167,
+   "bandCoverage": 0.6730769230769231,
+   "viirsShare": 0.3285917818132477
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.06643503758966718,
+   "medAbsNaiveTotalErr": 0.11430664741896379,
+   "meanMonthlyR": 0.9735013440870226,
+   "meanNaiveMonthlyR": 0.8664296497042872,
+   "bandCoverage": 0.6730769230769229,
+   "viirsShare": 0.20657409710757818
+  }
+ },
+ "boreal-canada": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.22809019816152354,
+   "medAbsNaiveTotalErr": 0.7968558643475849,
+   "meanMonthlyR": 0.9663059540750846,
+   "meanNaiveMonthlyR": 0.9816596999231556,
+   "bandCoverage": 0.6730769230769232,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.10449728521108348,
+   "medAbsNaiveTotalErr": 0.3787703212843143,
+   "meanMonthlyR": 0.9843102556876911,
+   "meanNaiveMonthlyR": 0.9848187482048997,
+   "bandCoverage": 0.717948717948718,
+   "viirsShare": 0.6855038543299479
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.04827373938833324,
+   "medAbsNaiveTotalErr": 0.1742713989490292,
+   "meanMonthlyR": 0.9880679303257284,
+   "meanNaiveMonthlyR": 0.9783932666577375,
+   "bandCoverage": 0.6923076923076923,
+   "viirsShare": 0.5387859397479118
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.06389762465769877,
+   "medAbsNaiveTotalErr": 0.12881994685619758,
+   "meanMonthlyR": 0.9836265902653913,
+   "meanNaiveMonthlyR": 0.9616663789386058,
+   "bandCoverage": 0.6282051282051282,
+   "viirsShare": 0.4034570870284082
+  }
+ },
+ "siberia": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.0900080273012156,
+   "medAbsNaiveTotalErr": 9.435160159950692,
+   "meanMonthlyR": 0.9465467213817358,
+   "meanNaiveMonthlyR": 0.9683669157622329,
+   "bandCoverage": 0.6153846153846153,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.09263814805924064,
+   "medAbsNaiveTotalErr": 7.000767849995778,
+   "meanMonthlyR": 0.9679390542899213,
+   "meanNaiveMonthlyR": 0.9779789912794088,
+   "bandCoverage": 0.6025641025641024,
+   "viirsShare": 0.6810107836511621
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.05576380312818863,
+   "medAbsNaiveTotalErr": 4.869349555365859,
+   "meanMonthlyR": 0.9730804759765914,
+   "meanNaiveMonthlyR": 0.97721742002575,
+   "bandCoverage": 0.6602564102564101,
+   "viirsShare": 0.5243416683806893
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.025003093021954248,
+   "medAbsNaiveTotalErr": 2.115681199243954,
+   "meanMonthlyR": 0.9696744086910498,
+   "meanNaiveMonthlyR": 0.9645105153752139,
+   "bandCoverage": 0.6217948717948717,
+   "viirsShare": 0.37383598272265156
+  }
+ },
+ "maritime-sea": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.14034524545626392,
+   "medAbsNaiveTotalErr": 0.21361184472002792,
+   "meanMonthlyR": 0.9438676140993046,
+   "meanNaiveMonthlyR": 0.9630503607986631,
+   "bandCoverage": 0.717948717948718,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.06390288927653853,
+   "medAbsNaiveTotalErr": 0.0905191669328782,
+   "meanMonthlyR": 0.9675028030281063,
+   "meanNaiveMonthlyR": 0.9681046959759564,
+   "bandCoverage": 0.6987179487179488,
+   "viirsShare": 0.5157766687357198
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.18338510892375648,
+   "medAbsNaiveTotalErr": 0.19206975611525912,
+   "meanMonthlyR": 0.967146145835058,
+   "meanNaiveMonthlyR": 0.9627123467799865,
+   "bandCoverage": 0.6538461538461539,
+   "viirsShare": 0.3180195666970091
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.34243012936563166,
+   "medAbsNaiveTotalErr": 0.2906595975710877,
+   "meanMonthlyR": 0.9426963490473361,
+   "meanNaiveMonthlyR": 0.9417717099355342,
+   "bandCoverage": 0.6666666666666666,
+   "viirsShare": 0.1744028729329577
+  }
+ },
+ "mainland-sea": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.05325806448985082,
+   "medAbsNaiveTotalErr": 0.347228195938029,
+   "meanMonthlyR": 0.9838340272809689,
+   "meanNaiveMonthlyR": 0.9858059794083646,
+   "bandCoverage": 0.6923076923076923,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.0594985905613068,
+   "medAbsNaiveTotalErr": 0.06989231507654403,
+   "meanMonthlyR": 0.9866256369354743,
+   "meanNaiveMonthlyR": 0.98873013723466,
+   "bandCoverage": 0.6794871794871795,
+   "viirsShare": 0.5936359281458816
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.06106444044013459,
+   "medAbsNaiveTotalErr": 0.27743259141955645,
+   "meanMonthlyR": 0.9869757506938857,
+   "meanNaiveMonthlyR": 0.9867180475896988,
+   "bandCoverage": 0.653846153846154,
+   "viirsShare": 0.39700061487304544
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.05574588165722738,
+   "medAbsNaiveTotalErr": 0.43994981576023373,
+   "meanMonthlyR": 0.9855107901597624,
+   "meanNaiveMonthlyR": 0.9819983825951917,
+   "bandCoverage": 0.6666666666666666,
+   "viirsShare": 0.2270891873805231
+  }
+ },
+ "mediterranean": {
+  "1": {
+   "years": 13,
+   "medAbsTotalErr": 0.06049851807830131,
+   "medAbsNaiveTotalErr": 0.18127120409416442,
+   "meanMonthlyR": 0.9449234175741716,
+   "meanNaiveMonthlyR": 0.9631712210838993,
+   "bandCoverage": 0.7115384615384616,
+   "viirsShare": 1.0
+  },
+  "2": {
+   "years": 13,
+   "medAbsTotalErr": 0.03155352634608355,
+   "medAbsNaiveTotalErr": 0.023384661210409052,
+   "meanMonthlyR": 0.9779275220867635,
+   "meanNaiveMonthlyR": 0.9677752626849833,
+   "bandCoverage": 0.7179487179487178,
+   "viirsShare": 0.41492829618129284
+  },
+  "3": {
+   "years": 13,
+   "medAbsTotalErr": 0.029491346777952954,
+   "medAbsNaiveTotalErr": 0.10877485016674215,
+   "meanMonthlyR": 0.9792133187735601,
+   "meanNaiveMonthlyR": 0.9579637581181051,
+   "bandCoverage": 0.7051282051282051,
+   "viirsShare": 0.21982744405630772
+  },
+  "5": {
+   "years": 13,
+   "medAbsTotalErr": 0.10451753413863785,
+   "medAbsNaiveTotalErr": 0.2233029809499022,
+   "meanMonthlyR": 0.9661618263474292,
+   "meanNaiveMonthlyR": 0.9339026972099254,
+   "bandCoverage": 0.6538461538461539,
+   "viirsShare": 0.10174255627348164
+  }
+ }
+}

@@ -186,11 +186,11 @@ flowchart LR
 </tr>
 <tr>
 <td><h3>2</h3></td>
-<td><b>Grid.</b> Aggregate to an <a href="https://h3geo.org">H3</a> hexagon grid and count <b>burning cell-days</b>: a cell with at least one detection on a day. This is much less sensitive to the 375 m versus 1 km pixel difference than raw point counts. Raw points are discarded; about 100 million cell-days are kept.</td>
+<td><b>Grid.</b> Aggregate to an <a href="https://h3geo.org">H3</a> hexagon grid and count <b>burning cell-days</b>: a cell with at least one MODIS detection on a day, or at least two VIIRS detections (a lone 375 m pixel is a fire MODIS would usually miss). This is much less sensitive to the 375 m versus 1 km pixel difference than raw point counts. Raw points are discarded; about 100 million cell-days are kept.</td>
 </tr>
 <tr>
 <td><h3>3</h3></td>
-<td><b>Harmonise.</b> For every area, learn <b>seasonal ratios</b> between <b>Aqua and VIIRS</b> (they overpass at the same local time) on their overlap from 2012, and between <b>Terra and Aqua</b> on theirs from 2002. Apply them to put 2000–2011 on the VIIRS scale. Every estimated day carries an <b>uncertainty band</b>.</td>
+<td><b>Harmonise.</b> For every area, learn <b>seasonal ratios</b> between <b>Aqua and VIIRS</b> (they overpass at the same local time) on their overlap from 2012, and between <b>Terra and Aqua</b> on theirs from 2002. Apply them to put 2000–2011 on the same MODIS-equivalent VIIRS scale. Every estimated day carries an <b>uncertainty band</b>.</td>
 </tr>
 <tr>
 <td><h3>4</h3></td>
@@ -264,7 +264,7 @@ A harmonised series is only worth something if it agrees with an **independent**
 
 | Seasonal cycle | Monthly series |
 |:-:|:-:|
-| **r = 0.887** | **r = 0.823** |
+| **r = 0.926** | **r = 0.858** |
 
 </div>
 
@@ -274,28 +274,30 @@ A harmonised series is only worth something if it agrees with an **independent**
 
 | Region | Seasonal r | Monthly r |
 |---|:-:|:-:|
-| 🌍 Southern African savanna | **0.99** | 0.98 |
-| 🌲 Siberian boreal forest | **0.96** | 0.88 |
-| 🏛️ Mediterranean Europe | **0.95** | 0.89 |
-| 🇮🇳 India | **0.93** | 0.88 |
-| 🌍 West African savanna | **0.92** | 0.91 |
-| 🌏 Mainland Southeast Asia | **0.91** | 0.89 |
-| 🌳 Amazon arc of deforestation | **0.91** | 0.83 |
-| 🌴 Sumatra & Kalimantan | **0.90** | 0.84 |
-| 🦘 Northern Australia savanna | 0.82 | 0.84 |
-| 🍁 Boreal Canada | 0.67 | 0.67 |
-| 🌲 California | 0.55 | 0.53 |
-| 🦘 Southeast Australia | −0.05 | 0.51 |
+| 🌍 Southern African savanna | **1.00** | 0.99 |
+| 🏛️ Mediterranean Europe | **0.98** | 0.93 |
+| 🌲 Siberian boreal forest | **0.98** | 0.90 |
+| 🇮🇳 India | **0.95** | 0.90 |
+| 🌍 West African savanna | **0.93** | 0.92 |
+| 🌴 Sumatra & Kalimantan | **0.92** | 0.87 |
+| 🌳 Amazon arc of deforestation | **0.93** | 0.85 |
+| 🌏 Mainland Southeast Asia | 0.90 | 0.88 |
+| 🦘 Northern Australia savanna | 0.84 | 0.86 |
+| 🌲 California | 0.80 | 0.65 |
+| 🍁 Boreal Canada | 0.76 | 0.76 |
+| 🦘 Southeast Australia | 0.12 | 0.56 |
 
 <img src="docs/submission/4_validation_global.png" alt="Validation across 12 regions" width="92%" />
 
 </div>
 
-**Nine of twelve regions reach a seasonal r of 0.90 or better.** The three weak ones share a cause, explained in the next section, and the site says so on the Method page.
+**Seven of twelve regions reach a seasonal r of 0.90 or better, and the average across the twelve is 0.84** (it was 0.79 before the MODIS-equivalent VIIRS rule below). Mainland Southeast Asia sits at 0.899, just under the line. The weak ones share a cause, explained in the next section, and the site says so on the Method page.
 
-**Hold-out test** (`pipeline/holdout_test.py`): each overlap year was left out in turn, the sensor ratio was learned from the other years, and the prediction was compared with what the newer sensor actually saw. For the Aqua-to-VIIRS link over 2013 to 2025, the world's annual total was off by a median of 2% and the monthly shape correlated at r = 0.88; the seasonal ratio beat a single yearly ratio on annual-total error in all 17 areas, and 61% to 75% of months fell inside the drawn calibration band (about 68% would be honest). The largest miss is Boreal Canada at about 23%. The older Terra-to-Aqua link (2003 to 2011) is weaker: the seasonal ratio beat the baseline in 12 of 17 areas, the worst miss is Sumatra and Kalimantan at about 18%, and in 6 areas fewer than 60% of months fell inside the band, so the range is a minimum, not a guarantee. Full table on the Method page.
+**MODIS-equivalent VIIRS.** VIIRS (375 m) records many cell-days that rest on a single small pixel, which MODIS (1 km) would usually miss. Counting a VIIRS cell-day only when it holds at least two detections made the calibration more accurate on held-out years and raised agreement with burned area in 11 of 12 regions (California 0.55 → 0.80, Boreal Canada 0.67 → 0.76, Mediterranean 0.95 → 0.98; Mainland Southeast Asia dipped from 0.91 to 0.90). It is a proxy for true footprint snapping, which would need each detection's coordinates. The test is `pipeline/holdout_snap.py`; the rule is `VIIRS_MIN_DETECTIONS` in `pipeline/build_global_products.py`.
 
-Cross-checks that also passed: the global India series matches the original India-only pipeline (correlation ≥ 0.9995, totals within about 1%), and in-browser calibration of custom areas matches the precomputed Python series with **zero difference** across six regions on six continents.
+**Hold-out test** (`pipeline/holdout_test.py`): each overlap year was left out in turn, the sensor ratio was learned from the other years, and the prediction was compared with what the newer sensor actually saw. For the Aqua-to-VIIRS link over 2013 to 2025, the world's annual total was off by a median of 2% and the monthly shape correlated at r = 0.92; the seasonal ratio beat a single yearly ratio on annual-total error in 16 of 17 areas, and 60% to 78% of months fell inside the drawn calibration band (about 68% would be honest). The largest miss is Boreal Canada at about 10% (it was 23% before the VIIRS rule). The older Terra-to-Aqua link (2003 to 2011) is weaker: the seasonal ratio beat the baseline in 12 of 17 areas, the worst miss is Sumatra and Kalimantan at about 18%, and in 6 areas fewer than 60% of months fell inside the band, so the range is a minimum, not a guarantee. Full table on the Method page.
+
+Cross-checks: in-browser calibration of custom areas matches the precomputed Python series with **zero difference**, re-checked after the VIIRS rule in California, Southeast Australia and the Amazon arc.
 
 <br/>
 
@@ -311,7 +313,7 @@ We would rather you trust a smaller claim.
 - **2000–2011 are calibrated estimates** from MODIS. They are always drawn with an uncertainty band and never presented as measurements.
 - **Overpass normalisation is an approximation.** It is an analytic orbit model (swath against orbit spacing) that assumes detections scale with the number of looks and ignores orbit drift. It is off by default on the map and shown as a separate row in Compare.
 - **One calibration ratio per area and calendar month.** Biome-specific ratios were tried (`pipeline/cell_biome.py`, `pipeline/holdout_biome.py`, RESOLVE Ecoregions 2017 grouped into 8 biomes) and rejected: on held-out years they were worse than per-area ratios in 11 of 15 comparable areas for Aqua to VIIRS and mixed for Terra to Aqua, because splitting the data makes each ratio noisier.
-- The **latest-week signal** uses near-real-time data, which lags about 12 days and is later replaced by reprocessed data. It runs roughly 10% above earlier years across the world because it cannot drop static sources like gas flares; a persistent-spot filter removes most of them, and the site shows the measured offset.
+- The **latest-week signal** uses near-real-time data, which lags about 12 days and is later replaced by reprocessed data. It cannot drop static sources like gas flares the way the archive does, so a persistent-spot filter removes most of them; with the same two-detection rule as the history, the worldwide offset against earlier years is now about zero.
 - **NOAA-20 and NOAA-21 are not included**, and **2026 is excluded** until FIRMS publishes reprocessed data.
 - Detections outlast burn scars, so the harmonised series runs a little high in winter and low at peaks against burned area.
 - **A hackathon project.** Do not use it for operational emergency decisions.

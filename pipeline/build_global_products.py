@@ -30,6 +30,10 @@ OUT = Path(os.environ.get("BURNLOG_OUT", REPO_ROOT / "app" / "public" / "data"))
 AXIS_END = pd.Timestamp("2025-12-31")
 NDAYS = (AXIS_END - AXIS_START).days + 1
 LOW_DATA_CELLDAYS = 500
+# MODIS-equivalent VIIRS (method step 3): a VIIRS cell-day counts only if it holds at least this many 375 m detections.
+# A lone VIIRS pixel is a fire MODIS (1 km) would usually miss, and dropping them made the Aqua-to-VIIRS calibration
+# more accurate on held-out years (pipeline/holdout_snap.py). Set to 1 to reproduce the old unfiltered series.
+VIIRS_MIN_DETECTIONS = int(os.environ.get("BURNLOG_VIIRS_MIN_DETECTIONS", "2"))
 
 # (id, name, bbox lon_min lat_min lon_max lat_max, optional country restriction)
 FEATURED = [
@@ -94,7 +98,8 @@ def main() -> None:
 
     # 3) accumulate cell-days per area, sensor and day, one shard at a time
     for p in shard_files:
-        df = pd.read_parquet(p, columns=["h3", "day", "sensor"])
+        df = pd.read_parquet(p, columns=["h3", "day", "sensor", "n"])
+        df = df[(df["sensor"] != 2) | (df["n"] >= VIIRS_MIN_DETECTIONS)]
         idx = np.searchsorted(uniq, df["h3"].to_numpy(np.uint64))
         day = df["day"].to_numpy(np.int64)
         sensor = df["sensor"].to_numpy(np.int64)
