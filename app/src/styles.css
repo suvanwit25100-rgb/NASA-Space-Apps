@@ -392,3 +392,9 @@ table.prov td { padding: 12px; border-bottom: 1px solid rgba(230, 200, 170, 0.08
 }
 @media (max-width: 560px) { .chapter-grid { grid-template-columns: 1fr; } .front-section { padding-top: 60px; } }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } .hero-media { transform: none; } .embers { display: none; } }
+
+/* forest-fire backdrop for the inner pages */
+.page-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: #0b0c10 url(/img/forest.webp) center 30% / cover no-repeat; animation: bgIn 1.2s ease both; }
+.page-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,16,.55), rgba(11,12,16,.72) 45%, rgba(11,12,16,.9)); }
+@keyframes bgIn { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 700px) { .page-bg { background-position: 50% 20%; } }

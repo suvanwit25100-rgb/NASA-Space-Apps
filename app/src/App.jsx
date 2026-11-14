@@ -92,6 +92,7 @@ export default function App() {
   return (
     <ExplorerProvider data={data}>
       <Nav route={route} />
+      {route !== "/" && <div className="page-bg" aria-hidden="true" />}
       {route === "/" ? <Home nCountries={nCountries} /> : <RoutedPage route={route} />}
       <SiteFooter />
       <TourMount />
