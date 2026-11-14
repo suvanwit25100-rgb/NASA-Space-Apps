@@ -28,3 +28,16 @@ export function useInView(threshold = 0.5) {
   }, [threshold]);
   return [ref, seen];
 }
+
+// true on touch-first devices (no hover); used to say "tap" instead of "hover"
+export function useCoarse() {
+  const q = typeof window !== "undefined" && window.matchMedia ? window.matchMedia("(hover: none)") : null;
+  const [coarse, setCoarse] = useState(!!q?.matches);
+  useEffect(() => {
+    if (!q) return undefined;
+    const on = () => setCoarse(q.matches);
+    q.addEventListener("change", on);
+    return () => q.removeEventListener("change", on);
+  }, [q]);
+  return coarse;
+}

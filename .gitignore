@@ -26,3 +26,7 @@ dist/
 
 # large tiled data for custom areas: build with pipeline/build_global_maps.py, host on the static bucket
 app/public/data/tiles/
+
+# firebase CLI local state
+.firebase/
+firebase-debug.log

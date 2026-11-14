@@ -146,7 +146,7 @@ function drawSky(canvas, w, h, pts) {
   ctx.globalCompositeOperation = "source-over";
 }
 
-export default function Hero({ cells4, sky, stats }) {
+export default function Hero({ cells4, sky, stats, onTour }) {
   const [ref, size] = useSize();
   const canvasRef = useRef(null);
   const pts = useFirePoints(cells4, sky);
@@ -171,6 +171,7 @@ export default function Hero({ cells4, sky, stats }) {
         </p>
         <div className="cta-row">
           <a className="btn primary" href="#explore">Explore the calendar</a>
+          <button className="btn" onClick={onTour}>Take the guided tour</button>
           <a className="btn" href="#method">How it works</a>
         </div>
         {stats && (

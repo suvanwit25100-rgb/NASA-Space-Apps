@@ -1,17 +1,18 @@
 import { useMemo, useState } from "react";
 import { area, line, scaleLinear } from "d3";
-import { fmtDate, monthStartDoy, MONTHS, weeklyAnomaly, anomalyAt } from "../lib/analytics";
+import { fmtDate, monthLabels, monthStartDoy, weeklyAnomaly, anomalyAt } from "../lib/analytics";
 import { useSize } from "../lib/hooks";
 
 const M = { l: 48, r: 14, t: 14, b: 26 };
 
 function MonthAxis({ x, h }) {
+  const labels = monthLabels(x(365));
   return (
     <g>
-      {MONTHS.map((m, i) => {
+      {labels.map((m, i) => {
         const px = x(monthStartDoy(2001, i));
         return (
-          <g key={m}>
+          <g key={i}>
             <line x1={px} x2={px} y1={0} y2={h} stroke="rgba(120,165,210,0.12)" />
             <text x={px + 4} y={h + 16} fill="#8fa8c4" fontSize="10" fontWeight="600">{m.toUpperCase()}</text>
           </g>

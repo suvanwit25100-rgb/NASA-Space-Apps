@@ -8,6 +8,9 @@ import Climatology from "./Climatology";
 import Compare from "./Compare";
 import CriticalPeriods from "./CriticalPeriods";
 import { ArrowDown } from "./Icons";
+import Tour from "./Tour";
+import { TOUR } from "../lib/tour";
+import { useCoarse } from "../lib/hooks";
 
 const FireMap = lazy(() => import("./FireMap"));
 const MAX_VERTICES = 50000;
@@ -42,7 +45,7 @@ function readUrl(ids, maxYear) {
 
 const rectName = ([w, s, e, n]) => `Custom area · ${((s + n) / 2).toFixed(1)}°N ${((w + e) / 2).toFixed(1)}°E`;
 
-export default function Explorer({ regions, meta, cells4 }) {
+export default function Explorer({ regions, meta, cells4, tourKey = 0 }) {
   const ids = useMemo(() => regions.map((r) => r.id), [regions]);
   const byId = useMemo(() => Object.fromEntries(regions.map((r) => [r.id, r])), [regions]);
   const world = byId.world;
@@ -63,6 +66,8 @@ export default function Explorer({ regions, meta, cells4 }) {
   const [toast, setToast] = useState("");
   const [mapYear, setMapYear] = useState(null);
   const [search, setSearch] = useState("");
+  const coarse = useCoarse();
+  const [tourStep, setTourStep] = useState(() => (new URLSearchParams(window.location.search).get("tour") === "1" ? 0 : null));
   const fileRef = useRef(null);
   const toastTimer = useRef(null);
   const lastModel = useRef(null);
@@ -188,6 +193,50 @@ export default function Explorer({ regions, meta, cells4 }) {
     }
   };
 
+  const tourCtx = { models: loaded, year, maxYear };
+  const ctxRef = useRef(tourCtx);
+  ctxRef.current = tourCtx;
+
+  useEffect(() => {
+    if (tourKey > 0) setTourStep(0);
+  }, [tourKey]);
+
+  useEffect(() => {
+    if (tourStep == null) return undefined;
+    const cfg = TOUR[tourStep];
+    const a = cfg.apply(ctxRef.current);
+    setAoiId(a.aoi);
+    setYear(a.year);
+    setMode(a.mode);
+    setMapMonth(a.month);
+    setCmpId(a.cmp);
+    let tries = 0;
+    let timer;
+    const focus = () => {
+      const el = document.querySelector(`[data-tour="${cfg.target}"]`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        el.classList.add("tour-focus");
+      } else if (tries++ < 25) timer = setTimeout(focus, 160);
+    };
+    timer = setTimeout(focus, 250);
+    return () => {
+      clearTimeout(timer);
+      document.querySelectorAll(".tour-focus").forEach((n) => n.classList.remove("tour-focus"));
+    };
+  }, [tourStep]);
+
+  useEffect(() => {
+    if (tourStep == null) return undefined;
+    const onKey = (e) => {
+      if (e.key === "Escape") setTourStep(null);
+      else if (e.key === "ArrowRight") setTourStep((i) => Math.min(i + 1, TOUR.length - 1));
+      else if (e.key === "ArrowLeft") setTourStep((i) => Math.max(i - 1, 0));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [tourStep]);
+
   if (!model) {
     return (
       <section id="explore" className="section" aria-label="Explorer">
@@ -211,19 +260,30 @@ export default function Explorer({ regions, meta, cells4 }) {
         <p>
           Pick a region or any country, or draw your own area. Every square is one day of satellite fire detections, harmonised so a day
           in 2004 can be fairly compared with a day in 2024.
+          <button className="tour-link" onClick={() => setTourStep(0)}>Take the guided tour</button>
         </p>
       </div>
 
       <div className="wrap">
-        <div className="controls">
+        <div className="controls" data-tour="controls">
           <div className="panel">
             <span className="label caps">Area of interest</span>
+            <label className="region-select">
+              <span className="sr">Region or country</span>
+              <select value={aoiId} aria-label="Region or country" onChange={(e) => (e.target.value !== "custom" || custom?.status === "ready") && setAoiId(e.target.value)}>
+                {custom?.status === "ready" && <option value="custom">{custom.name}</option>}
+                <optgroup label="Regions">{[world, ...featured].filter(Boolean).map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</optgroup>
+                <optgroup label="Countries">{countries.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</optgroup>
+              </select>
+            </label>
             <div className="chips" role="group" aria-label="Featured regions">
-              {[world, ...featured].filter(Boolean).map((a) => (
-                <button key={a.id} className="chip" aria-pressed={a.id === aoiId} onClick={() => setAoiId(a.id)}>
-                  {a.name}
-                </button>
-              ))}
+              <span className="region-chips">
+                {[world, ...featured].filter(Boolean).map((a) => (
+                  <button key={a.id} className="chip" aria-pressed={a.id === aoiId} onClick={() => setAoiId(a.id)}>
+                    {a.name}
+                  </button>
+                ))}
+              </span>
               {activeCountry && <button className="chip" aria-pressed="true">{byId[aoiId].name}</button>}
               {custom && (
                 <span className="chip-group">
@@ -247,7 +307,7 @@ export default function Explorer({ regions, meta, cells4 }) {
             <div className="actions">
               <label className="select-wrap">
                 <span className="sr">Search for a country</span>
-                <input list="country-list" className="search" placeholder="Search a country…" value={search} onChange={(e) => onSearch(e.target.value)} aria-label="Search for a country" />
+                <input list="country-list" className="search" placeholder="Search country…" value={search} onChange={(e) => onSearch(e.target.value)} aria-label="Search for a country" />
                 <datalist id="country-list">{countries.map((c) => <option key={c.id} value={c.name} />)}</datalist>
               </label>
               <button className="btn-sm" aria-pressed={drawing} onClick={toggleDrawing}>{drawing ? "Cancel drawing" : "Draw on map"}</button>
@@ -324,11 +384,11 @@ export default function Explorer({ regions, meta, cells4 }) {
         )}
         {!sum && <div className="panel" style={{ marginBottom: 18 }}>Not enough fire detections in this area to describe a season.</div>}
 
-        <div className="panel" style={{ marginBottom: 18 }}>
+        <div className="panel" style={{ marginBottom: 18 }} data-tour="calendar">
           <div className="panel-top">
             <div>
               <h3>Burning activity calendar</h3>
-              <p className="hint">One row per year, one column per day. Hover for the value, anomaly and confidence; click a row to select that year.</p>
+              <p className="hint">{coarse ? "One row per year, one column per day. Tap a day for the value, anomaly and confidence; tap a row to select that year." : "One row per year, one column per day. Hover for the value, anomaly and confidence; click a row to select that year."}</p>
             </div>
             <div className="toolbar">
               <div className="seg" role="group" aria-label="Colour mode">
@@ -346,7 +406,7 @@ export default function Explorer({ regions, meta, cells4 }) {
         </div>
 
         <div className="grid-2">
-          <div className="panel">
+          <div className="panel" data-tour="climatology">
             <h3>Climatology and {year}</h3>
             <p className="hint">The typical year, and where {year} sat against it. Shaded bands are {year}'s fire seasons.</p>
             <Climatology model={model} year={year} />
@@ -359,7 +419,7 @@ export default function Explorer({ regions, meta, cells4 }) {
         </div>
 
         {cmpModel && (
-          <div className="panel" style={{ marginBottom: 18 }}>
+          <div className="panel" style={{ marginBottom: 18 }} data-tour="compare">
             <div className="panel-top">
               <div>
                 <h3>Compare regions in {year}</h3>
@@ -371,11 +431,11 @@ export default function Explorer({ regions, meta, cells4 }) {
           </div>
         )}
 
-        <div className="panel">
+        <div className="panel" data-tour="map">
           <div className="panel-top">
             <div>
               <h3>Where it burned</h3>
-              <p className="hint">Cells with satellite-detected fire. Click a day in the calendar to jump to its month, or choose below.</p>
+              <p className="hint">{coarse ? "Cells with satellite-detected fire. Tap a day in the calendar to jump to its month, or choose below." : "Cells with satellite-detected fire. Click a day in the calendar to jump to its month, or choose below."}</p>
             </div>
           </div>
           <div className="chips" style={{ marginBottom: 14 }} role="group" aria-label="Map period">
@@ -402,6 +462,15 @@ export default function Explorer({ regions, meta, cells4 }) {
         </div>
       </div>
 
+      {tourStep != null && (
+        <Tour
+          index={tourStep}
+          steps={TOUR.map((t) => ({ id: t.id, title: t.title, body: t.body(tourCtx) }))}
+          onBack={() => setTourStep((i) => Math.max(i - 1, 0))}
+          onNext={() => setTourStep((i) => Math.min(i + 1, TOUR.length - 1))}
+          onClose={() => setTourStep(null)}
+        />
+      )}
       {toast && <div className="toast" role="status">{toast}</div>}
 
       <div className="section-foot">

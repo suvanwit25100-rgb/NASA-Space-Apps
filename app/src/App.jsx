@@ -9,6 +9,7 @@ import About from "./components/About";
 export default function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const [tourKey, setTourKey] = useState(0);
 
   useEffect(() => {
     Promise.all([loadRegions(), loadCells4(), loadSky()])
@@ -27,10 +28,10 @@ export default function App() {
     <>
       <Nav />
       <main>
-        <Hero cells4={data?.cells4} sky={data?.sky} stats={stats} />
+        <Hero cells4={data?.cells4} sky={data?.sky} stats={stats} onTour={() => setTourKey((k) => k + 1)} />
         {error && <div className="section"><div className="error">Could not load the data: {error}</div></div>}
         {!data && !error && <div className="section"><div className="skeleton">Loading fire record…</div></div>}
-        {data && <Explorer regions={data.regions} meta={data.meta} cells4={data.cells4} />}
+        {data && <Explorer regions={data.regions} meta={data.meta} cells4={data.cells4} tourKey={tourKey} />}
         <Method />
         <About />
       </main>

@@ -7,6 +7,7 @@ import { PolygonLayer } from "@deck.gl/layers";
 import { fireColor } from "../lib/colors";
 import { FIRE_CSS } from "../lib/colors";
 import { MONTHS } from "../lib/analytics";
+import { useCoarse } from "../lib/hooks";
 
 maplibregl.setWorkerUrl(workerUrl);
 
@@ -19,6 +20,7 @@ export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, on
   const [hover, setHover] = useState(null);
   const [ready, setReady] = useState(false);
   const [draft, setDraft] = useState(null);
+  const coarse = useCoarse();
   const onDrawnRef = useRef(onDrawn);
   onDrawnRef.current = onDrawn;
 
@@ -66,32 +68,41 @@ export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, on
     const map = mapRef.current;
     if (!map || !ready || !drawing) return undefined;
     let start = null;
+    let last = null;
     const canvas = map.getCanvas();
     canvas.style.cursor = "crosshair";
+    canvas.style.touchAction = "none";
     map.dragPan.disable();
     const box = (a, b) => [Math.min(a.lng, b.lng), Math.min(a.lat, b.lat), Math.max(a.lng, b.lng), Math.max(a.lat, b.lat)];
+    const cancel = () => {
+      start = null;
+      last = null;
+      setDraft(null);
+    };
     const down = (e) => {
+      if (e.points && e.points.length > 1) return cancel(); // a second finger means pinch-zoom, not drawing
       start = e.lngLat;
+      last = e.lngLat;
     };
     const move = (e) => {
-      if (start) setDraft(box(start, e.lngLat));
+      if (e.points && e.points.length > 1) return cancel();
+      if (!start) return;
+      last = e.lngLat;
+      setDraft(box(start, e.lngLat));
     };
     const up = (e) => {
       if (!start) return;
-      const b = box(start, e.lngLat);
-      start = null;
-      setDraft(null);
+      const b = box(start, last || e.lngLat);
+      cancel();
       if (b[2] - b[0] > 0.15 && b[3] - b[1] > 0.15) onDrawnRef.current?.(b);
     };
-    map.on("mousedown", down);
-    map.on("mousemove", move);
-    map.on("mouseup", up);
+    const events = [["mousedown", down], ["mousemove", move], ["mouseup", up], ["touchstart", down], ["touchmove", move], ["touchend", up], ["touchcancel", cancel]];
+    events.forEach(([n, f]) => map.on(n, f));
     return () => {
-      map.off("mousedown", down);
-      map.off("mousemove", move);
-      map.off("mouseup", up);
+      events.forEach(([n, f]) => map.off(n, f));
       map.dragPan.enable();
       canvas.style.cursor = "";
+      canvas.style.touchAction = "";
       setDraft(null);
     };
   }, [drawing, ready]);
@@ -152,7 +163,7 @@ export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, on
         <div className="map-badge">
           {loading ? "Loading map…" : <>Showing <b>{label}</b> · {data.rows.length.toLocaleString()} burning cells · <span style={{ color: "#8fa8c4" }}>{era}</span></>}
         </div>
-        {drawing && <div className="map-badge" style={{ top: 52, borderColor: "#ff8a1f" }}>Click and drag on the map to draw your area</div>}
+        {drawing && <div className="map-badge" style={{ top: "auto", bottom: 34, borderColor: "#ff8a1f" }}>{coarse ? "Press and drag with one finger to draw your area" : "Click and drag on the map to draw your area"}</div>}
         {hover && (
           <div className="map-tip" style={{ left: hover.x, top: hover.y }}>
             <b>{hover.v}</b> burning day{hover.v === 1 ? "" : "s"} in this ~1,770 km² cell

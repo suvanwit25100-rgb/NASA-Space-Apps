@@ -2,6 +2,8 @@ const DAY = 86400000;
 const AXIS0 = Date.UTC(2000, 0, 1);
 
 export const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+// single letters when a month column is too narrow for three-letter labels (phones)
+export const monthLabels = (widthPx) => (widthPx / 12 < 34 ? "JFMAMJJASOND".split("") : MONTHS.map((m) => m.toUpperCase()));
 export const isLeap = (y) => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
 export const daysIn = (y) => (isLeap(y) ? 366 : 365);
 export const dateOf = (y, d) => new Date(Date.UTC(y, 0, 1 + d));

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { area, line, scaleLinear } from "d3";
-import { fmtDate, MONTHS, monthStartDoy, yearSummary } from "../lib/analytics";
+import { fmtDate, monthLabels, monthStartDoy, yearSummary } from "../lib/analytics";
 import { useSize } from "../lib/hooks";
 
 const M = { l: 44, r: 14, t: 12, b: 26 };
@@ -53,8 +53,8 @@ export default function Compare({ a, b, year }) {
                   <text x={-8} y={paths.y(t) + 3} textAnchor="end" fill="#8fa8c4" fontSize="10">{t}</text>
                 </g>
               ))}
-              {MONTHS.map((m, i) => (
-                <text key={m} x={paths.x(monthStartDoy(2001, i)) + 3} y={ih + 16} fill="#8fa8c4" fontSize="10" fontWeight="600">{m.toUpperCase()}</text>
+              {monthLabels(iw).map((m, i) => (
+                <text key={i} x={paths.x(monthStartDoy(2001, i)) + 3} y={ih + 16} fill="#8fa8c4" fontSize="10" fontWeight="600">{m.toUpperCase()}</text>
               ))}
               <path d={paths.a.band} fill="rgba(255,138,31,0.1)" />
               <path d={paths.b.band} fill="rgba(95,176,255,0.1)" />

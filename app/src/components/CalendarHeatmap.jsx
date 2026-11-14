@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { anomalyAt, fmtDateLong, isMeasured, monthOfDoy, monthStartDoy, MONTHS } from "../lib/analytics";
+import { anomalyAt, fmtDateLong, isMeasured, monthLabels, monthOfDoy, monthStartDoy } from "../lib/analytics";
 import { anomalyColor, fireColor, rgb, ANOM_CSS, FIRE_CSS } from "../lib/colors";
 import { useSize } from "../lib/hooks";
 
@@ -66,9 +66,10 @@ export default function CalendarHeatmap({ model, year, mode, onSelect }) {
 
     ctx.textAlign = "left";
     ctx.fillStyle = "#8fa8c4";
+    const labels = monthLabels(w - ML - MR);
     for (let m = 0; m < 12; m++) {
       const x = ML + monthStartDoy(2001, m) * cw;
-      ctx.fillText(MONTHS[m].toUpperCase(), x + 2, 10);
+      ctx.fillText(labels[m], x + 2, 10);
       ctx.fillStyle = "rgba(120,165,210,0.35)";
       ctx.fillRect(x, 17, 1, 6);
       ctx.fillStyle = "#8fa8c4";

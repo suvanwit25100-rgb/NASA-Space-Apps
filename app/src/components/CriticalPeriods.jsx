@@ -1,5 +1,5 @@
 import { scaleLinear } from "d3";
-import { fmtDate, monthStartDoy, MONTHS } from "../lib/analytics";
+import { fmtDate, monthLabels, monthStartDoy } from "../lib/analytics";
 import { useSize } from "../lib/hooks";
 
 const M = { l: 44, r: 12, t: 8, b: 24 };
@@ -17,10 +17,10 @@ export default function CriticalPeriods({ model, year, onSelect }) {
       {w > 0 && (
         <svg height={H} role="img" aria-label="Fire seasons for each year, with the peak week of each season marked.">
           <g transform={`translate(${M.l},${M.t})`}>
-            {MONTHS.map((m, i) => {
+            {monthLabels(iw).map((m, i) => {
               const px = x(monthStartDoy(2001, i));
               return (
-                <g key={m}>
+                <g key={i}>
                   <line x1={px} x2={px} y1={0} y2={ys.length * ROW} stroke="rgba(120,165,210,0.12)" />
                   <text x={px + 3} y={ys.length * ROW + 15} fill="#8fa8c4" fontSize="10" fontWeight="600">{m.toUpperCase()}</text>
                 </g>
