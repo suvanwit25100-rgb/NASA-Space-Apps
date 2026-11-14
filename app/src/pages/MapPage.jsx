@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import AreaBar from "../components/AreaBar";
 import Loading from "../components/Loading";
 import { ChapterNav, PageHead } from "../components/PageHead";
-import { MONTHS } from "../lib/analytics";
 import { rectName, useExplorer } from "../state/Explorer";
 
 const FireMap = lazy(() => import("../components/FireMap"));
@@ -26,16 +25,10 @@ export default function MapPage() {
               <h2>Where it burned</h2>
               <p className="hint">
                 {e.coarse
-                  ? "Cells with satellite-detected fire. Choose a month below, or draw your own area with one finger."
-                  : "Cells with satellite-detected fire. Choose a month below, or draw your own area and see its calendar."}
+                  ? "Cells with satellite-detected fire. Pick a month on the timeline, press play, or draw your own area with one finger."
+                  : "Cells with satellite-detected fire. Pick a month on the timeline, press play to watch the year unfold, or draw your own area and see its calendar."}
               </p>
             </div>
-          </div>
-          <div className="pill-row wrap" role="group" aria-label="Map period">
-            <button className="chip" aria-pressed={e.mapMonth == null} onClick={() => e.setMapMonth(null)}>Full year</button>
-            {MONTHS.map((m, i) => (
-              <button key={m} className="chip" aria-pressed={e.mapMonth === i} onClick={() => e.setMapMonth(i)}>{m}</button>
-            ))}
           </div>
           <Suspense fallback={<div className="map-wrap"><div className="map-badge">Loading map…</div></div>}>
             <FireMap
@@ -44,6 +37,8 @@ export default function MapPage() {
               aoi={e.aoi}
               year={e.year}
               month={e.mapMonth}
+              setMonth={e.setMapMonth}
+              onToggleDraw={e.toggleDrawing}
               drawing={e.drawing}
               onDrawn={(bbox) => e.startCustom({ bbox, source: "rect", name: rectName(bbox) })}
             />

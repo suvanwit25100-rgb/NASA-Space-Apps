@@ -118,7 +118,7 @@ The site is a short story told over six chapters. Open any of them from the fron
 - 📈 **Climatology** with the typical range, and the selected year laid over it.
 - 🌡️ **Anomaly view**: how unusual was a day against the same week in other years.
 - 🔥 **Fire-season detection**, including regions with two seasons a year (see [Design choices](#-design-choices)).
-- 🗺️ **Linked map** (MapLibre + deck.gl) that follows the calendar.
+- 🗺️ **Map stage** (MapLibre + deck.gl): a large glass-framed map with a month timeline and **play** button that animates the year, a colour legend, reset view, full screen, a Layers menu for the thin-cell and coverage options, a draw-area tool, and a hover card that shows the cell's colour and burning days.
 - ✏️ **Any area on Earth**: pick a country or featured region, **draw a rectangle**, or **upload a GeoJSON outline**. Custom areas are calibrated live in your browser.
 - ⚖️ **Compare** two areas or periods.
 - 📤 **Export** the daily series as CSV (with a provenance header) or the calendar as PNG.
