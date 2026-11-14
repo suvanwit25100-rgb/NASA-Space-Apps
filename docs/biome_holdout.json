@@ -1,0 +1,308 @@
+{
+ "world": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.016397001719595128,
+   "medAbsBiomeErr": 0.01860141222050604,
+   "areaR": 0.8768323073632129,
+   "biomeR": 0.8814307922800155,
+   "years": 13,
+   "nBiomes": 8
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.00782994205658083,
+   "medAbsBiomeErr": 0.019925877016299887,
+   "areaR": 0.9712826939712045,
+   "biomeR": 0.9781850537907063,
+   "years": 9,
+   "nBiomes": 8
+  }
+ },
+ "punjab-haryana": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.07888165490695154,
+   "medAbsBiomeErr": 0.10326700162371183,
+   "areaR": 0.9727624592697697,
+   "biomeR": 0.9718103081851586,
+   "years": 13,
+   "nBiomes": 5
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.10018763370750494,
+   "medAbsBiomeErr": 0.09654654702629739,
+   "areaR": 0.9794403426836428,
+   "biomeR": 0.9778108061321471,
+   "years": 9,
+   "nBiomes": 5
+  }
+ },
+ "indo-gangetic": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.04855054497387479,
+   "medAbsBiomeErr": 0.06093972599048403,
+   "areaR": 0.9769981570291228,
+   "biomeR": 0.9745230750446983,
+   "years": 13,
+   "nBiomes": 6
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.11359161023802677,
+   "medAbsBiomeErr": 0.1289251390061521,
+   "areaR": 0.9780741394754333,
+   "biomeR": 0.9714315317469198,
+   "years": 9,
+   "nBiomes": 6
+  }
+ },
+ "central-india": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.032011425160982654,
+   "medAbsBiomeErr": 0.045709478513902835,
+   "areaR": 0.9774889005664105,
+   "biomeR": 0.9772510137130168,
+   "years": 13,
+   "nBiomes": 3
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.10905558823417505,
+   "medAbsBiomeErr": 0.08456512912751113,
+   "areaR": 0.9877322720497487,
+   "biomeR": 0.9868554559611393,
+   "years": 9,
+   "nBiomes": 3
+  }
+ },
+ "northeast": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.025244631595709777,
+   "medAbsBiomeErr": null,
+   "areaR": 0.9926261277605891,
+   "biomeR": 0.9930878380078797,
+   "years": 13,
+   "nBiomes": 5
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.1180111130169168,
+   "medAbsBiomeErr": null,
+   "areaR": 0.9846625756432424,
+   "biomeR": null,
+   "years": 9,
+   "nBiomes": 5
+  }
+ },
+ "peninsular": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.07798992958601536,
+   "medAbsBiomeErr": 0.09095062030320089,
+   "areaR": 0.9705552052676591,
+   "biomeR": 0.9701671902727091,
+   "years": 13,
+   "nBiomes": 3
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.17530577118656487,
+   "medAbsBiomeErr": 0.14637409858335493,
+   "areaR": 0.9840456044736902,
+   "biomeR": 0.986099072814888,
+   "years": 9,
+   "nBiomes": 3
+  }
+ },
+ "amazon-arc": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.04808530760037766,
+   "medAbsBiomeErr": 0.04130207746592773,
+   "areaR": 0.9913242177878125,
+   "biomeR": 0.9912896371182923,
+   "years": 13,
+   "nBiomes": 3
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.05944778115581739,
+   "medAbsBiomeErr": 0.05049314046134801,
+   "areaR": 0.9944514709291197,
+   "biomeR": 0.9939443842866411,
+   "years": 9,
+   "nBiomes": 3
+  }
+ },
+ "southern-africa-savanna": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.02446262744172889,
+   "medAbsBiomeErr": 0.0242655396122492,
+   "areaR": 0.9882913638787205,
+   "biomeR": 0.9882877258637388,
+   "years": 13,
+   "nBiomes": 5
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.024976829186952543,
+   "medAbsBiomeErr": 0.02510140296013952,
+   "areaR": 0.9964993630556306,
+   "biomeR": 0.9965145883121352,
+   "years": 9,
+   "nBiomes": 5
+  }
+ },
+ "sahel-savanna": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.02943157960292886,
+   "medAbsBiomeErr": 0.027563593158521638,
+   "areaR": 0.9968253805675639,
+   "biomeR": 0.9970385310603713,
+   "years": 13,
+   "nBiomes": 3
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.049484404013340644,
+   "medAbsBiomeErr": 0.04739461277107737,
+   "areaR": 0.9943134702741815,
+   "biomeR": 0.9929252094231682,
+   "years": 9,
+   "nBiomes": 3
+  }
+ },
+ "northern-australia": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.04470154269988935,
+   "medAbsBiomeErr": 0.048516425650248385,
+   "areaR": 0.9789932496773935,
+   "biomeR": 0.9783621944309225,
+   "years": 13,
+   "nBiomes": 2
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.02573288493831183,
+   "medAbsBiomeErr": 0.030436667274151175,
+   "areaR": 0.9906858508036787,
+   "biomeR": 0.9906202273351946,
+   "years": 9,
+   "nBiomes": 2
+  }
+ },
+ "southeast-australia": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.12486227996308386,
+   "medAbsBiomeErr": 0.15709783093227414,
+   "areaR": 0.9329396162539341,
+   "biomeR": 0.9316582464238182,
+   "years": 13,
+   "nBiomes": 4
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.17541846409177242,
+   "medAbsBiomeErr": 0.2891022054078818,
+   "areaR": 0.8994787708291084,
+   "biomeR": 0.9027926593991881,
+   "years": 9,
+   "nBiomes": 4
+  }
+ },
+ "california": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.09794544221075463,
+   "medAbsBiomeErr": 0.186304666791973,
+   "areaR": 0.8424819101561355,
+   "biomeR": 0.8233843678506023,
+   "years": 13,
+   "nBiomes": 4
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.04478119368528177,
+   "medAbsBiomeErr": 0.07153109440556671,
+   "areaR": 0.9525425083016066,
+   "biomeR": 0.9383844765486473,
+   "years": 9,
+   "nBiomes": 4
+  }
+ },
+ "boreal-canada": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.22809019816152354,
+   "medAbsBiomeErr": 0.3216217754356929,
+   "areaR": 0.9663059540750846,
+   "biomeR": 0.9603635313172875,
+   "years": 13,
+   "nBiomes": 4
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.026203503129216377,
+   "medAbsBiomeErr": 0.013970776447645328,
+   "areaR": 0.9896809694328427,
+   "biomeR": 0.992458488022042,
+   "years": 9,
+   "nBiomes": 4
+  }
+ },
+ "siberia": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.0900080273012156,
+   "medAbsBiomeErr": 0.2473573716645312,
+   "areaR": 0.9465467213817358,
+   "biomeR": 0.8398394145512923,
+   "years": 13,
+   "nBiomes": 5
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.005609974156382647,
+   "medAbsBiomeErr": 0.003336288682387556,
+   "areaR": 0.9993694847001375,
+   "biomeR": 0.999288578700752,
+   "years": 9,
+   "nBiomes": 5
+  }
+ },
+ "maritime-sea": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.14034524545626392,
+   "medAbsBiomeErr": 0.14034524545626392,
+   "areaR": 0.9438676140993046,
+   "biomeR": 0.9438676140993046,
+   "years": 13,
+   "nBiomes": 1
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.1831432535319233,
+   "medAbsBiomeErr": 0.1831432535319233,
+   "areaR": 0.9683954680213134,
+   "biomeR": 0.9683954680213134,
+   "years": 9,
+   "nBiomes": 1
+  }
+ },
+ "mainland-sea": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.05325806448985082,
+   "medAbsBiomeErr": 0.05622157547623874,
+   "areaR": 0.9838340272809689,
+   "biomeR": 0.9841001912515656,
+   "years": 13,
+   "nBiomes": 2
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.0840682204785832,
+   "medAbsBiomeErr": 0.05925307670298652,
+   "areaR": 0.9876539692996715,
+   "biomeR": 0.9893832523241686,
+   "years": 9,
+   "nBiomes": 2
+  }
+ },
+ "mediterranean": {
+  "aquaToViirs": {
+   "medAbsAreaErr": 0.06049851807830131,
+   "medAbsBiomeErr": null,
+   "areaR": 0.9449234175741716,
+   "biomeR": 0.944984178357284,
+   "years": 13,
+   "nBiomes": 4
+  },
+  "terraToAqua": {
+   "medAbsAreaErr": 0.020829165776149905,
+   "medAbsBiomeErr": null,
+   "areaR": 0.9921226704419279,
+   "biomeR": null,
+   "years": 9,
+   "nBiomes": 4
+  }
+ }
+}

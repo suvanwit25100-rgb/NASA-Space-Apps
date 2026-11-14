@@ -76,6 +76,8 @@ See git log and this file's edits for current status.
 
 - Done: leave-one-year-out hold-out test (`pipeline/holdout_test.py` -> `holdout.json`, shown on the Method page via `components/Holdout.jsx`). Aqua->VIIRS (held-out 2013-2025): world annual total median error 1.6%, monthly r 0.88, band coverage 61-75% across areas; the seasonal ratio beat a single ratio in 17 of 17 areas; worst area Boreal Canada ~23%. Terra->Aqua (2003-2011) is weaker: beat the baseline in 12 of 17, worst Sumatra & Kalimantan ~18%, and 6 areas had under 60% band coverage, so the calibration range is a minimum. Remaining: hour-of-day view, biome-specific calibration, VIIRS footprint snapping.
 
+- Tried and rejected: biome-specific calibration. `pipeline/cell_biome.py` assigns each cell to one of 8 groups from RESOLVE Ecoregions 2017 (CC BY 4.0; downloaded to data/biomes, gitignored; result committed as `pipeline/cell_biome.npz`); `pipeline/holdout_biome.py` compares per-biome against per-area ratios on held-out years (results in `docs/biome_holdout.json`). Aqua->VIIRS: biome worse in 11 of 15 comparable areas, better in 3; Terra->Aqua: 8 better, 6 worse. Splitting dilutes each ratio, so the app keeps one ratio per area. Remaining: VIIRS footprint snapping; hour-of-day data fetch (`pipeline/fetch_hours.py`) in progress.
+
 ### API facts learned from the test call (update the plan's "to verify" list accordingly)
 
 - The area API's date parameter is the **start** of the window; `day_range` extends **forward** from it (not backward from an end date as initially assumed).

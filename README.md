@@ -310,7 +310,7 @@ We would rather you trust a smaller claim.
 - **Cell-days are not area burned.** They show *where and when* fire was detected, not *how much land* burned. Where a few very large fires dominate burned area (California, Boreal Canada, Southeast Australia), cell-days count presence, not size, and the seasonal match is weaker.
 - **2000–2011 are calibrated estimates** from MODIS. They are always drawn with an uncertainty band and never presented as measurements.
 - **Overpass normalisation is an approximation.** It is an analytic orbit model (swath against orbit spacing) that assumes detections scale with the number of looks and ignores orbit drift. It is off by default on the map and shown as a separate row in Compare.
-- **One calibration ratio per area and calendar month.** Biome-specific calibration is future work.
+- **One calibration ratio per area and calendar month.** Biome-specific ratios were tried (`pipeline/cell_biome.py`, `pipeline/holdout_biome.py`, RESOLVE Ecoregions 2017 grouped into 8 biomes) and rejected: on held-out years they were worse than per-area ratios in 11 of 15 comparable areas for Aqua to VIIRS and mixed for Terra to Aqua, because splitting the data makes each ratio noisier.
 - The **latest-week signal** uses near-real-time data, which lags about 12 days and is later replaced by reprocessed data. It runs roughly 10% above earlier years across the world because it cannot drop static sources like gas flares; a persistent-spot filter removes most of them, and the site shows the measured offset.
 - **NOAA-20 and NOAA-21 are not included**, and **2026 is excluded** until FIRMS publishes reprocessed data.
 - Detections outlast burn scars, so the harmonised series runs a little high in winter and low at peaks against burned area.
@@ -351,6 +351,7 @@ We would rather you trust a smaller claim.
   - **VIIRS** 375 m active fire from **Suomi NPP**, 2012 to 2025.
   - Taken from FIRMS's public per-country annual archive.
 - **NASA MCD64A1** (MODIS Burned Area, Collection 6.1, 500 m), read through the Microsoft Planetary Computer, used as an independent validation. See [`pipeline/validate_against_mcd64a1.py`](pipeline/validate_against_mcd64a1.py).
+- **RESOLVE Ecoregions 2017** (Dinerstein et al. 2017, BioScience, CC BY 4.0) assigns each cell to a biome, used only in the biome-calibration experiment described under limits. It is not a NASA resource.
 - **GFED4.1s** burned area is a second cross-check. It is a third-party dataset built on MCD64A1, not itself a NASA resource.
 
 <br/>
@@ -429,7 +430,6 @@ npx firebase-tools deploy --only hosting
 - Push alerts for all 209 countries. They are limited to the world and the featured regions because the near-real-time feed cannot drop gas flares the way the archive does and still over-reads some small countries.
 - Orbit drift in the coverage model (Terra and Aqua have drifted from their original overpass times).
 - A finer diurnal view. Today's signal compares two overpass times; true hour-of-day needs the raw acquisition times, which the pipeline discards.
-- Biome-specific calibration (quantile mapping per biome and season).
 
 <br/>
 

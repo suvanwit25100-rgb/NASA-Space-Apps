@@ -457,3 +457,5 @@ main:focus { outline: none; }
 .push { grid-column: 1 / -1; }
 .push summary { cursor: pointer; font-weight: 800; color: var(--ember-hot); }
 .push code { background: rgba(255,255,255,.08); padding: 2px 8px; border-radius: 8px; }
+
+.sub-h { font-family: var(--serif); font-weight: 500; font-size: 24px; margin: 28px 0 8px; color: var(--cream); }

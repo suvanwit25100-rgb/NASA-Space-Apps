@@ -8,6 +8,7 @@ import Loading from "../components/Loading";
 import { ChapterNav, PageHead } from "../components/PageHead";
 import Replays from "../components/Replays";
 import { KpiRow, StoryLead } from "../components/Story";
+import HourOfDay from "../components/HourOfDay";
 import TimeOfDay from "../components/TimeOfDay";
 import Trend from "../components/Trend";
 import Verdict from "../components/Verdict";
@@ -52,6 +53,8 @@ export default function SeasonsPage() {
           <h2>Morning or afternoon?</h2>
           <p className="hint">When in the day fires are caught: a time-of-day signal from the two MODIS satellites' different overpass times.</p>
           <TimeOfDay />
+          <h3 className="sub-h">What hour of the day</h3>
+          <HourOfDay />
         </section>
         <section className="panel" data-tour="weather">
           <h2>Weather context</h2>
