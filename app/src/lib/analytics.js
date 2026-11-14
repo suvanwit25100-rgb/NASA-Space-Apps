@@ -246,3 +246,78 @@ export function yearSummary(model, y) {
 export function isMeasured(y, d) {
   return dateOf(y, d) >= Date.UTC(2012, 0, 20);
 }
+
+const meanOf = (a) => a.reduce((s, v) => s + v, 0) / a.length;
+const sdOf = (a) => {
+  const m = meanOf(a);
+  return Math.sqrt(a.reduce((s, v) => s + (v - m) ** 2, 0) / a.length);
+};
+
+// A one-line judgement on how unusual a year was: its total against the other years, and its most unusual week.
+export function yearVerdict(model, y) {
+  const c = model.crit[y];
+  if (!c) return null;
+  const others = model.completeYears.filter((o) => o !== y).map((o) => model.crit[o].total);
+  if (others.length < 8) return null;
+  const sd = sdOf(others);
+  const z = sd > 0 ? (c.total - meanOf(others)) / sd : 0;
+  const rankAbove = others.filter((t) => t > c.total).length + 1;
+  let peak = null;
+  for (const w of weeklyAnomaly(model, y)) if (w.z != null && (peak == null || Math.abs(w.z) > Math.abs(peak.z))) peak = w;
+  const level = z >= 1.5 ? "high" : z <= -1.5 ? "low" : Math.abs(z) < 0.5 ? "typical" : z > 0 ? "above" : "below";
+  const label = { high: "Unusually active", above: "Busier than usual", typical: "A typical year", below: "Quieter than usual", low: "Unusually quiet" }[level];
+  return { z, level, label, rank: rankAbove, n: others.length + 1, peak, calibrated: y < 2012 };
+}
+
+function regress(xs, ys) {
+  const n = xs.length;
+  const mx = meanOf(xs);
+  const my = meanOf(ys);
+  let sxx = 0;
+  let sxy = 0;
+  for (let i = 0; i < n; i++) {
+    sxx += (xs[i] - mx) ** 2;
+    sxy += (xs[i] - mx) * (ys[i] - my);
+  }
+  const slope = sxy / sxx;
+  const icpt = my - slope * mx;
+  let sse = 0;
+  for (let i = 0; i < n; i++) sse += (ys[i] - (icpt + slope * xs[i])) ** 2;
+  const se = Math.sqrt(sse / Math.max(n - 2, 1) / sxx);
+  return { slope, icpt, t: se > 0 ? slope / se : 0 };
+}
+
+// Has the main fire season moved? Follows the same season (peak within 75 days of the median peak) across years.
+export function seasonTrend(model) {
+  const mains = model.completeYears.map((y) => ({ y, s: model.seasons[y]?.[0] })).filter((d) => d.s);
+  if (mains.length < 12) return null;
+  const ref = [...mains.map((d) => d.s.peak)].sort((a, b) => a - b)[Math.floor(mains.length / 2)];
+  const pts = [];
+  for (const y of model.completeYears) {
+    const s = (model.seasons[y] || []).filter((x) => Math.abs(x.peak - ref) <= 75).sort((a, b) => b.share - a.share)[0];
+    if (s) pts.push({ y, start: s.start, end: s.end, peak: s.peakWeek });
+  }
+  if (pts.length < 12) return null;
+  if (meanOf(pts.map((p) => p.end - p.start)) >= 300) return null; // burns year-round, no season to track
+  const xs = pts.map((p) => p.y);
+  const f = (k) => regress(xs, pts.map((p) => p[k]));
+  const start = f("start");
+  const end = f("end");
+  const peak = f("peak");
+  return { pts, start, end, peak, nYears: pts.length };
+}
+
+// How wide the calibration range is for a year, as a share of the typical daily value (null once VIIRS measures directly).
+export function yearUncertainty(model, y) {
+  if (y >= 2012) return { measured: true };
+  const d = model.byYear[y];
+  if (!d) return null;
+  let sum = 0;
+  let band = 0;
+  for (let i = 0; i < d.n; i++) {
+    if (Number.isNaN(d.vals[i]) || Number.isNaN(d.lo[i]) || Number.isNaN(d.hi[i])) continue;
+    sum += d.vals[i];
+    band += (d.hi[i] - d.lo[i]) / 2;
+  }
+  return sum > 0 ? { measured: false, pct: (band / sum) * 100 } : null;
+}

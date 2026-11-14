@@ -3,7 +3,10 @@ import Climatology from "../components/Climatology";
 import CriticalPeriods from "../components/CriticalPeriods";
 import Loading from "../components/Loading";
 import { ChapterNav, PageHead } from "../components/PageHead";
+import Replays from "../components/Replays";
 import { KpiRow, StoryLead } from "../components/Story";
+import Trend from "../components/Trend";
+import Verdict from "../components/Verdict";
 import { useExplorer } from "../state/Explorer";
 
 export default function SeasonsPage() {
@@ -15,6 +18,7 @@ export default function SeasonsPage() {
       <Loading>
         <StoryLead />
         <KpiRow />
+        <Verdict />
         <div className="grid-2">
           <section className="panel" data-tour="climatology">
             <h2>Climatology and {e.year}</h2>
@@ -27,7 +31,13 @@ export default function SeasonsPage() {
             {e.model && <CriticalPeriods model={e.model} year={e.year} onSelect={e.select} />}
           </section>
         </div>
+        <section className="panel" data-tour="trend">
+          <h2>Has the season moved?</h2>
+          <p className="hint">Start and end of the main fire season in every year, with a straight-line trend.</p>
+          {e.model && <Trend model={e.model} />}
+        </section>
       </Loading>
+      <Replays />
       <ChapterNav path="/seasons" />
     </main>
   );

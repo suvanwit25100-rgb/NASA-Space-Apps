@@ -13,7 +13,10 @@ maplibregl.setWorkerUrl(workerUrl);
 
 const STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
+const THIN = 3; // fewer burning days than this in a cell is one or two detections, too little to read as a pattern
+
 export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, onDrawn }) {
+  const [flagThin, setFlagThin] = useState(false);
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const overlayRef = useRef(null);
@@ -135,6 +138,18 @@ export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, on
           lineWidthUnits: "pixels",
         }),
         new H3HexagonLayer({
+          id: "thin",
+          data: flagThin ? data.rows.filter((d) => d.v < THIN) : [],
+          getHexagon: (d) => d.hex,
+          filled: false,
+          stroked: true,
+          getLineColor: [159, 208, 255, 230],
+          getLineWidth: 1.5,
+          lineWidthUnits: "pixels",
+          extruded: false,
+          coverage: 0.92,
+        }),
+        new H3HexagonLayer({
           id: "burn",
           data: data.rows,
           getHexagon: (d) => d.hex,
@@ -150,7 +165,9 @@ export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, on
         }),
       ],
     });
-  }, [data, aoi, ready, draft]);
+  }, [data, aoi, ready, draft, flagThin]);
+
+  const thinCount = useMemo(() => data.rows.filter((d) => d.v < THIN).length, [data]);
 
   const era = year >= 2012 ? "VIIRS 375 m" : year >= 2003 ? "MODIS Aqua 1 km" : "MODIS Terra 1 km";
   const label = month == null ? `${year}, full year` : `${MONTHS[month]} ${year}`;
@@ -172,6 +189,11 @@ export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, on
       </div>
       <div className="legend" style={{ marginTop: 12 }}>
         <span>Fewer burning days<i className="ramp" style={{ background: FIRE_CSS }} />More burning days</span>
+        <span>
+          <label className="thin-toggle">
+            <input type="checkbox" checked={flagThin} onChange={(e) => setFlagThin(e.target.checked)} /> Outline thin-evidence cells ({thinCount.toLocaleString()} of {data.rows.length.toLocaleString()} have under {THIN} burning days)
+          </label>
+        </span>
         <span>Colour is scaled within the selected period, so compare patterns, not absolute levels, across years.</span>
       </div>
     </>

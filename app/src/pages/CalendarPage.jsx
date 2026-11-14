@@ -2,7 +2,9 @@ import AreaBar from "../components/AreaBar";
 import CalendarHeatmap from "../components/CalendarHeatmap";
 import Loading from "../components/Loading";
 import { ChapterNav, PageHead } from "../components/PageHead";
+import Replays from "../components/Replays";
 import { StoryLead } from "../components/Story";
+import Verdict from "../components/Verdict";
 import { exportCalendarPng, exportCsv } from "../lib/exporters";
 import { useExplorer } from "../state/Explorer";
 
@@ -14,6 +16,7 @@ export default function CalendarPage() {
       <AreaBar />
       <Loading>
         <StoryLead />
+        <Verdict />
         <section className="panel" data-tour="calendar">
           <div className="panel-top">
             <div>
@@ -39,6 +42,7 @@ export default function CalendarPage() {
           {e.model && <CalendarHeatmap model={e.model} year={e.year} mode={e.mode} onSelect={e.select} />}
         </section>
       </Loading>
+      <Replays />
       <ChapterNav path="/calendar" />
     </main>
   );
