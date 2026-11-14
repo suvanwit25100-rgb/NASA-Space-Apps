@@ -1,0 +1,15 @@
+FortiGuard Web Filter rating request for https://globalburnlog.earth
+Form: https://www.fortiguard.com/faq/wfratingsubmit
+
+URL:        https://globalburnlog.earth
+Category:   Reference
+Screenshot: docs/fortiguard_screenshot.jpg (224 KB, limit is 2 MB)
+Name:       <your name>
+Email:      <your contact email>
+Company:    N/A
+Comment:    New website for a NASA Space Apps Challenge project: an interactive, read-only data explorer for satellite fire
+            detections (NASA FIRMS MODIS and VIIRS) by country and region. It contains scientific reference data, charts and
+            a map; there are no logins, downloads, ads or user accounts. Suggested category: Reference.
+
+Then tick "I'm not a robot" and press Submit. Also submit https://www.globalburnlog.earth once www is set up, if you use it.
+Afterwards, check the rating at https://www.fortiguard.com/webfilter (search the URL); a review can take a few days.
