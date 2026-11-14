@@ -9,6 +9,15 @@
     "cleanUrls": true,
     "headers": [
       {
+        "source": "{/,/index.html,/calendar,/seasons,/map,/compare,/method,/about}",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
         "source": "/assets/**",
         "headers": [
           {
