@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Holdout from "../components/Holdout";
 import { ChapterNav, PageHead } from "../components/PageHead";
 import { looksPerDay } from "../lib/overpass";
 
@@ -81,6 +82,7 @@ export default function MethodPage() {
       )}
 
       <div className="grid-2">
+        <Holdout />
         <section className="panel">
           <h2>How often the satellites look</h2>
           <p className="lead-text">

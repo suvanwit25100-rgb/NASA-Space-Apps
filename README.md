@@ -293,6 +293,8 @@ A harmonised series is only worth something if it agrees with an **independent**
 
 **Nine of twelve regions reach a seasonal r of 0.90 or better.** The three weak ones share a cause, explained in the next section, and the site says so on the Method page.
 
+**Hold-out test** (`pipeline/holdout_test.py`): each overlap year was left out in turn, the sensor ratio was learned from the other years, and the prediction was compared with what the newer sensor actually saw. For Aqua to VIIRS over 2013 to 2025, the world's annual total was off by a median of 2% and the monthly shape correlated at r = 0.88; the seasonal ratio beat a single yearly ratio on annual-total error in 12 of 17 areas. The largest miss is Boreal Canada at about 23% in the Aqua-to-VIIRS link, and in several areas the calibration bands were a little too narrow, so the range is a minimum, not a guarantee. Full table on the Method page.
+
 Cross-checks that also passed: the global India series matches the original India-only pipeline (correlation ≥ 0.9995, totals within about 1%), and in-browser calibration of custom areas matches the precomputed Python series with **zero difference** across six regions on six continents.
 
 <br/>

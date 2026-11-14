@@ -74,6 +74,8 @@ See git log and this file's edits for current status.
 
 - Done: overpass normalisation (method step 5), as an analytic orbit model in `app/src/lib/overpass.js` (looks per day from swath width, orbit spacing and latitude; VIIRS ~2.2 at the equator, ~3.9 at boreal Canada). Not applied to the stored series (within an area it cancels in the ratios); offered as a map toggle and as 'adjusted' rows in Compare, plus a Method-page section. Assumes detections scale with looks and ignores orbit drift, so it is stated as approximate. Still not done: biome-specific calibration, VIIRS footprint snapping, hour-of-day view.
 
+- Done: leave-one-year-out hold-out test (`pipeline/holdout_test.py` -> `holdout.json`, shown on the Method page via `components/Holdout.jsx`). Aqua->VIIRS (held-out 2013-2025): world annual total median error 1.6%, monthly r 0.88, band coverage 75%; seasonal ratio beat a single ratio in 12 of 17 areas; worst area Boreal Canada ~23%. Terra->Aqua (2003-2011): bands under 60% coverage in 6 areas, so the calibration range is a minimum. Remaining: hour-of-day view, biome-specific calibration, VIIRS footprint snapping.
+
 ### API facts learned from the test call (update the plan's "to verify" list accordingly)
 
 - The area API's date parameter is the **start** of the window; `day_range` extends **forward** from it (not backward from an end date as initially assumed).
