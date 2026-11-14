@@ -1,8 +1,8 @@
 # Burning Activity Calendar
 
-**Live:** https://global-burn-log.web.app (custom domain: globalburnlog.earth, once HTTPS is issued)
+**Live:** https://globalburnlog.earth (also https://global-burn-log.web.app)
 
-**60-second guided tour:** https://global-burn-log.web.app/?tour=1 (Punjab and Haryana stubble burning: when it starts, when it peaks, how the latest year compares)
+**60-second guided tour:** https://globalburnlog.earth/?tour=1 (Punjab and Haryana stubble burning: when it starts, when it peaks, how the latest year compares)
 
 A global burning-activity calendar built from 20+ years of satellite active-fire hotspot data (MODIS + VIIRS via NASA FIRMS), harmonised across sensors into comparable "burning cell-days" on an H3 grid, so responders, scientists and land managers can see historical fire patterns, anomalies and critical periods for any area of interest.
 
