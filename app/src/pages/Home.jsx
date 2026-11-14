@@ -144,6 +144,7 @@ export default function Home({ nCountries = 209 }) {
         </section>
 
         <Reveal className="smoke-band">
+          <div className="smoke-art" aria-hidden="true" />
           <div className="smoke-copy">
             <p className="eyebrow caps">The demo question</p>
             <h2 className="front-h">When does <em>your</em> region burn?</h2>
