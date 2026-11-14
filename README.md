@@ -128,7 +128,7 @@ The site is a short story told over six chapters. Open any of them from the fron
 - 🎞️ **Event replays**: one click to Australia 2019–20, Canada 2023, the Amazon 2019, Indonesia 2015, California 2020 and Punjab stubble burning.
 - 📉 **Has the season moved?** Season start and end across 25 years with a trend line, marked "no clear shift" when it is within noise.
 - ✅ **Checked against burned area, in the app**: the harmonised seasonal shape drawn over GFED4.1s (and NASA MCD64A1 for India), with r.
-- 🌓 **Morning or afternoon?** A time-of-day signal from Terra's 10:30 and Aqua's 13:30 overpasses.
+- 🌓 **Morning or afternoon, and what hour?** The Terra-to-Aqua ratio by month, plus the local solar hour of every detection (loaded on request from a sample of years), with the night-time share of fires.
 - 🌦️ **Weather context** (on request): temperature and rainfall anomalies beside the fire anomaly, from Open-Meteo (ERA5).
 - 🛰️ **Coverage adjustment**: satellites look at high latitudes more often (orbits converge toward the poles), so the map and the Compare table can adjust cell-days for that, using a simple orbit model.
 - 🔍 **Thin-evidence cells** can be outlined on the map, so weak spots are visible rather than hidden.
@@ -431,7 +431,7 @@ npx firebase-tools deploy --only hosting
 - NOAA-20 and NOAA-21 detections. Probed the public country archive under ten plausible folder names and all returned 404, so there is no public per-country file to use; the FIRMS area API could supply them but only within its rate limits.
 - Push alerts for all 209 countries. They are limited to the world and the featured regions because the near-real-time feed cannot drop gas flares the way the archive does and still over-reads some small countries.
 - Orbit drift in the coverage model (Terra and Aqua have drifted from their original overpass times).
-- A finer diurnal view. Today's signal compares two overpass times; true hour-of-day needs the raw acquisition times, which the pipeline discards.
+- A continuous diurnal curve. The hour-of-day view uses the satellites' own timestamps, but each satellite only passes at fixed times (about 10:30, 13:30, 22:30 and 01:30), so it shows when fires are seen, not when they burn. It uses a sample of years (2014, 2018, 2022 for VIIRS; 2004, 2010, 2018, 2022 for MODIS), not all 26.
 
 <br/>
 

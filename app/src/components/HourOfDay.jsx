@@ -33,7 +33,7 @@ export default function HourOfDay() {
 
   if (state !== "ready") {
     return (
-      <div>
+      <div ref={ref}>
         <p className="hint">Shows the local time of day of each detection, from the satellites' own timestamps. About 1 MB, loaded only when you ask.</p>
         <button className="btn-sm" onClick={open} disabled={state === "loading"}>{state === "loading" ? "Loading…" : state === "error" ? "Could not load, try again" : "Show time of day"}</button>
       </div>
