@@ -15,21 +15,17 @@ function rng(seed) {
   };
 }
 
-function useFirePoints(cells, cm) {
+function useFirePoints(cells4, sky) {
   return useMemo(() => {
-    if (!cells || !cm) return null;
-    const total = new Float32Array(cells.length);
-    for (let i = 0; i < cm.n; i++) if (cm.month[i] >= 144) total[cm.cell[i]] += cm.days[i];
-    const sorted = Array.from(total).filter((v) => v > 0).sort((a, b) => a - b);
-    const ref = sorted[Math.floor(sorted.length * 0.995)] || 1;
+    if (!cells4 || !sky) return null;
     const pts = [];
-    for (let i = 0; i < cells.length; i++) {
-      if (total[i] <= 0) continue;
-      const [lat, lon] = cellToLatLng(cells[i]);
-      pts.push({ lat, lon, k: Math.min(1, (total[i] / ref) ** 1.25) });
+    for (let i = 0; i < cells4.length; i++) {
+      if (sky[i] < 5) continue;
+      const [lat, lon] = cellToLatLng(cells4[i]);
+      pts.push({ lat, lon, k: Math.min(1, (sky[i] / 255) ** 1.1) });
     }
     return pts;
-  }, [cells, cm]);
+  }, [cells4, sky]);
 }
 
 function drawSky(canvas, w, h, pts) {
@@ -96,8 +92,8 @@ function drawSky(canvas, w, h, pts) {
   ctx.restore();
 
   if (!pts) return;
-  const lat0 = (-30 * Math.PI) / 180;
-  const lon0 = 82;
+  const lat0 = (-22 * Math.PI) / 180;
+  const lon0 = 38;
   const roll = (-8 * Math.PI) / 180;
   const pivotX = cx;
   const pivotY = h * 0.7;
@@ -128,20 +124,20 @@ function drawSky(canvas, w, h, pts) {
   sg.fillRect(0, 0, 64, 64);
 
   ctx.globalCompositeOperation = "lighter";
-  const cellPx = R * 0.0016;
+  const cellPx = R * 0.0034;
   for (const p of pts) {
     const q = project(p.lat, p.lon);
     if (!q) continue;
     const [x, y, s] = q;
     if (x < -40 || x > w + 40 || y < limbY - 10 || y > h + 40) continue;
-    const r = cellPx * (1.1 + p.k * 1.7) * (0.6 + s * 0.4);
-    ctx.globalAlpha = 0.03 + p.k * 0.3;
+    const r = cellPx * (1.3 + p.k * 2.2) * (0.6 + s * 0.4);
+    ctx.globalAlpha = 0.06 + p.k * 0.5;
     ctx.drawImage(sprite, x - r, y - r, r * 2, r * 2);
-    const n = Math.round(p.k * 4);
+    const n = Math.round(p.k * 9);
     for (let i = 0; i < n; i++) {
       const jx = x + (rand() - 0.5) * cellPx * 5.5;
       const jy = y + (rand() - 0.5) * cellPx * 3.2;
-      ctx.globalAlpha = 0.2 + rand() * 0.45;
+      ctx.globalAlpha = 0.3 + rand() * 0.6;
       ctx.fillStyle = rand() < 0.18 ? "#ffd592" : "#ff7a14";
       ctx.fillRect(jx, jy, 1.2, 1.2);
     }
@@ -150,10 +146,10 @@ function drawSky(canvas, w, h, pts) {
   ctx.globalCompositeOperation = "source-over";
 }
 
-export default function Hero({ cells, cm, stats }) {
+export default function Hero({ cells4, sky, stats }) {
   const [ref, size] = useSize();
   const canvasRef = useRef(null);
-  const pts = useFirePoints(cells, cm);
+  const pts = useFirePoints(cells4, sky);
 
   useEffect(() => {
     if (canvasRef.current && size.w && size.h) drawSky(canvasRef.current, size.w, size.h, pts);
@@ -161,7 +157,7 @@ export default function Hero({ cells, cm, stats }) {
 
   return (
     <section id="top" className="hero" ref={ref} aria-label="Introduction">
-      <canvas ref={canvasRef} className="sky" role="img" aria-label="Night-side Earth seen from orbit, glowing orange where satellites have detected fire across India" />
+      <canvas ref={canvasRef} className="sky" role="img" aria-label="Night-side Earth seen from orbit, glowing orange where satellites have detected fire across Africa, the Middle East and Asia" />
       <div className="hero-inner">
         <HudFrame>
           <h1>
@@ -170,8 +166,8 @@ export default function Hero({ cells, cm, stats }) {
           <p className="sub">GLOBAL BURNING ACTIVITY CALENDAR</p>
         </HudFrame>
         <p className="lede">
-          Twenty-five years of satellite fire detections, stitched across sensors that never agreed with each other. See when a
-          region's fire season starts, when it peaks, and how this year compares.
+          Twenty-five years of satellite fire detections from every country on Earth, stitched across sensors that never agreed
+          with each other. See when a region's fire season starts, when it peaks, and how this year compares.
         </p>
         <div className="cta-row">
           <a className="btn primary" href="#explore">Explore the calendar</a>

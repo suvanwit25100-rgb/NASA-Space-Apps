@@ -12,7 +12,7 @@ maplibregl.setWorkerUrl(workerUrl);
 
 const STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
-export default function FireMap({ cells, cm, aoi, year, month, drawing, onDrawn }) {
+export default function FireMap({ cells4, mapYear, aoi, year, month, drawing, onDrawn }) {
   const hostRef = useRef(null);
   const mapRef = useRef(null);
   const overlayRef = useRef(null);
@@ -22,30 +22,24 @@ export default function FireMap({ cells, cm, aoi, year, month, drawing, onDrawn 
   const onDrawnRef = useRef(onDrawn);
   onDrawnRef.current = onDrawn;
 
-  const byMonth = useMemo(() => {
-    const arr = Array.from({ length: 12 * 27 }, () => []);
-    for (let i = 0; i < cm.n; i++) arr[cm.month[i]].push(i);
-    return arr;
-  }, [cm]);
-
   const data = useMemo(() => {
-    const months = month == null ? Array.from({ length: 12 }, (_, i) => i) : [month];
-    const acc = new Uint16Array(cells.length);
-    for (const m of months) for (const i of byMonth[(year - 2000) * 12 + m] || []) acc[cm.cell[i]] += cm.days[i];
+    if (!mapYear) return { rows: [], ref: 1 };
+    const acc = new Uint16Array(cells4.length);
+    for (let i = 0; i < mapYear.n; i++) if (month == null || mapYear.month[i] === month) acc[mapYear.cell[i]] += mapYear.days[i];
     const out = [];
-    for (let i = 0; i < acc.length; i++) if (acc[i] > 0) out.push({ hex: cells[i], v: acc[i] });
+    for (let i = 0; i < acc.length; i++) if (acc[i] > 0) out.push({ hex: cells4[i], v: acc[i] });
     const sorted = out.map((d) => d.v).sort((a, b) => a - b);
     const ref = sorted.length ? Math.max(sorted[Math.floor(sorted.length * 0.97)], 2) : 1;
     return { rows: out, ref };
-  }, [cells, cm, byMonth, year, month]);
+  }, [cells4, mapYear, month]);
 
   useEffect(() => {
     const map = new maplibregl.Map({
       container: hostRef.current,
       style: STYLE,
-      center: [80, 22],
-      zoom: 3.4,
-      minZoom: 2.5,
+      center: [30, 15],
+      zoom: 1.8,
+      minZoom: 1,
       maxZoom: 9,
       attributionControl: { compact: true },
     });
@@ -149,18 +143,19 @@ export default function FireMap({ cells, cm, aoi, year, month, drawing, onDrawn 
 
   const era = year >= 2012 ? "VIIRS 375 m" : year >= 2003 ? "MODIS Aqua 1 km" : "MODIS Terra 1 km";
   const label = month == null ? `${year}, full year` : `${MONTHS[month]} ${year}`;
+  const loading = !mapYear;
 
   return (
     <>
       <div className="map-wrap">
         <div ref={hostRef} style={{ position: "absolute", inset: 0 }} />
         <div className="map-badge">
-          Showing <b>{label}</b> · {data.rows.length.toLocaleString()} burning cells · <span style={{ color: "#8fa8c4" }}>{era}</span>
+          {loading ? "Loading map…" : <>Showing <b>{label}</b> · {data.rows.length.toLocaleString()} burning cells · <span style={{ color: "#8fa8c4" }}>{era}</span></>}
         </div>
         {drawing && <div className="map-badge" style={{ top: 52, borderColor: "#ff8a1f" }}>Click and drag on the map to draw your area</div>}
         {hover && (
           <div className="map-tip" style={{ left: hover.x, top: hover.y }}>
-            <b>{hover.v}</b> burning day{hover.v === 1 ? "" : "s"} in this ~250 km² cell
+            <b>{hover.v}</b> burning day{hover.v === 1 ? "" : "s"} in this ~1,770 km² cell
           </div>
         )}
       </div>

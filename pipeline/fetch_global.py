@@ -121,11 +121,14 @@ def run_shard(archive: str, year: int, countries: dict, out_dir: Path) -> bool:
     if failures:
         print(f"  {archive} {year}: INCOMPLETE, {len(failures)} country failures (e.g. {failures[0]}); shard not written", flush=True)
         return False
-    merged = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=["h3", "day", "sensor", "n"])
+    parts = [p for p in parts if len(p)]  # an empty frame would silently turn the uint64 cell ids into floats
+    merged = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame({"h3": [], "day": [], "sensor": [], "n": []})
     # cells straddling a border appear in two countries: merge them
     merged = merged.groupby(["h3", "day", "sensor"], sort=True)["n"].sum().reset_index()
+    merged = merged.astype({"h3": np.uint64, "day": np.uint16, "sensor": np.uint8})
     merged["n"] = merged["n"].clip(upper=65535).astype(np.uint16)
     cc_all = pd.concat(cc_parts, ignore_index=True) if cc_parts else pd.DataFrame({"h3": [], "cd": [], "cidx": []})
+    cc_all = cc_all.astype({"h3": np.uint64})
     cc_all.to_parquet(cc_path, index=False)
     merged.to_parquet(shard.with_suffix(".tmp"), index=False)
     shard.with_suffix(".tmp").rename(shard)
@@ -145,6 +148,7 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--years", help="e.g. 2020 or 2015-2018 (default: all available)")
     p.add_argument("--countries", help="comma-separated ISO alpha-3 codes (default: all)")
+    p.add_argument("--archives", help="comma-separated subset of: modis, viirs-snpp (default: both)")
     p.add_argument("--end-year", type=int, default=2025)
     p.add_argument("--out-dir", default=str(REPO_ROOT / "data" / "global" / "shards"))
     args = p.parse_args()
@@ -164,7 +168,10 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     print(f"{len(countries)} countries, years {years.start}-{years.stop - 1}", flush=True)
     incomplete = []
+    chosen = args.archives.split(",") if args.archives else list(ARCHIVES)
     for archive, cfg in ARCHIVES.items():
+        if archive not in chosen:
+            continue
         for year in years:
             if year < cfg["first_year"]:
                 continue

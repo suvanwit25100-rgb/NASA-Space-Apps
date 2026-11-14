@@ -13,7 +13,7 @@ export default function About() {
         <div className="panel">
           <h3>NASA data used</h3>
           <ul className="caveats">
-            <li><b>NASA FIRMS</b> (Fire Information for Resource Management System): MODIS Collection 6.1 active fire from the Terra and Aqua satellites, and VIIRS 375 m active fire from Suomi NPP.</li>
+            <li><b>NASA FIRMS</b> (Fire Information for Resource Management System): MODIS Collection 6.1 active fire from the Terra and Aqua satellites, and VIIRS 375 m active fire from Suomi NPP, for every country in the FIRMS annual archive.</li>
             <li><b>NASA MCD64A1</b> (MODIS burned area, Collection 6.1), read through the Microsoft Planetary Computer, as an independent validation of the seasonal cycle.</li>
             <li><b>Also compared:</b> GFED4.1s burned area, a third-party dataset built on MCD64A1.</li>
           </ul>

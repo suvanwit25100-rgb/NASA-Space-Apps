@@ -17,8 +17,8 @@ Built for NASA Space Apps Challenge 2026.
 
 ## Repo layout
 
-- `pipeline/` — Python pipeline: fetch FIRMS data, filter, aggregate to H3 cell-day, cross-sensor calibration, export partitioned Parquet.
-- `app/` — React + Vite frontend: MapLibre GL + deck.gl H3 map, D3 and canvas calendar heatmap, climatology, anomaly and fire-season charts. Run it with `npm --prefix app install && npm --prefix app run dev` (data is pre-exported into `app/public/data/` by `pipeline/export_frontend_data.py`).
+- `pipeline/` — Python pipeline: fetch FIRMS data for every country, filter, aggregate to H3 cell-days, cross-sensor calibration, validation, and export of browser-ready data.
+- `app/` — React + Vite frontend: MapLibre GL + deck.gl H3 map, D3 and canvas calendar heatmap, climatology, anomaly and fire-season charts. Run it with `npm --prefix app install && npm --prefix app run dev`.
 - `docs/` — architecture notes, validation figures, submission assets.
 
 ## Setup
@@ -29,3 +29,17 @@ cp .env.example .env
 ```
 
 See [CLAUDE.md](CLAUDE.md) for the full plan, data caveats and method, and [AI_USAGE.md](AI_USAGE.md) for the SI (AI) tool usage disclosure required by the NASA Space Apps Challenge rules.
+
+## Reproducing the global dataset
+
+No API key is needed for the historical archive (FIRMS publishes public per-country annual files). Allow about two hours and 30 GB of downloads; the pipeline is resumable and keeps only aggregated cell-days.
+
+```bash
+pip install -r pipeline/requirements.txt
+python3 pipeline/fetch_global.py            # 209 countries, MODIS 2000-2025 + VIIRS S-NPP 2012-2025 -> data/global/shards/
+python3 pipeline/build_global_products.py   # per-country, featured-region and world series -> app/public/data/series/
+python3 pipeline/build_global_maps.py       # yearly map layers + custom-area tiles (tiles are gitignored, ~110 MB)
+python3 pipeline/validate_regions_gfed.py --fetch-only && python3 pipeline/validate_regions_gfed.py
+```
+
+`pipeline/fetch_and_aggregate.py`, `calibrate.py` and `plot_before_after.py` are the original India-only worked example behind the before/after figures.

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { loadAois, loadCellMonths, loadCells } from "./lib/data";
+import { loadCells4, loadRegions, loadSky } from "./lib/data";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Explorer from "./components/Explorer";
@@ -11,25 +11,26 @@ export default function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    Promise.all([loadAois(), loadCells(), loadCellMonths()])
-      .then(([a, cells, cm]) => setData({ ...a, cells, cm }))
+    Promise.all([loadRegions(), loadCells4(), loadSky()])
+      .then(([r, cells4, sky]) => setData({ ...r, cells4, sky }))
       .catch((e) => setError(e.message));
   }, []);
 
+  const nCountries = data ? data.regions.filter((r) => r.kind === "country").length : 0;
   const stats = data && [
     { value: "25", label: "Years of record" },
     { value: "3", label: "Satellite sensors" },
-    { value: data.cells.length.toLocaleString(), label: "Map cells (India)" },
+    { value: String(nCountries), label: "Countries" },
   ];
 
   return (
     <>
       <Nav />
       <main>
-        <Hero cells={data?.cells} cm={data?.cm} stats={stats} />
+        <Hero cells4={data?.cells4} sky={data?.sky} stats={stats} />
         {error && <div className="section"><div className="error">Could not load the data: {error}</div></div>}
         {!data && !error && <div className="section"><div className="skeleton">Loading fire record…</div></div>}
-        {data && <Explorer aois={data.aois} meta={data.meta} cells={data.cells} cm={data.cm} />}
+        {data && <Explorer regions={data.regions} meta={data.meta} cells4={data.cells4} />}
         <Method />
         <About />
       </main>

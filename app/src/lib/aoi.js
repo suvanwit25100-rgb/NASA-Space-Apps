@@ -1,56 +1,66 @@
-import { cellToLatLng } from "h3-js";
+import { loadBuffer } from "./data";
 
-const base = import.meta.env.BASE_URL;
 const DAY = 86400000;
 const AXIS0 = Date.UTC(2000, 0, 1);
 const LOW_DATA_CELLDAYS = 500;
+const MAX_TILES = 16;
+const SENSORS = ["MODIS_TERRA", "MODIS_AQUA", "VIIRS_SNPP"];
 
-export function cellCentroids(cells) {
-  const lat = new Float32Array(cells.length);
-  const lon = new Float32Array(cells.length);
-  cells.forEach((c, i) => {
-    const [la, lo] = cellToLatLng(c);
-    lat[i] = la;
-    lon[i] = lo;
-  });
-  return { lat, lon };
-}
-
-let cellDaysPromise = null;
-export function loadCellDays(meta) {
-  if (!cellDaysPromise) {
-    cellDaysPromise = fetch(`${base}data/cell_days.bin`)
+let tileIndexPromise = null;
+const tileIndex = () => {
+  if (!tileIndexPromise) {
+    tileIndexPromise = fetch(`${import.meta.env.BASE_URL}data/tiles/index.json`)
       .then((r) => {
-        if (!r.ok) throw new Error("Could not load cell-day data");
-        return r.arrayBuffer();
-      })
-      .then((buf) => {
-        const out = {};
-        let off = 0;
-        for (const sensor of ["MODIS_TERRA", "MODIS_AQUA", "VIIRS_SNPP"]) {
-          const n = meta.cellDays[sensor];
-          out[sensor] = { cell: new Uint16Array(buf, off, n), day: new Uint16Array(buf, off + 2 * n, n), n };
-          off += 4 * n;
-        }
-        return out;
+        if (!r.ok) throw new Error("Could not load the tile index");
+        return r.json();
       })
       .catch((e) => {
-        cellDaysPromise = null;
+        tileIndexPromise = null;
         throw e;
       });
   }
-  return cellDaysPromise;
+  return tileIndexPromise;
+};
+
+function parseTile(buf) {
+  const dv = new DataView(buf);
+  const nCells = dv.getUint32(0, true);
+  const coords = new Float32Array(buf, 4, nCells * 2);
+  const lat = new Float32Array(nCells);
+  const lon = new Float32Array(nCells);
+  for (let i = 0; i < nCells; i++) {
+    lat[i] = coords[2 * i];
+    lon[i] = coords[2 * i + 1];
+  }
+  let off = 4 + nCells * 8;
+  const seg = {};
+  for (const s of SENSORS) {
+    const n = dv.getUint32(off, true);
+    off += 4;
+    seg[s] = { n, cell: new Uint16Array(buf, off, n), day: new Uint16Array(buf, off + 2 * n, n) };
+    off += 4 * n;
+  }
+  return { nCells, lat, lon, seg };
 }
 
-export function maskFromBBox(centroids, bbox) {
+// Loads the 5-degree tiles that a bounding box touches (rejects very large areas).
+export async function loadTilesFor(bbox) {
+  const idx = await tileIndex();
+  const d = idx.tileDeg;
+  const cols = 360 / d;
   const [w, s, e, n] = bbox;
-  const mask = new Uint8Array(centroids.lat.length);
-  for (let i = 0; i < mask.length; i++) {
-    const la = centroids.lat[i];
-    const lo = centroids.lon[i];
-    if (lo >= w && lo <= e && la >= s && la <= n) mask[i] = 1;
+  const x0 = Math.max(0, Math.floor((w + 180) / d));
+  const x1 = Math.min(cols - 1, Math.floor((e + 180) / d));
+  const y0 = Math.max(0, Math.floor((s + 90) / d));
+  const y1 = Math.min(180 / d - 1, Math.floor((n + 90) / d));
+  const ids = [];
+  for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (idx.tiles[y * cols + x]) ids.push(y * cols + x);
+  if ((x1 - x0 + 1) * (y1 - y0 + 1) > MAX_TILES) {
+    throw new Error("That area is too large to calibrate in the browser. Draw a smaller one, or pick a region or country from the list.");
   }
-  return mask;
+  if (!ids.length) throw new Error("No fire detections fall inside that area.");
+  const tiles = await Promise.all(ids.map((id) => loadBuffer(`tiles/${id}.bin.gz`).then(parseTile)));
+  return tiles;
 }
 
 function inRing(x, y, ring) {
@@ -63,8 +73,17 @@ function inRing(x, y, ring) {
   return inside;
 }
 
-export function maskFromPolygons(centroids, polygons) {
-  const mask = new Uint8Array(centroids.lat.length);
+export function maskFromBBox(tile, bbox) {
+  const [w, s, e, n] = bbox;
+  const mask = new Uint8Array(tile.nCells);
+  for (let i = 0; i < mask.length; i++) {
+    if (tile.lon[i] >= w && tile.lon[i] <= e && tile.lat[i] >= s && tile.lat[i] <= n) mask[i] = 1;
+  }
+  return mask;
+}
+
+export function maskFromPolygons(tile, polygons) {
+  const mask = new Uint8Array(tile.nCells);
   const boxes = polygons.map((rings) => {
     let w = 180;
     let s = 90;
@@ -79,8 +98,8 @@ export function maskFromPolygons(centroids, polygons) {
     return [w, s, e, n];
   });
   for (let i = 0; i < mask.length; i++) {
-    const x = centroids.lon[i];
-    const y = centroids.lat[i];
+    const x = tile.lon[i];
+    const y = tile.lat[i];
     for (let k = 0; k < polygons.length; k++) {
       const [w, s, e, n] = boxes[k];
       if (x < w || x > e || y < s || y > n) continue;
@@ -159,8 +178,8 @@ function seasonalRatio(num, den, months, monthOfYear) {
   };
 }
 
-// Mirrors aoi_series() in pipeline/export_frontend_data.py
-export function computeAoiSeries(mask, cd, meta) {
+// Mirrors aoi_series() in pipeline/calibration.py. parts: [{ tile, mask }]
+export function computeAoiSeries(parts, meta) {
   const last = Date.parse(`${meta.axisEnd}T00:00:00Z`);
   const nDays = Math.round((last - AXIS0) / DAY) + 1;
   const lastDate = new Date(last);
@@ -176,21 +195,26 @@ export function computeAoiSeries(mask, cd, meta) {
 
   const daily = {};
   const monthly = {};
-  const seen = new Uint8Array(mask.length);
-  for (const sensor of ["MODIS_TERRA", "MODIS_AQUA", "VIIRS_SNPP"]) {
+  let cells = 0;
+  const seenByPart = parts.map((p) => new Uint8Array(p.tile.nCells));
+  for (const sensor of SENSORS) {
     const dd = new Float64Array(nDays);
     const mm = new Float64Array(monthCount);
-    const { cell, day, n } = cd[sensor];
-    for (let i = 0; i < n; i++) {
-      if (mask[cell[i]] && day[i] < nDays) {
-        dd[day[i]] += 1;
-        mm[monthOf[day[i]]] += 1;
-        seen[cell[i]] = 1;
+    parts.forEach((p, k) => {
+      const { cell, day, n } = p.tile.seg[sensor];
+      for (let i = 0; i < n; i++) {
+        if (p.mask[cell[i]] && day[i] < nDays) {
+          dd[day[i]] += 1;
+          mm[monthOf[day[i]]] += 1;
+          seenByPart[k][cell[i]] = 1;
+        }
       }
-    }
+    });
     daily[sensor] = dd;
     monthly[sensor] = mm;
   }
+  for (const s of seenByPart) for (let i = 0; i < s.length; i++) cells += s[i];
+
   const dayIdx = (y, m, d) => Math.round((Date.UTC(y, m, d) - AXIS0) / DAY);
   const mIdx = (y, m) => (y - 2000) * 12 + m;
   const range = (a, b) => Array.from({ length: Math.max(0, b - a) }, (_, i) => a + i);
@@ -220,12 +244,14 @@ export function computeAoiSeries(mask, cd, meta) {
     lo[d] = Math.round(Math.max(val * (1 - rel), 0) * 10) / 10;
     hi[d] = Math.round(val * (1 + rel) * 10) / 10;
   }
-  const viirsTotal = cd.VIIRS_SNPP ? daily.VIIRS_SNPP.reduce((x, y) => x + y, 0) : 0;
-  return {
-    values,
-    lo,
-    hi,
-    cells: seen.reduce((x, y) => x + y, 0),
-    lowData: viirsTotal < LOW_DATA_CELLDAYS,
-  };
+  const viirsTotal = daily.VIIRS_SNPP.reduce((x, y) => x + y, 0);
+  return { values, lo, hi, cells, lowData: viirsTotal < LOW_DATA_CELLDAYS };
+}
+
+export async function calibrateArea({ bbox, polygons }, meta) {
+  const tiles = await loadTilesFor(bbox);
+  const parts = tiles.map((tile) => ({ tile, mask: polygons ? maskFromPolygons(tile, polygons) : maskFromBBox(tile, bbox) }));
+  const res = computeAoiSeries(parts, meta);
+  if (res.cells === 0) throw new Error("No fire detections fall inside that area.");
+  return res;
 }
