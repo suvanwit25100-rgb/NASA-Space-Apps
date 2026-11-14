@@ -16,16 +16,18 @@ export function useSize() {
   return [ref, size];
 }
 
+export const prefersReducedMotion = () => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
 export function useInView(threshold = 0.5) {
   const ref = useRef(null);
-  const [seen, setSeen] = useState(false);
+  const [seen, setSeen] = useState(() => prefersReducedMotion());
   useEffect(() => {
     const el = ref.current;
-    if (!el) return undefined;
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && setSeen(true), { threshold });
+    if (!el || seen) return undefined;
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setSeen(true), { threshold, rootMargin: "0px 0px -8% 0px" });
     io.observe(el);
     return () => io.disconnect();
-  }, [threshold]);
+  }, [threshold, seen]);
   return [ref, seen];
 }
 

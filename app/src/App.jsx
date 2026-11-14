@@ -93,7 +93,7 @@ export default function App() {
     <ExplorerProvider data={data}>
       <Nav route={route} />
       {route === "/" ? <Home nCountries={nCountries} /> : <RoutedPage route={route} />}
-      {route !== "/" && <SiteFooter />}
+      <SiteFooter />
       <TourMount />
       <Toast />
     </ExplorerProvider>

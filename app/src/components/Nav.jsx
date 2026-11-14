@@ -4,6 +4,13 @@ import { CloseIcon, Logo, MenuIcon } from "./Icons";
 
 export default function Nav({ route }) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 60);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, []);
   useEffect(() => setOpen(false), [route]);
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -13,7 +20,7 @@ export default function Nav({ route }) {
   }, [open]);
 
   return (
-    <header className={`nav ${route === "/" ? "on-hero" : ""}`}>
+    <header className={`nav ${route === "/" ? "on-hero" : ""} ${scrolled ? "scrolled" : ""}`}>
       <Link to="/" className="brand" aria-label="Global Burn Log home">
         <Logo />
         <span>Global Burn Log</span>
