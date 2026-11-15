@@ -34,6 +34,7 @@ function SiteFooter({ palette, onPalette, lang, onLang }) {
       </div>
       <p>Fire detections: NASA FIRMS (MODIS, VIIRS). Validation: NASA MCD64A1 and GFED4.1s. Basemap: © OpenStreetMap contributors © CARTO.</p>
       <p>Global Burn Log is a hackathon project; do not use it for operational emergency decisions. <Link to="/data">{t("Use the data")}</Link></p>
+      <p className="copyright">© 2026 Suvanwit Mandal. All rights reserved.</p>
     </footer>
   );
 }

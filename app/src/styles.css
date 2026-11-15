@@ -563,3 +563,6 @@ table.prov code { background: rgba(255,255,255,.07); padding: 2px 7px; border-ra
 html[lang="hi"] *:not(svg *) { letter-spacing: 0 !important; text-transform: none !important; }
 html[lang="hi"] body { font-family: "Noto Sans Devanagari", var(--sans); }
 .scroll-cue { left: auto; right: var(--gutter); bottom: 34px; transform: none; }
+
+.footer .copyright { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--cream); font: 700 12px var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+html[lang="hi"] .footer .copyright { text-transform: none; }
