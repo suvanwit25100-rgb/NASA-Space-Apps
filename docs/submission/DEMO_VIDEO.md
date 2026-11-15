@@ -1,3 +1,5 @@
+> **Form limit:** the Space Apps project form accepts a video of **30 seconds or less**, or a slide deck of at most 7 slides. The deck in `docs/Global_Burn_Log_Demo_Slides.pdf` meets this. If you record a video instead, keep it to 30 seconds: problem (the 2012 jump), the live Punjab example, one line on the evidence, and the URL. The longer script below is for a presentation, not for the form.
+
 # Demo video script (about 2 minutes)
 
 Record the screen at 1920x1080 with a voice-over. Host it on YouTube (unlisted is fine) or Google Drive set to "anyone with the link", and test the link in a private window.
