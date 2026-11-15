@@ -15,7 +15,7 @@ export function DataAndAI() {
         <h2>AI disclosure</h2>
         <ul className="caveats">
           <li>The team set the goal and made the design decisions. Claude (Anthropic) was used as a tool to help plan, and <b>Claude Code</b> (Anthropic) to write the data pipeline, the web app and the documentation.</li>
-          <li>No generative AI was used to create imagery. The hero photo is a real photograph, the charts are plots of real data and the architecture diagram is hand-coded.</li>
+          <li>The front-page hero is a real photograph. The page backgrounds and the glowing-tree picture were generated with ChatGPT and carry a visible SI-generated label. The charts are plots of real data and the architecture diagram is hand-coded.</li>
           <li>This site uses no NASA logos or mission identifiers.</li>
         </ul>
       </Reveal>

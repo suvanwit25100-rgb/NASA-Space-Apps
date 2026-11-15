@@ -448,7 +448,7 @@ npx firebase-tools deploy --only hosting
 
 ## 🤖 &nbsp;Use of AI
 
-The team set the goal and made the design decisions. **Claude** (Anthropic) was used as a tool to help plan, and **Claude Code** to write the data pipeline, the web app and the documentation. The photographs on the site were supplied by the team. Full disclosure in [AI_USAGE.md](AI_USAGE.md).
+The team set the goal and made the design decisions. The inner-page background, the glow behind the front page's About section and the glowing-tree picture were generated with ChatGPT and are labelled "SI-generated" on the site. **Claude** (Anthropic) was used as a tool to help plan, and **Claude Code** to write the data pipeline, the web app and the documentation. Full disclosure in [AI_USAGE.md](AI_USAGE.md).
 
 <br/>
 

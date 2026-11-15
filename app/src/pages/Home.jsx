@@ -113,6 +113,7 @@ export default function Home({ nCountries = 209 }) {
 
       <div className="front-scroll">
         <section id="about-front" className="front-section about-bg" aria-label="About">
+          <span className="si-mark corner" role="note">SI-generated background image (ChatGPT)</span>
           <Reveal as="p" className="eyebrow caps">{t("About the project")}</Reveal>
           <Reveal as="h2" className="front-h" delay={80}>{t("Twenty-five years of fire,")}<br /><em>{t("one consistent record.")}</em></Reveal>
           <Reveal as="p" className="front-lead" delay={160}>
@@ -146,7 +147,7 @@ export default function Home({ nCountries = 209 }) {
         <HotBoard />
 
         <Reveal className="smoke-band">
-          <div className="smoke-art" aria-hidden="true" />
+          <div className="smoke-art" role="img" aria-label="A glowing tree on a hill under a night sky (SI-generated image)"><span className="si-mark corner" role="note">SI-generated image (ChatGPT)</span></div>
           <div className="smoke-copy">
             <p className="eyebrow caps">{t("The demo question")}</p>
             <h2 className="front-h">{t("When does")} <em>{t("your")}</em> {t("region burn?")}</h2>
