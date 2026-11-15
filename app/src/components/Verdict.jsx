@@ -1,5 +1,5 @@
 import { fmtDate } from "../lib/analytics";
-import { exportReportPng } from "../lib/exporters";
+import { exportReportPng, shareCardPng } from "../lib/exporters";
 import { useExplorer } from "../state/Explorer";
 import { yearUncertainty, yearVerdict } from "../lib/analytics";
 
@@ -32,7 +32,10 @@ export default function Verdict() {
           </span>
         )}
       </p>
+      <div className="verdict-actions">
+      <button className="btn-sm" onClick={() => shareCardPng(model, year, sum, v)} title="A picture for a post or a chat">Share card</button>
       <button className="btn-sm verdict-report" onClick={() => exportReportPng(model, year, sum, v, u)} title="Download a one-page picture report for this area and year">Download report</button>
+      </div>
     </section>
   );
 }

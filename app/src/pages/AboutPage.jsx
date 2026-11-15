@@ -33,6 +33,7 @@ export default function AboutPage() {
       <section className="panel link-row">
         <a className="btn" href={REPO} target="_blank" rel="noreferrer"><GithubIcon width="18" height="18" /> Source on GitHub</a>
         <a className="btn" href="/calendar?tour=1">Take the guided tour</a>
+        <a className="btn" href="/data">Use the data</a>
       </section>
       <ChapterNav path="/about" />
     </main>

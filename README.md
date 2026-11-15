@@ -132,6 +132,13 @@ The site is a short story told over six chapters. Open any of them from the fron
 - 🌦️ **Weather context** (on request): temperature and rainfall anomalies beside the fire anomaly, from Open-Meteo (ERA5).
 - 🛰️ **Coverage adjustment**: satellites look at high latitudes more often (orbits converge toward the poles), so the map and the Compare table can adjust cell-days for that, using a simple orbit model.
 - 🔍 **Thin-evidence cells** can be outlined on the map, so weak spots are visible rather than hidden.
+- 🔥 **Anomaly map and two-year map.** Switch the map from Activity to **Unusual** (each cell against the same cell in 2013 to 2025) or **Two years** (where one year burned more or less than another). Canada in 2023 lights up exactly where the record fires were.
+- 🏆 **Furthest from normal this week.** The front page ranks the world, the featured regions and the highest and lowest countries by the newest-week anomaly, each one tap from its seasons.
+- ⏳ **When does the season start?** For any area: the typical start date with its middle-half range, the peak and end, a countdown, and whether the season is happening now.
+- 🧰 **Use the data.** A documented set of plain files (no key), Python and JavaScript examples, and a notebook (`notebooks/use_the_data.ipynb`, open in Colab) that runs against the live site.
+- 📲 **Installable and offline.** A service worker lets the site be added to a home screen and reopened offline with the pages and data you already viewed.
+- 🎨 **Colour-blind safe colours** (blue, teal and yellow for activity; blue against yellow for unusual) and a **share card** image for any area and year.
+- 🌐 **Spanish, Portuguese and Hindi** for the navigation, front page and map controls. Translated with AI assistance and not yet reviewed by native speakers; the long explanations stay in English.
 - 🧭 **Guided tour** of the Punjab and Haryana crop-residue story, written from the data itself.
 - 📱 **Phone friendly**: touch drawing, large tap targets, stacked layouts.
 - ♿ **Reduced-motion aware**: every animation switches off when the visitor asks for it.

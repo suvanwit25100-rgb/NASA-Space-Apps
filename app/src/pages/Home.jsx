@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { DataAndAI } from "../components/AboutBlocks";
+import HotBoard from "../components/HotBoard";
 import CountUp from "../components/CountUp";
 import { ArrowRight, GithubIcon, PlayIcon } from "../components/Icons";
 import { Reveal } from "../components/Reveal";
 import { prefersReducedMotion } from "../lib/hooks";
 import { CHAPTERS, Link, startTour } from "../lib/router";
+import { t } from "../lib/i18n";
 
 const DWELL_MS = 7000;
 const REPO = "https://github.com/suvanwit25100-rgb/NASA-Space-Apps";
@@ -86,7 +88,7 @@ export default function Home({ nCountries = 209 }) {
             <circle cx="80" cy="80" r="78" className="orb-arc" key={`${i}-${paused}`} style={{ animationPlayState: paused ? "paused" : "running" }} />
             <line x1="22" y1="138" x2="138" y2="22" className="orb-slash" />
           </svg>
-          <span>Open</span>
+          <span>{t("Open")}</span>
         </Link>
 
         <div className="pager" role="tablist" aria-label="Chapters">
@@ -105,30 +107,28 @@ export default function Home({ nCountries = 209 }) {
         </div>
 
         <button className="scroll-cue" onClick={() => document.getElementById("about-front")?.scrollIntoView({ behavior: "smooth" })} aria-label="Scroll down to learn more">
-          <span>Scroll</span><i />
+          <span>{t("Scroll")}</span><i />
         </button>
       </section>
 
       <div className="front-scroll">
         <section id="about-front" className="front-section about-bg" aria-label="About">
-          <Reveal as="p" className="eyebrow caps">About the project</Reveal>
-          <Reveal as="h2" className="front-h" delay={80}>Twenty-five years of fire,<br /><em>one consistent record.</em></Reveal>
+          <Reveal as="p" className="eyebrow caps">{t("About the project")}</Reveal>
+          <Reveal as="h2" className="front-h" delay={80}>{t("Twenty-five years of fire,")}<br /><em>{t("one consistent record.")}</em></Reveal>
           <Reveal as="p" className="front-lead" delay={160}>
-            Satellites have watched Earth burn since 2000, but the record is split across sensors that cannot be compared directly: the newer VIIRS sees
-            roughly six times more fire detections than the older MODIS, so a naive count jumps in 2012. Global Burn Log calibrates the sensors against each
-            other, so early-warning teams, land managers and scientists can see when a region's fire season starts, when it peaks, and how this year compares.
+            {t("LEAD") !== "LEAD" ? t("LEAD") : "Satellites have watched Earth burn since 2000, but the record is split across sensors that cannot be compared directly: the newer VIIRS sees roughly six times more fire detections than the older MODIS, so a naive count jumps in 2012. Global Burn Log calibrates the sensors against each other, so early-warning teams, land managers and scientists can see when a region\u2019s fire season starts, when it peaks, and how this year compares."}
           </Reveal>
           <div className="stat-row">
-            <Reveal className="stat"><b><CountUp to={25} /></b><span className="caps">Years of record</span></Reveal>
-            <Reveal className="stat" delay={100}><b><CountUp to={nCountries} /></b><span className="caps">Countries</span></Reveal>
-            <Reveal className="stat" delay={200}><b><CountUp to={100} suffix=" M" /></b><span className="caps">Burning cell-days</span></Reveal>
-            <Reveal className="stat" delay={300}><b><CountUp to={3} /></b><span className="caps">Satellite sensors</span></Reveal>
+            <Reveal className="stat"><b><CountUp to={25} /></b><span className="caps">{t("Years of record")}</span></Reveal>
+            <Reveal className="stat" delay={100}><b><CountUp to={nCountries} /></b><span className="caps">{t("Countries")}</span></Reveal>
+            <Reveal className="stat" delay={200}><b><CountUp to={100} suffix=" M" /></b><span className="caps">{t("Burning cell-days")}</span></Reveal>
+            <Reveal className="stat" delay={300}><b><CountUp to={3} /></b><span className="caps">{t("Satellite sensors")}</span></Reveal>
           </div>
         </section>
 
         <section className="front-section" aria-label="Chapters">
-          <Reveal as="p" className="eyebrow caps">Explore</Reveal>
-          <Reveal as="h2" className="front-h" delay={80}>Six ways in</Reveal>
+          <Reveal as="p" className="eyebrow caps">{t("Explore")}</Reveal>
+          <Reveal as="h2" className="front-h" delay={80}>{t("Six ways in")}</Reveal>
           <div className="chapter-grid">
             {CHAPTERS.map((ch, k) => (
               <Reveal key={ch.n} delay={k * 90}>
@@ -143,24 +143,26 @@ export default function Home({ nCountries = 209 }) {
           </div>
         </section>
 
+        <HotBoard />
+
         <Reveal className="smoke-band">
           <div className="smoke-art" aria-hidden="true" />
           <div className="smoke-copy">
-            <p className="eyebrow caps">The demo question</p>
-            <h2 className="front-h">When does <em>your</em> region burn?</h2>
+            <p className="eyebrow caps">{t("The demo question")}</p>
+            <h2 className="front-h">{t("When does")} <em>{t("your")}</em> {t("region burn?")}</h2>
             <p className="front-lead">Pick Punjab and Haryana to see two separate fire seasons, spring wheat residue and autumn paddy stubble, and how this year compares with the last twenty-five.</p>
-            <Link to="/seasons" className="btn primary">See fire seasons <ArrowRight width="16" height="16" /></Link>
+            <Link to="/seasons" className="btn primary">{t("See fire seasons")} <ArrowRight width="16" height="16" /></Link>
           </div>
         </Reveal>
 
         <section className="front-section" aria-label="Data and honesty">
-          <Reveal as="p" className="eyebrow caps">Where it comes from</Reveal>
-          <Reveal as="h2" className="front-h" delay={80}>Built on NASA data, <em>openly.</em></Reveal>
+          <Reveal as="p" className="eyebrow caps">{t("Where it comes from")}</Reveal>
+          <Reveal as="h2" className="front-h" delay={80}>{t("Built on NASA data,")} <em>{t("openly.")}</em></Reveal>
           <DataAndAI />
           <Reveal className="cta-row">
-            <button className="btn primary" onClick={startTour}><PlayIcon width="16" height="16" /> Take the guided tour</button>
-            <Link to="/method" className="btn">How we checked it <ArrowRight width="16" height="16" /></Link>
-            <a className="btn" href={REPO} target="_blank" rel="noreferrer"><GithubIcon width="16" height="16" /> Source code</a>
+            <button className="btn primary" onClick={startTour}><PlayIcon width="16" height="16" /> {t("Take the guided tour")}</button>
+            <Link to="/method" className="btn">{t("How we checked it")} <ArrowRight width="16" height="16" /></Link>
+            <a className="btn" href={REPO} target="_blank" rel="noreferrer"><GithubIcon width="16" height="16" /> {t("Source code")}</a>
           </Reveal>
         </section>
       </div>

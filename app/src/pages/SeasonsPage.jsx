@@ -6,6 +6,7 @@ import EarlyWarning from "../components/EarlyWarning";
 import Watchlist from "../components/Watchlist";
 import Loading from "../components/Loading";
 import { ChapterNav, PageHead } from "../components/PageHead";
+import SeasonOutlook from "../components/SeasonOutlook";
 import Replays from "../components/Replays";
 import { KpiRow, StoryLead } from "../components/Story";
 import HourOfDay from "../components/HourOfDay";
@@ -25,6 +26,7 @@ export default function SeasonsPage() {
       <Loading>
         <StoryLead />
         <KpiRow />
+        <SeasonOutlook />
         <Verdict />
         <EarlyWarning />
         <div className="grid-2">

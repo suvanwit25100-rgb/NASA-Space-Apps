@@ -3,7 +3,7 @@ const AXIS0 = Date.UTC(2000, 0, 1);
 
 export const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 // single letters when a month column is too narrow for three-letter labels (phones)
-export const monthLabels = (widthPx) => (widthPx / 12 < 34 ? "JFMAMJJASOND".split("") : MONTHS.map((m) => m.toUpperCase()));
+export const monthLabels = (widthPx) => (widthPx / 12 < 34 ? MONTHS.map((m) => Array.from(m)[0].toUpperCase()) : MONTHS.map((m) => m.toUpperCase()));
 export const isLeap = (y) => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
 export const daysIn = (y) => (isLeap(y) ? 366 : 365);
 export const dateOf = (y, d) => new Date(Date.UTC(y, 0, 1 + d));
@@ -320,4 +320,41 @@ export function yearUncertainty(model, y) {
     band += (d.hi[i] - d.lo[i]) / 2;
   }
   return sum > 0 ? { measured: false, pct: (band / sum) * 100 } : null;
+}
+
+const pct = (arr, q) => {
+  const s = [...arr].sort((a, b) => a - b);
+  return quantile(s, q);
+};
+
+// When does each recurring fire season usually start, peak and end? Seasons from all complete years are grouped by where
+// their peak falls (within 60 days of a group's first peak); a group that appears in at least 60% of years is a regular season.
+export function seasonOutlook(model) {
+  const years = model.completeYears;
+  if (years.length < 10) return null;
+  const groups = [];
+  for (const y of years) {
+    for (const s of model.seasons[y] || []) {
+      let g = groups.find((x) => Math.abs(x.ref - s.peak) <= 60);
+      if (!g) groups.push((g = { ref: s.peak, items: [] }));
+      if (!g.items.some((it) => it.y === y)) g.items.push({ y, start: s.start, peak: s.peakWeek, end: s.end, share: s.share });
+    }
+  }
+  const regular = groups
+    .filter((g) => g.items.length >= Math.ceil(0.6 * years.length))
+    .map((g) => ({
+      years: g.items.length,
+      start: pct(g.items.map((i) => i.start), 0.5),
+      startLo: pct(g.items.map((i) => i.start), 0.25),
+      startHi: pct(g.items.map((i) => i.start), 0.75),
+      peak: pct(g.items.map((i) => i.peak), 0.5),
+      end: pct(g.items.map((i) => i.end), 0.5),
+      share: pct(g.items.map((i) => i.share), 0.5),
+      items: g.items,
+    }))
+    .sort((a, b) => a.start - b.start);
+  if (!regular.length) return null;
+  const spans = regular.map((r) => r.end - r.start);
+  if (spans.some((d) => d >= 300)) return { yearRound: true, seasons: regular };
+  return { yearRound: false, seasons: regular };
 }

@@ -262,3 +262,123 @@ export function exportReportPng(model, year, sum, verdict, unc) {
   x.fillText("globalburnlog.earth", P, H - 50);
   c.toBlob((b) => b && download(b, `burn-log-report-${slug(model.aoi.name)}-${year}.png`));
 }
+
+// A 1200 x 630 picture for social posts and chats: area, year, the verdict, the main season and the typical year with this year over it.
+export async function shareCardPng(model, year, sum, verdict) {
+  if (!sum) return;
+  const W = 1200;
+  const H = 630;
+  const c = document.createElement("canvas");
+  c.width = W;
+  c.height = H;
+  const x = c.getContext("2d");
+  const F = (w, s, serif) => `${w} ${s}px ${serif ? "'Cormorant Garamond', Georgia, serif" : "Lato, system-ui, sans-serif"}`;
+  const g = x.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, "#1e0f09");
+  g.addColorStop(0.55, "#0b0c10");
+  g.addColorStop(1, "#0b0c10");
+  x.fillStyle = g;
+  x.fillRect(0, 0, W, H);
+  const glow = x.createRadialGradient(W, H, 10, W, H, 520);
+  glow.addColorStop(0, "rgba(255,122,47,.35)");
+  glow.addColorStop(1, "rgba(255,122,47,0)");
+  x.fillStyle = glow;
+  x.fillRect(0, 0, W, H);
+
+  const mon = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const fmt = (d) => {
+    const t = dateOf(year, d);
+    return `${t.getUTCDate()} ${mon[t.getUTCMonth()]}`;
+  };
+  x.fillStyle = "#ff7a2f";
+  x.font = F(900, 20);
+  x.fillText("GLOBAL BURN LOG", 64, 80);
+  x.fillStyle = "#f5efe6";
+  let size = 78;
+  x.font = F(400, size, true);
+  while (x.measureText(model.aoi.name).width > 560 && size > 36) {
+    size -= 4;
+    x.font = F(400, size, true);
+  }
+  x.fillText(model.aoi.name, 64, 190);
+  x.fillStyle = "#bdb1a6";
+  x.font = F(700, 28);
+  x.fillText(String(year), 64, 236);
+  if (verdict) {
+    x.fillStyle = "#ffb869";
+    x.font = F(500, 58, true);
+    x.fillText(verdict.label, 64, 330);
+    const up = verdict.rank <= Math.ceil(verdict.n / 2);
+    const k = up ? verdict.rank : verdict.n - verdict.rank + 1;
+    x.fillStyle = "#e9e2d7";
+    x.font = F(400, 24);
+    x.fillText(`${k === 1 ? "The" : `#${k}`} ${up ? "busiest" : "quietest"} of ${verdict.n} years`, 64, 374);
+  }
+  x.fillStyle = "#bdb1a6";
+  x.font = F(700, 16);
+  x.fillText("MAIN SEASON", 64, 450);
+  x.fillStyle = "#f5efe6";
+  x.font = F(500, 40, true);
+  x.fillText(`${fmt(sum.main.start)} to ${fmt(sum.main.end)}`, 64, 494);
+  x.fillStyle = "#bdb1a6";
+  x.font = F(400, 20);
+  x.fillText(`Peak week of ${fmt(sum.main.peakWeek)}`, 64, 528);
+
+  // typical year with this year over it
+  const cx0 = 650;
+  const cw = 490;
+  const top = 120;
+  const ch = 330;
+  const yr = model.byYear[year];
+  const vmax = Math.max(1, ...model.clim.p90.filter((v) => !Number.isNaN(v)), ...yr.sm.filter((v) => !Number.isNaN(v)));
+  const px = (d) => cx0 + (d / 365) * cw;
+  const py = (v) => top + ch - (v / vmax) * (ch - 10);
+  x.fillStyle = "rgba(255,255,255,.04)";
+  x.beginPath();
+  x.roundRect(cx0 - 20, top - 20, cw + 40, ch + 60, 24);
+  x.fill();
+  x.fillStyle = "rgba(255,122,47,.22)";
+  x.beginPath();
+  let st = false;
+  for (let d = 0; d < 365; d++) if (!Number.isNaN(model.clim.p90[d])) { x[st ? "lineTo" : "moveTo"](px(d), py(model.clim.p90[d])); st = true; }
+  for (let d = 364; d >= 0; d--) if (!Number.isNaN(model.clim.p10[d])) x.lineTo(px(d), py(model.clim.p10[d]));
+  x.closePath();
+  x.fill();
+  const line = (arr, col, w) => {
+    x.strokeStyle = col;
+    x.lineWidth = w;
+    x.beginPath();
+    let s2 = false;
+    for (let d = 0; d < 365; d++) if (!Number.isNaN(arr[d])) { x[s2 ? "lineTo" : "moveTo"](px(d), py(arr[d])); s2 = true; }
+    x.stroke();
+  };
+  line(model.clim.median, "#bdb1a6", 2.5);
+  line(yr.sm, "#ffb869", 4);
+  x.fillStyle = "#9d8f82";
+  x.font = F(700, 13);
+  ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"].forEach((m, i) => x.fillText(m, px(Math.round((Date.UTC(2001, i, 1) - Date.UTC(2001, 0, 1)) / 86400000)) + 6, top + ch + 24));
+  x.fillStyle = "#ffb869";
+  x.font = F(700, 15);
+  x.fillText(`${year}`, cx0, top + ch + 54);
+  x.fillStyle = "#bdb1a6";
+  x.fillText("median year and typical range", cx0 + 62, top + ch + 54);
+  x.fillStyle = "#ff7a2f";
+  x.font = F(900, 17);
+  x.fillText("globalburnlog.earth", W - 64 - x.measureText("globalburnlog.earth").width, H - 36);
+  x.fillStyle = "#8d8279";
+  x.font = F(400, 14);
+  x.fillText("NASA FIRMS (MODIS, VIIRS) · harmonised burning cell-days", 64, H - 36);
+
+  const blob = await new Promise((r) => c.toBlob(r, "image/png"));
+  if (!blob) return;
+  const file = new File([blob], `burn-log-${slug(model.aoi.name)}-${year}.png`, { type: "image/png" });
+  if (navigator.canShare?.({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: `${model.aoi.name} ${year}`, text: `${model.aoi.name} in ${year}: ${verdict?.label || "fire season"}. globalburnlog.earth` });
+      return;
+    } catch {
+      /* cancelled: fall through to a plain download */
+    }
+  }
+  download(blob, file.name);
+}

@@ -1,4 +1,5 @@
 import { useExplorer } from "../state/Explorer";
+import { t } from "../lib/i18n";
 
 export default function AreaBar({ children }) {
   const e = useExplorer();
@@ -7,7 +8,7 @@ export default function AreaBar({ children }) {
     <section className="panel area-bar" data-tour="area" aria-label="Choose an area and a year">
       <div className="area-row">
         <label className="field grow">
-          <span className="label caps">Area</span>
+          <span className="label caps">{t("Area")}</span>
           <select value={aoiId} aria-label="Region or country" onChange={(ev) => (ev.target.value !== "custom" || custom?.status === "ready") && setAoiId(ev.target.value)}>
             {custom?.status === "ready" && <option value="custom">{custom.name}</option>}
             <optgroup label="Regions">{[world, ...featured].filter(Boolean).map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</optgroup>
@@ -15,12 +16,12 @@ export default function AreaBar({ children }) {
           </select>
         </label>
         <label className="field">
-          <span className="label caps">Search a country</span>
-          <input list="country-list" className="search" placeholder="Type a country…" value={search} onChange={(ev) => onSearch(ev.target.value)} aria-label="Search for a country" />
+          <span className="label caps">{t("Search a country")}</span>
+          <input list="country-list" className="search" placeholder={t("Type a country…")} value={search} onChange={(ev) => onSearch(ev.target.value)} aria-label="Search for a country" />
           <datalist id="country-list">{countries.map((c) => <option key={c.id} value={c.name} />)}</datalist>
         </label>
         <div className="field year-field">
-          <span className="label caps">Year</span>
+          <span className="label caps">{t("Year")}</span>
           <div className="year-row">
             <button className="step" aria-label="Previous year" disabled={year <= minYear} onClick={() => select(year - 1)}>‹</button>
             <input type="range" min={minYear} max={maxYear} value={year} onChange={(ev) => select(Number(ev.target.value))} aria-label="Year" />

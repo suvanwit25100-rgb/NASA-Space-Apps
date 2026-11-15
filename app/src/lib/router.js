@@ -9,7 +9,7 @@ export const CHAPTERS = [
   { n: "VI", path: "/about", title: "About", teaser: "The NASA data behind it, how AI was used, and what the limits are." },
 ];
 
-const ROUTES = ["/", ...CHAPTERS.map((c) => c.path)];
+const ROUTES = ["/", "/data", ...CHAPTERS.map((c) => c.path)];
 
 export function routeOf(pathname) {
   const clean = pathname.replace(/\/+$/, "") || "/";

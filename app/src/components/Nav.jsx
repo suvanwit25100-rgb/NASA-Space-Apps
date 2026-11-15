@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CHAPTERS, Link, startTour } from "../lib/router";
 import { CloseIcon, Logo, MenuIcon } from "./Icons";
+import { t } from "../lib/i18n";
 
 export default function Nav({ route }) {
   const [open, setOpen] = useState(false);
@@ -36,14 +37,14 @@ export default function Nav({ route }) {
         ))}
       </nav>
       <div className="nav-right">
-        <button className="nav-tour" onClick={startTour}>Guided tour</button>
+        <button className="nav-tour" onClick={startTour}>{t("Guided tour")}</button>
         <button className="icon-btn menu" onClick={() => setOpen((o) => !o)} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open}>
           {open ? <CloseIcon /> : <MenuIcon />}
         </button>
       </div>
       {open && (
         <div className="sheet" role="dialog" aria-label="Menu">
-          <Link to="/" aria-current={route === "/" ? "page" : undefined}>Home</Link>
+          <Link to="/" aria-current={route === "/" ? "page" : undefined}>{t("Home")}</Link>
           {CHAPTERS.map((c) => (
             <Link key={c.path} to={c.path} aria-current={route === c.path ? "page" : undefined}>
               <b>{c.n}</b> {c.title}

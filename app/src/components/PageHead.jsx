@@ -1,5 +1,6 @@
 import { CHAPTERS, Link } from "../lib/router";
 import { ArrowLeft, ArrowRight } from "./Icons";
+import { t } from "../lib/i18n";
 
 export function PageHead({ path, children }) {
   const c = CHAPTERS.find((x) => x.path === path);
@@ -21,12 +22,12 @@ export function ChapterNav({ path }) {
       {prev ? (
         <Link to={prev.path} className="pill-link"><ArrowLeft width="16" height="16" /> <span><small>{prev.n}</small>{prev.title}</span></Link>
       ) : (
-        <Link to="/" className="pill-link"><ArrowLeft width="16" height="16" /> <span><small>Front page</small>Home</span></Link>
+        <Link to="/" className="pill-link"><ArrowLeft width="16" height="16" /> <span><small>{t("Front page")}</small>{t("Home")}</span></Link>
       )}
       {next ? (
         <Link to={next.path} className="pill-link next"><span><small>{next.n}</small>{next.title}</span> <ArrowRight width="16" height="16" /></Link>
       ) : (
-        <Link to="/" className="pill-link next"><span><small>Back to</small>Front page</span> <ArrowRight width="16" height="16" /></Link>
+        <Link to="/" className="pill-link next"><span><small>{t("Back to")}</small>{t("Front page")}</span> <ArrowRight width="16" height="16" /></Link>
       )}
     </nav>
   );
