@@ -566,3 +566,9 @@ html[lang="hi"] body { font-family: "Noto Sans Devanagari", var(--sans); }
 
 .footer .copyright { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--cream); font: 700 12px var(--sans); letter-spacing: .14em; text-transform: uppercase; }
 html[lang="hi"] .footer .copyright { text-transform: none; }
+
+/* long code lines must scroll inside their panel, not widen the page */
+.page > * { min-width: 0; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: minmax(0, 1fr); } }
+pre.code { max-width: 100%; }
