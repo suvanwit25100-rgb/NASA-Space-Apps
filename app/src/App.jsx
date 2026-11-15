@@ -195,7 +195,7 @@ export default function App() {
       <Nav key={lang} route={route} />
       <div className="progress" aria-hidden="true" />
       {route !== "/" && <div className="page-bg" aria-hidden="true" />}
-      {route !== "/" && <div className="si-mark fixed" role="note">SI-generated background image (ChatGPT)</div>}
+      {route !== "/" && <div className="si-mark fixed" role="note">SI-generated image (ChatGPT)</div>}
       <Fragment key={`${palette}-${lang}`}>{route === "/" ? <Home nCountries={nCountries} /> : <RoutedPage route={route} />}</Fragment>
       <SiteFooter palette={palette} onPalette={choosePalette} lang={lang} onLang={chooseLang} />
       <TourMount />
